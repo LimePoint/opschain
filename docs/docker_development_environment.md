@@ -21,13 +21,20 @@ Commands such as `opschain-action` or `opschain-dev` that use the development co
 $ cd opschain_project_git_repos/production/$project_id
 ```
 
-_Note: The `opschain-action` commands below assume the OpsChain development environment is being run in the original "Payables Team" project (created in the Getting Started guide), including setting the `project_id` environment variable.  If using a different project, modify these commands to reflect the OpsChain actions available._
+_Note: The `opschain-action` commands below assume the OpsChain development environment is being run in the original "Demo Hello World" project (created in the Getting Started guide), including setting the `project_id` variable.  If using a different project, modify these commands to reflect the OpsChain actions available._
 
-#### Create a `step_context.json`
+#### Create a `step_context.json` (optional)
 
-The `opschain-action` script requires that a `.opschain/step_context.json` file exists within the project Git repository.  For more information about the `step_context.json` file, see the [Actions Reference Guide](reference/actions.md#step-context-json).
+The `opschain-action` script uses a `.opschain/step_context.json` file if it exists within the project Git repository working directory. For more information about the `step_context.json` file, see the [Actions Reference Guide](reference/actions.md#step-context-json).
 
-Currently, you will need to create this file manually.  If your action does not require OpsChain [properties](reference/properties.md) values, create the `.opschain/step_context.json` file as follows:
+If your action requires [properties](reference/properties.md) then you can use the `opschain` `properties-show` sub command to output the required properties values:
+
+```bash
+$ opschain project properties-show --project_id $project_id
+$ opschain environment properties-show --project_id $project_id --environment_code $environment_code
+```
+
+Use the output of these commands to replace the `{}` in the sample properties in the empty file below:
 
 ```bash
 $ mkdir -p .opschain
@@ -42,16 +49,6 @@ $ cat << EOF > .opschain/step_context.json
 }
 EOF
 ```
-
-If your action does require [properties](reference/properties.md) use the `opschain` `properties-show` sub command to output the required properties values:
-
-```bash
-$ opschain project properties-show --project_id $project_id
-$ opschain environment properties-show --project_id $project_id --environment_code $environment_code
-```
-
-Use the output of these commands to replace the empty `{}` properties in the empty file above.
-
 ### Using the OpsChain Development Environment
 
 The `opschain-action` script can be used to run OpsChain actions the same way they are run by the step runner.

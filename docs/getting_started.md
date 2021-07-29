@@ -7,10 +7,11 @@ After following this guide you should know how to:
 - create an OpsChain user
 - create some sample data
 - list projects
-- show project and environment properties
-- find the action definitions for a project
+- list actions in an OpsChain project
+- interactively run an action in an OpsChain project
 - create a change
 - view the logs of a running (or completed) change
+- view the history of changes in an environment
 
 ## Prerequisites
 
@@ -78,7 +79,7 @@ $ ./configure
 
 You will be asked to confirm whether you would like to use certain features and will also be able to override default values for the location of database files and other settings.
 
-_Note: On Windows Subsystem for Linux (WSL) you will need to enable full read-write-execute (777) permissions on the /var/run/docker.sock file_
+_Note: On Windows Subsystem for Linux (WSL) you will need to enable full read-write-execute (777) permissions on the /var/run/docker.sock file._
 
 ### Pull Latest OpsChain Images
 
@@ -149,139 +150,155 @@ _Note: If you create a `.opschainrc` file in your current directory, this will b
 
 ### Create Sample Data
 
-Sample [projects](reference/concepts.md#project) and [environments](reference/concepts.md#environment) can be created in the OpsChain database:
+Create a sample [project](reference/concepts.md#project) and [environment](reference/concepts.md#environment) in the OpsChain database:
 
 ```bash
 $ opschain-utils create_sample_data
 ```
 
-The command will also create a sample commit in each project's [Git repository](reference/concepts.md#project-git-repository) containing the OpsChain [actions](reference/concepts.md#action) that will be run below (the actions implement a simple "hello world" example).
+This command will also create a sample commit in the project's [Git repository](reference/concepts.md#project-git-repository) containing the OpsChain [action](reference/concepts.md#action) that will be run below (the action implements a simple "hello world" example).
 
-## Using the OpsChain Client CLI
+#### Finding the Sample Project ID
 
-The OpsChain client CLI can be used to interact with an OpsChain server instance. In these examples the server is running on your local machine but in most installations will be installed in a central location and shared.
-
-### Check Available CLI Commands
-
-Running the OpsChain CLI without any parameters will provide a list of available commands:
-
-```bash
-$ opschain
-```
-
-Adding one of these commands to the CLI will display the sub-commands that apply to it:
-
-```bash
-$ opschain environment
-```
-
-More information about each sub-command is available by appending the `--help` option
-
-```bash
-$ opschain environment create --help
-```
-
-Any sub-command arguments not supplied via options will be prompted for.
-
-Any create sub-command will also require confirmation.
-
-Output will be displayed in tabular format.
-
-_Note that the `opschain` command uses the config in `.opschainrc` and the `./cli-files` directory relative to where the command is executed. Hence, we suggest always using `opschain` from the `opschain-release` directory - or you could copy the `.opschainrc` config file and the `cli-files` directory somewhere else._
-
-### List Available Projects
-
-Use the project list command to show available projects.
+Run the OpsChain project list command to find the sample project's ID:
 
 ```bash
 $ opschain project list
 ```
 
-Manually copy and set the project ID related to the _Payables Team_ project as an environment variable, you'll need it for the next steps:
+Manually copy the project ID displayed in the command output and assign it to a variable, you'll need it for the next steps:
 
 ```bash
-$ project_id=XXXXX
+$ project_id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
-### Querying Properties
+## Running OpsChain Actions
 
-The sample projects and environments created earlier include sample [properties](reference/properties.md). The OpsChain CLI enables you to view the current properties values.
+OpsChain is a tool for running actions. OpsChain actions can be developed interactively by using the `opschain-action` and `opschain-dev` utilities.
+
+### Running an Action Locally
+
+You can use the `opschain-action` utility to list the actions available within the current project.
+
+Enter the project's Git repository working directory (this is required to use the `opschain-action` command):
 
 ```bash
-$ opschain project properties-show --project_id $project_id
-$ opschain environment properties-show --project_id $project_id --environment_code dev_p
+$ cd ./opschain_project_git_repos/production/$project_id
 ```
 
-### Project Git Repository
-
-Each OpsChain project is linked to a local Git repository (by default located at `./opschain_project_git_repos/production/$project_id`). Commits in the repository are the [Git references](https://git-scm.com/book/en/v2/Git-Tools-Revision-Selection) that refer to the state of configuration at a given version.
-
-You can use Git commands such as [branch](https://git-scm.com/docs/git-branch) and [tag](https://git-scm.com/docs/git-tag) to find references that you can use in order to refer to a specific commit ref.
-
-A deployable commit must include the `actions.rb` entrypoint.  This file defines the [actions](reference/concepts.md#action) available to be performed as part of an OpsChain change.
-
-You can interact and make changes directly to the local Git repository, or link the repository to a [remote](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes) as shown in the [Confluent Example](running_a_complex_change.md).
-
-#### View the Project's actions.rb
-
-The _Payables Team_ project's `actions.rb` file can be viewed to see how the example [actions](reference/concepts.md#action) are constructed:
+You can now list the actions available in this project by running the following command:
 
 ```bash
-$ cat "./opschain_project_git_repos/production/$project_id/actions.rb"
+$ opschain-action -T # this will list all actions with a description (or use -AT to show all configured actions)
+```
+
+Running the `create_sample_data` command earlier created an actions.rb file in this project that contains a single action, `hello_world`.
+
+You can run this action locally by using the `opschain-action` command as follows:
+
+```bash
+$ opschain-action hello_world
+Hello World
+```
+
+### Adding a New Action (optional)
+
+Open the `actions.rb` file with your favourite editor so that you can add the new action to the project.
+
+Add the following to the bottom of the file (after the `hello_world` action):
+
+```ruby
+desc 'Say Goodbye World' # if this line were omitted then this action would not be shown in `opschain-action -T`
+action :goodbye_world do
+  puts 'Goodbye World' # you could write any Ruby in here, but OpsChain provides a friendlier API in addition to this
+end
+```
+
+You can now manually run the new `goodbye_world` task in addition to the existing `hello_world` task:
+
+```bash
+$ opschain-action hello_world goodbye_world
+Hello World
+Goodbye World
+```
+
+Add the following to the `actions.rb` file to configure the project to run both of these actions as the default action (eg when you don't specify which action to run):
+
+```ruby
+action default: [ :hello_world, :goodbye_world ]
+```
+
+You can now run the default action:
+
+```bash
+$ opschain-action
+Hello World
+Goodbye World
+```
+
+Commit the changes to the `actions.rb` file to allow them to be used via the OpsChain server:
+
+```bash
+$ git add actions.rb
+$ git commit -m "Add a Goodbye action and run hello_world and goodbye_world by default."
 ```
 
 See the [Actions Reference Guide](reference/actions.md) and the [Developing Your Own Resources](developing_resources.md) guide for further information about the `actions.rb` file structure and contents.
 
-### Create a Change
+### Return to the OpsChain Release Directory
 
-Create a change to run the `default` action, from the latest commit in the _Payables Team_ Git repository, in the _Payables Team_'s Development environment:
+Return to the `opschain-release` repository directory to continue following this guide:
 
 ```bash
-$ opschain change create --project_id $project_id --environment_code dev_p --commit_ref HEAD --action default --confirm
+$ cd ../../..
 ```
 
-The [steps](reference/concepts.md#step) that comprise the change will be shown as well as their status.
+## Creating an OpsChain Change
 
-Manually copy and set the change ID as a variable, you'll need it for the next steps:
+You can use the OpsChain CLI to create a new [change](reference/concepts.md#change). A change runs an action (which may have dependent actions or steps) on the OpsChain server.
+
+The OpsChain CLI (`opschain`) can be used to interact with an OpsChain server instance. In these examples the server is running on your local machine but in most installations will be installed in a central location and shared.
+
+### Running the Hello World Action via a Change
+
+You can use the `opschain change create` command to run the sample `hello_world` action as follows:
 
 ```bash
-$ change_id=XXXXX
+# the `hello_world` can be changed to `default` (or even `''`) if you followed the `Adding a New Action` steps
+$ opschain change create --project_id $project_id --environment_code dev --commit_ref HEAD --action hello_world --confirm
 ```
 
-### Display Change Status
+This will run the change using an OpsChain runner which has been started and managed by an OpsChain worker - a part of the OpsChain server.
 
-The information displayed in the table after submitting a [change](reference/concepts.md#change) can be displayed at any time by running the `change show` command.
+This command will show you an overview of the action as it executes. It will not show the `hello_world` task output because it has been sent to the OpsChain log aggregator.
+
+To see the output you can use the `opschain change logs-show` command as follows:
 
 ```bash
+$ opschain change logs-show --change_id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace with the ID from the `change create` output
+```
+
+If you ever need to revisit the status of a change you can use the change list and change show commands:
+
+```bash
+$ opschain change list --project_id $project_id --environment_code dev # if you need to find out about other changes
 $ opschain change show --change_id $change_id
-```
-
-### Review the Change Logs
-
-Review the output produced by the [steps](reference/concepts.md#step) in your [change](reference/concepts.md#change).
-
-```bash
-$ opschain change logs-show --change_id $change_id
 ```
 
 ## What to Do Next
 
-### See Properties Override In Action
+### Learn More About OpsChain Actions
 
-Note that the `Payables Team` [project](reference/concepts.md#project) and `dev_p` [environment](reference/concepts.md#environment) include values for `test/some_property` and the `sit_p` environment does not.  Compare the [properties](reference/properties.md) displayed in the [change](reference/concepts.md#change) logs when the [change](reference/concepts.md#change) is executed against these two [environments](reference/concepts.md#environment).
+Follow the [Actions Reference Guide](reference/actions.md) and add more advanced actions to the sample [project](reference/concepts.md#project).
 
-```bash
-$ opschain change create --project_id $project_id --environment_code dev_p --commit_ref master --action default --confirm
-$ opschain change create --project_id $project_id --environment_code sit_p --commit_ref master --action default --confirm
-```
-
-### Change Some Properties
+### Learn More About OpsChain Properties
 
 Follow the [Loading Properties](reference/properties.md#loading-properties) guide to try editing some [project](reference/concepts.md#project) or [environment](reference/concepts.md#environment) properties.
 
 ### Try a More Advanced Example
 
-The [Confluent Example](running_a_complex_change.md) documentation provides an example of using OpsChain to build and deploy a confluent control-centre, zookeeper and brokers (as Docker containers).
+- The [Terraform Example](running_a_simple_terraform_change.md) demonstrates how to use OpsChain with Terraform to build a simple Nginx Docker container
+- The [Confluent Example](running_a_complex_change.md) demonstrates how to use OpsChain to build and deploy a confluent control-centre, zookeeper and brokers (as Docker containers)
 
 ### Try Developing Your Own Resources
 

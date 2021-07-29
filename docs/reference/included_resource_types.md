@@ -60,6 +60,8 @@ Requiring `opschain-terraform` provides the `terraform_config` Resource Type. Th
 
 Please see the [RubyTerraform README](https://github.com/infrablocks/ruby_terraform/blob/v0.64.0/README.md#usage) for further information about each action.
 
+_Note: RubyTerraform supplies `vars` to Terraform on the command line via multiple `-var` parameters.  OpsChain overrides this logic by placing the [Input Variables](https://www.terraform.io/docs/language/values/variables.html) in a [var file](https://www.terraform.io/docs/language/values/variables.html#variable-definitions-tfvars-files) and supplying this to Terraform via the `-var-file` parameter to avoid encountering any command line length issues._
+
 ### Prerequisites
 
 `opschain-terraform` does not include the Terraform binary. Customers wishing to use the Resource Type will need to install Terraform in their Project's Step Runner.  This can be done by using a [Custom Step Runner Dockerfile](../developing_resources.md#custom-step-runner-dockerfiles), an example of this can be found in the [OpsChain Confluent Example](https://github.com/LimePoint/opschain-examples-confluent/blob/75473f7fbac4150b3d5c583dfc52c6b22044552f/.opschain/Dockerfile#L8).
@@ -80,9 +82,11 @@ _Note: Resources can override these values if required_
 
 The Terraform `TF_IN_AUTOMATION` environment variable is automatically configured when running `terraform_config` actions.  This will indicate to Terraform that there is some wrapping application executing terraform and cause it to make adjustments to its output to de-emphasize specific commands to run next.  For further information see [Controlling Terraform Output in Automation](https://learn.hashicorp.com/tutorials/terraform/automate-terraform#controlling-terraform-output-in-automation).
 
-### Example
+## Examples
 
-The [Confluent OpsChain Example Project](https://github.com/LimePoint/opschain-examples-confluent) demonstrates how these Resource Types can be used.
+The [OpsChain Terraform Example Project](https://github.com/LimePoint/opschain-examples-terraform) demonstrates how the OpsChain Terraform Resource Type can be used.
+
+The [OpsChain Confluent Example Project](https://github.com/LimePoint/opschain-examples-confluent) demonstrates how the OpsChain Infrastructure and OpsChain Terraform Resource Types can be used together.
 
 # Licence & Authors
 - Author:: LimePoint (support@limepoint.com)

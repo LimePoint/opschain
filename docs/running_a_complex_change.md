@@ -14,7 +14,7 @@ After following this guide you should know how to:
 Create a new project:
 
 ```bash
-$ opschain project create --name 'Demo Project' --description 'My demo project' --confirm
+$ opschain project create --name 'Demo Confluent Project' --description 'My demo Confluent project' --confirm
 ```
 
 Verify that your new project appears in the list:
@@ -53,28 +53,7 @@ $ environment_code=local
 
 ### Add the Confluent Example as a Remote to the Project Git Repository
 
-#### Create a Github Personal Access Token
-
-If you choose to use your Github username and password when connecting the example repository, you will see warnings displayed whenever OpsChain accesses the repository. Alternatively, follow the Github guide to create a [Github personal access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
-
-#### Set the Project Git Remote
-
-Add the OpsChain Confluent example Git repository as a [remote](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes):
-
-```bash
-# Note: to avoid potentially storing the repository credentials in the shell history the `--url` argument can be omitted and filled in when prompted
-$ opschain project git-remote-set -p $project_id --name origin --url "https://{username}:{password / personal access token}@github.com/LimePoint/opschain-examples-confluent.git"
-```
-
-#### Project Git Repository Remote Credentials
-
-To be used by OpsChain, the remote must be either:
-- An unauthenticated Git remote.
-- A http(s) authenticated Git remote where the username and password are embedded in the remote URL. For example `https://username:password@github.com/LimePoint/opschain-examples-confluent`.
-
-OpsChain does not support any other authentication mechanisms for Git remotes.
-
-_Using SSH keys for authentication is not supported however some users have reported success with this [unsupported workaround](troubleshooting.md#git-remotes-with-ssh-authentication)._
+Follow [Adding a Project Git Repository as a Remote](reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the OpsChain Confluent Example repository remote URL `https://username:password@github.com/LimePoint/opschain-examples-confluent.git`.
 
 ### Fetch the Latest Confluent Example Code
 
@@ -154,6 +133,8 @@ Create a new change for the current `origin/master` branch of your project and r
 $ opschain change create --project_id $project_id --environment_code local --commit_ref origin/master --action default --confirm
 ```
 
+The [steps](reference/concepts.md#step) that comprise the change will be shown as well as their status.
+
 _Note: the first step in this change may take a long time as it downloads a Centos Docker image as well as installation executables for Java and Confluent. Subsequent runs will use Docker's  layer caching feature and should not require these to be re-downloaded._
 
 Manually copy and set the change ID as a variable, you'll need it for the next steps:
@@ -162,9 +143,7 @@ Manually copy and set the change ID as a variable, you'll need it for the next s
 $ change_id=XXXXX
 ```
 
-**Refer to the terminal running the server to see the details of the change (including any failures).**
-
-The [steps](reference/concepts.md#step) that comprise the change will be shown as well as their status.
+**Use the `opschain change logs-show` command to see the log output from the change (including any failures).**
 
 ### Verify Change Deployment
 
@@ -223,7 +202,7 @@ More detailed information about the specific versions of environment and project
 The repository includes two Dockerfiles
 
 1. The `Dockerfile` in `.opschain` builds a custom OpsChain Step Runner image that includes
-    - The Terraform binary required for the `terraform_config` resource_type
+    - The Terraform binary required for the `terraform_config` resource type
     - The JRE Installer required for the Confluent containers
     - The Confluent Installer required for the Confluent containers
 

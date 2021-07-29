@@ -8,6 +8,10 @@ OpsChain enables you to connect, automate and orchestrate processes and tools ac
 
 Install your OpsChain environment and run a simple change.
 
+## [Running a Simple Terraform Change](running_a_simple_terraform_change.md)
+
+Run a simple change using our example Terraform project.
+
 ## [Running a Complex Change](running_a_complex_change.md)
 
 Run a more complex change using our example [Confluent](https://www.confluent.io) project.
