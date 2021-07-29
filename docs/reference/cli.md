@@ -1,5 +1,29 @@
 # OpsChain CLI reference
 
+## OpsChain native CLI
+
+The `opschain` command in the `opschain-release` repository uses a Docker container to run the OpsChain CLI. As such this command requires the host have a working Docker installation. As an alternative, OpsChain offers native builds of the OpsChain CLI for Windows, macOS and Linux.
+
+The native binary offers several benefits over the Docker command:
+
+- the host does not need to have Docker installed
+- better startup performance
+- the binary can be distributed to users that do not have access to the `opschain-release` repository
+- the `cli-files` directory does not need to be used - any files can be used directly
+
+The native binary can be downloaded from the `opschain-release` repository on [GitHub](https://github.com/LimePoint/opschain-release/releases). Ensure the native build matches the version of OpsChain that you are using.
+
+After downloading the binary you may need to make it executable (this is required on macOS or Linux):
+
+```bash
+chmod +x opschain*
+```
+
+Please note that:
+
+- the native binaries are currently a release preview and offer support for the latest version of the respective OS on a best effort basis (older versions of the respective OS may work)
+- unlike the OpsChain CLI container, you will need to manually update the native binary whenever you upgrade your OpsChain installation
+
 ## OpsChain CLI configuration
 
 The OpsChain CLI uses an `.opschainrc` configuration file. If `.opschainrc` is present in the current working directory it is used, otherwise, the `.opschainrc` from the user's home directory is used.

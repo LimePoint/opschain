@@ -17,6 +17,8 @@ Then OpsChain can be started again:
 docker-compose up # or systemctl --user start opschain.service if running OpsChain as a systemd service
 ```
 
+If you are using the OpsChain CLI native binaries then these should be [downloaded](../reference/cli.md#opschain-native-cli) for the current version.
+
 ## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)

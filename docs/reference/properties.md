@@ -186,7 +186,7 @@ OpsChain file properties are written to the working directory prior to the step 
         "mode": "0600",
         "content": "contents of the file"
       },
-      "/full/path/to/file2.json": {
+      "~/path/to/file2.json": {
         "content": {
           "json": "file",
           "values": "here"
@@ -198,7 +198,7 @@ OpsChain file properties are written to the working directory prior to the step 
 }
 ```
 
-Each file property key is an absolute path and represents the location the file will be written to. Each file property value can include the following attributes:
+Each file property key is an absolute path (or will be [expanded](https://docs.ruby-lang.org/en/2.7.0/File.html#method-c-expand_path) to one) and represents the location the file will be written to. Each file property value can include the following attributes:
 
 Attribute | Description
 :-------- | :-------------------------------------------
@@ -248,9 +248,17 @@ To remove a file from the environment properties
   OpsChain.environment.remove_file!('/file/to/store.txt')
 ```
 
-#### Setting files example
+#### Optional file format
 
-An example of setting files can be seen in the [Confluent example](https://github.com/LimePoint/opschain-examples-confluent).
+The `store_file!` method accepts an optional `format:` parameter, allowing you to specify the [file format](#file-formats) OpsChain should use when adding the file into the file properties. For example:
+
+```ruby
+  OpsChain.environment.store_file!('/file/to/store.txt', format: :base64)
+```
+
+#### Storing files examples
+
+Examples of storing files can be seen in the [Confluent example](https://github.com/LimePoint/opschain-examples-confluent).
 
 - The `generate_keys` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store generated SSH keys in the environment properties (for use later when building the base image for the Confluent servers
 - The `provision` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store the terraform.tfstate file in the environment properties (to ensure the terraform state is available to future runs)

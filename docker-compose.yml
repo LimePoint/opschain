@@ -55,6 +55,9 @@ services:
       - opschain-network
     ports:
       - "${OPSCHAIN_LOG_AGGREGATOR_PORT_MAPPING}" # must be exposed to docker host logging driver
+    volumes:
+      - ${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/plugin:/etc/fluent/plugin
+      - ${OPSCHAIN_DATA_DIR}/opschain_log_aggregator:/opschain
     env_file:
       - .env
     healthcheck:

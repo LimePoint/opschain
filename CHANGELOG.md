@@ -1,5 +1,20 @@
 # Changelog
 
+## [2021-07-19]
+
+### Added
+
+- OpsChain change logs can now be [forwarded to external storage](docs/operations/log_forwarding.md).
+- OpsChain change logs can now be [cleaned up automatically](docs/operations/change_log_retention.md).
+- When defining dependent steps in the OpsChain DSL the step name is now automatically qualified with the current namespace.
+- **Feature preview** - the platform native builds of the OpsChain CLI can now be [downloaded directly](docs/reference/cli.md#opschain-native-cli).
+
+### Changed
+
+- File property paths are now [expanded](https://docs.ruby-lang.org/en/2.7.0/File.html#method-c-expand_path) before being written.
+- Running the `configure` script no longer removes unknown configuration options.
+- Any resources included in the value supplied to the `properties` resource DSL will have their controller assigned to the relevant property rather than the resource itself. This makes `properties` match the existing functionality for individually set properties.
+
 ## [2021-07-08]
 
 ### Added

@@ -65,6 +65,18 @@ validate_settings() {
   confirm_workers
 }
 
+read_configuration_keys() {
+  for file in "$@"; do
+    if [ -e "$file" ]; then
+      while IFS='=' read -r var _; do
+        if ! [[ $var =~ $blank_line || $var =~ $comment_line ]]; then
+          echo "$var"
+        fi
+      done < "$file"
+    fi
+  done | awk '!a[$0]++'
+}
+
 save_settings() {
   local lp_env_file example_env_file env_file_contents
   lp_env_file="$1"
@@ -74,11 +86,9 @@ save_settings() {
   comment_line="^#"
 
   # use example env file as a template, accumulate key=value pairs
-  while IFS='=' read -r var _; do
-    if ! [[ $var =~ $blank_line || $var =~ $comment_line ]]; then
-      env_file_contents="${env_file_contents}${var}=${!var}\n"
-    fi
-  done < "${example_env_file}"
+  for var in $(read_configuration_keys "${example_env_file}" "${lp_env_file}"); do
+    env_file_contents="${env_file_contents}${var}=${!var@Q}\n"
+  done
 
   echo -e "${env_file_contents}" > "${lp_env_file}"
   chmod 600 "${lp_env_file}"
@@ -120,6 +130,8 @@ confirm_data_path() {
   create_directory "${OPSCHAIN_DATA_DIR}/opschain_ldap/ldap"
   create_directory "${OPSCHAIN_DATA_DIR}/opschain_ldap/slapd.d"
   create_directory "${OPSCHAIN_DATA_DIR}/opschain_auth"
+  create_directory "${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/plugin"
+  create_directory "${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/bundler"
   cp -n opschain_auth.tmpl/* "${OPSCHAIN_DATA_DIR}/opschain_auth"
 }
 

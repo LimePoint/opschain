@@ -383,7 +383,7 @@ city :melbourne do
 end
 ```
 
-These actions can have prerequisites and initiate subsequent steps like normal actions however you must refer to them using the fully qualified action name:
+These actions can have prerequisites and initiate subsequent steps like normal actions:
 
 ```ruby
 city :melbourne do
@@ -397,7 +397,7 @@ city :melbourne do
     puts 'seeing music'
   end
 
-  action :visit, steps: ['melbourne:get_coffee', 'melbourne:see_music']
+  action :visit, steps: ['get_coffee', 'see_music']
 end
 ```
 
