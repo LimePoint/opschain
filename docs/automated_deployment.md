@@ -90,7 +90,7 @@ Running `opschain change automated-deployment-create --help` will show details o
 
 Try creating a scheduled deployment rule by following the same concepts demonstrated in this guide.
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

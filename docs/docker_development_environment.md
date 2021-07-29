@@ -102,11 +102,33 @@ $ opschain-action sample:hello_world_1:run # just run the child step
 $ opschain-action hello_world sample:hello_world_1:run # run the original step and the child step in sequence
 ```
 
+## Using Custom Runner Images
+
+After a custom runner image has been built by a change, it can be used by the OpsChain development environment. _Note: To build the image without running an action, simply create a change to run an action that is not in your `actions.rb`_.
+
+The custom runner image IDs can be found by querying Docker for the relevant change ID:
+
+```
+$ docker image ls --filter 'label=opschain.change_id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
+```
+
+Docker will list the image(s) used by that change. _Note: If multiple images are used by a change, we suggest trying them in order (most recently created first) until you identify the image you need.
+
+Copy the image ID and use it when starting the OpsChain Docker development environment:
+
+```
+$ export OPSCHAIN_RUNNER_IMAGE=db25da0dcc7f # just an example, yours will be different
+$ export OPSCHAIN_RUNNER_IMAGE=$(docker image ls --quiet --filter 'label=opschain.change_id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' | head -n 1) # alternative, just use the latest image
+$ opschain-dev # or opschain-action, as before
+```
+
+You are now in the OpsChain development environment with the current directory mounted to /opt/opschain rather than the repository as the change used.
+
 ## What to Do Next
 
 Try [Developing Your Own Resources](developing_resources.md)
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

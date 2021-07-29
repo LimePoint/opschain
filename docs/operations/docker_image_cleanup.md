@@ -1,4 +1,4 @@
-# System Maintenance
+# OpsChain Docker Image Cleanup
 
 As part of regular system maintenance it is recommended that the OpsChain runner images are regularly pruned to limit disk usage. After following this guide you should know how to:
 - remove older OpsChain images
@@ -28,7 +28,7 @@ The change ID is shown during change creation. The following command will remove
 $ docker image prune --filter 'label=opschain.change_id=abc123'
 ```
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../LICENCE)
+See [LICENCE](../../LICENCE)

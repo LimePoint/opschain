@@ -27,7 +27,7 @@ OpsChain does not support any other authentication mechanisms for Git remotes.
 
 _Using SSH keys for authentication is not supported however some users have reported success with this [unsupported workaround](troubleshooting.md#git-remotes-with-ssh-authentication)._
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

@@ -1,5 +1,15 @@
 # Changelog
 
+## [2021-06-01]
+
+### Added
+- The ability to use custom Runner images in the OpsChain Docker development environment. Note that the custom Runner image must have been built as part of an OpsChain change.
+  - **This change requires the `configure` script to be rerun.**
+- The OpsChain CLI now inherits environment variables. This allows using environment variables to override CLI config or to configure http(s) proxies. Find out more in our [CLI reference](docs/reference/cli.md).
+- [OpsChain Operations Guides](docs/operations).
+  - [OpsChain Rootless Docker Install](docs/operations/rootless_install.md) documentation.
+  - [OpsChain Backups](docs/operations/backups.md) documentation.
+
 ## [2021-05-26]
 
 ### Added
@@ -109,7 +119,7 @@
 
 ### Added
 - Automatically expose [Controller Actions and Properties](docs/reference/actions.md#controller-actions-and-properties) in resource types and resources.
-- [upgrading.md](docs/upgrading.md) documentation.
+- [upgrading.md](docs/operations/upgrading.md) documentation.
 
 ### Changed
 - Upgraded OpsChain Log Aggregator Image Fluentd from version 1.11 to 1.12.1

@@ -262,7 +262,7 @@ Each [step](concepts.md#step) [action](concepts.md#action) is executed using the
 
 An example of setting Environment Variables can be seen in the [Confluent Example](https://github.com/LimePoint/opschain-examples-confluent). The [`environment_properties.json`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/environment_properties.json) includes the `TF_IN_AUTOMATION` environment variable to instruct Terraform that it is running in non-human interactive mode.
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

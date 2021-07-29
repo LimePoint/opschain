@@ -13,4 +13,6 @@ fi
 CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
 cd ..
 
-exec docker-compose run --rm opschain-cli "$@"
+env_vars="$(printf ' -e %s ' $(compgen -e))"
+
+exec docker-compose run ${env_vars} --rm opschain-cli "$@"

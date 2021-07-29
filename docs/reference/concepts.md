@@ -108,7 +108,7 @@ A controller is a ruby object that can be configured via properties and provides
 
 An example controller is shown in the [Actions Reference Guide](actions.md#controller).
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

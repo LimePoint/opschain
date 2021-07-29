@@ -132,7 +132,7 @@ If an OpsChain user is assigned to multiple LDAP groups, the user is restricted 
     _Note: Changes POSTed to the server that are not replicated in the `security_configuration.json` file will be lost on OpsChain restart._
 2. Issuing a GET request to the `http://localhost:8181/v1/data` endpoint will return the current configuration.
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

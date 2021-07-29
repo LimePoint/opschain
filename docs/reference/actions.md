@@ -620,7 +620,7 @@ OpsChain relies on configuration done as part of the `limepoint/opschain-runner`
 Learn about the [Docker Development Environment](../docker_development_environment.md)
 Try [Developing Your Own Resources](../developing_resources.md)
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

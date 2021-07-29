@@ -102,7 +102,7 @@ The example makes use of the [Terraform Docker Provider](https://www.terraform.i
 
 Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [Reference Documentation](reference/index.md) and [Developing Your Own Resources](developing_resources.md) guide for more information.
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

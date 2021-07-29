@@ -129,10 +129,20 @@ services:
   # for pulling updates and as a step development tool
   opschain-runner-devenv:
     scale: 0
-    image: limepoint/opschain-runner:${OPSCHAIN_IMAGE_TAG}
+    image: ${OPSCHAIN_RUNNER_IMAGE}
     env_file:
       - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
     volumes:
       - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
     networks:
       - opschain-runner-network
+  # an operations tool in rootless installs
+  opschain-ops:
+    scale: 0
+    image: centos:centos8
+    env_file:
+      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
+    volumes:
+      - ${OPSCHAIN_DATA_DIR}:/opschain_data
+      - .:/opschain-release
+    command: /bin/bash

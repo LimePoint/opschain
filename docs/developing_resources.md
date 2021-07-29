@@ -138,7 +138,7 @@ _Note: Commits before this point won't use the custom Dockerfile because it is n
 
 
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

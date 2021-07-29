@@ -84,7 +84,7 @@ The [OpsChain AWS Ansible Example Project](https://github.com/LimePoint/opschain
 
 The [OpsChain Confluent Example Project](https://github.com/LimePoint/opschain-examples-confluent) demonstrates how the OpsChain Infrastructure and OpsChain Terraform Resource Types can be used together.
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

@@ -130,6 +130,7 @@ The OpsChain API server requires a valid username and password. To create a user
 ```bash
 $ opschain-utils "create_user['opschain','password']"
 ```
+
 ### Create an OpsChain CLI Configuration File
 
 Copy the example CLI configuration file to your home directory:
@@ -307,7 +308,7 @@ The [Developing Your Own Resources](developing_resources.md) guide explains the 
 
 The [Reference Documentation](reference/index.md) provides in-depth descriptions of many of the features available in OpsChain.
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

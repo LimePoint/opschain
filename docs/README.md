@@ -36,23 +36,19 @@ Learn the basics of developing your own resources.
 
 OpsChain concepts, system architecture, actions and properties.
 
-## [System Maintenance](system_maintenance.md)
+## [Operations Guides](operations/)
 
-General information about regular maintenance tasks to run (or schedule) on your OpsChain host.
+Operations guides for OpsChain, including installation and upgrade guides.
 
 ## [Troubleshooting](troubleshooting.md)
 
 Known issues and solutions.
 
-## [Upgrading](upgrading.md)
-
-Upgrading OpsChain to the latest release.
-
 ## [Changelog](../CHANGELOG.md)
 
 New features, bug fixes and changes in OpsChain.
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

@@ -105,7 +105,7 @@ This will start the runner container as root, so you can install any packages yo
 
 You can now use the `opschain-action` command per the instructions in the [Developing Your Own Resources](developing_resources.md) guide.
 
-# Licence & Authors
+## Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)
