@@ -538,7 +538,7 @@ The `steps/children` value contains the child steps (and execution strategy) the
 
 ### Overview
 
-OpsChain runs all steps using Docker containers. By default these containers use a Centos-based image that provides the MintPress Controller Gems with an associated Ruby installation, the standard Centos base development tooling, and Terraform. The image used by the step container is built as part of every step's execution and relies on Docker build caching functionality to keep this performant.
+OpsChain runs all steps using Docker containers. By default these containers use a Centos-based image that provides the MintPress Controller Gems with an associated Ruby installation and the standard Centos base development tooling. The image used by the step container is built as part of every step's execution and relies on Docker build caching functionality to keep this performant.
 
 If your resources or actions rely on external software the image used for these containers can be modified to add extra packages or executables. The image may also be modified to optimise the performance of build steps by performing tasks as part of the step image build rather than as part of the Step execution.
 

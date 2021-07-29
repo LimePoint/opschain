@@ -1,0 +1,90 @@
+# Included Resource Types
+
+A collection of Resource Types come pre-installed on the OpsChain Step Runner image, this guide covers what they are and how to use them.
+
+
+## Resource Type Summary
+
+The table below outlines the file to `require` in your resource definition and the Resource Types that will become available.
+
+| Require                   | Resource Type      | Description                          |
+| :------------------------ | :-------------------- | :----------------------------------- |
+| `opschain-infrastructure` | `infrastructure_host` | Exposes the [`MintPress::Infrastructure::Host` controller](https://docs.limepoint.com/reference/ruby/MintPress/Infrastructure/Host.html) |
+|                           | `transport_factory`   | Exposes the [`MintPress::Infrastructure::TransportFactory` controller](https://docs.limepoint.com/reference/ruby/MintPress/Infrastructure/TransportFactory.html) |
+| `opschain-terraform`      | `terraform_config`    | Exposes the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/tree/v0.64.0) gem |
+
+_Note: Contact [LimePoint](mailto:opschain@limepoint.com) to obtain the password required to access the MintPress Reference Documentation._
+
+### Usage
+
+The Resource Types are pre-installed in the OpsChain Step Runner Image via the `opschain-resource-types` gem.  To use them, simply add the following line to your `Gemfile` in your Project Git Repository:
+```ruby
+gem 'opschain-resource-types'
+```
+
+Then in your `actions.rb` (or wherever you define your resources) add:
+
+```ruby
+# replace 'opschain-infrastructure' with the relevant value from the "Require" column in the table above
+require 'opschain-infrastructure'
+
+# replace transport_factory with the required resource type from the "Resource Type" column in the table above
+transport_factory :my_transport_factory do
+  ...
+end
+```
+
+## OpsChain Infrastructure
+
+Requiring `opschain-infrastructure` currently provides a minimal set of Resource Types (with minimal actions and properties exposed) for the [Confluent OpsChain Example Project](https://github.com/LimePoint/opschain-examples-confluent).  More support will be added over time.
+
+## OpsChain Terraform
+
+Requiring `opschain-terraform` provides the `terraform_config` Resource Type. The Resource Type will accept any of the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/blob/v0.64.0/README.md) command arguments as properties, but will only pass those supported by the command when the action is invoked.
+
+| Action        | Properties used |
+| :------------ | :-------------- |
+| init          | from_module, path, backend, get, backend_config, no_color, plugin_dir |
+| get           | directory, update, no_color |
+| plan          | directory, vars, var_file, var_files, target, targets, state, plan, input, destroy, no_color |
+| apply         | directory, vars, var_file, var_files, target, targets, state, backup, input, no_backup, no_color, auto_approve |
+| show          | path, no_color, module_depth, json |
+| destroy       | directory, vars, var_file, var_files, target, targets, state, force, backup, no_backup, no_color |
+| output        | name, state, no_color, module |
+| refresh       | directory, vars, var_file, var_files, target, targets, state, input, no_color |
+| import        | directory, address, id, vars, var_file, var_files, input, state, no_backup, backup, no_color |
+| remote_config | backend, backend_config, no_color |
+| format        | directory, recursive, list, write, check, diff, no_color |
+| validate      | directory, vars, var_file, var_files, no_color, check_variables, json |
+| workspace     | directory, operation, workspac |
+
+Please see the [RubyTerraform README](https://github.com/infrablocks/ruby_terraform/blob/v0.64.0/README.md#usage) for further information about each action.
+
+### Prerequisites
+
+`opschain-terraform` does not include the Terraform binary. Customers wishing to use the Resource Type will need to install Terraform in their Project's Step Runner.  This can be done by using a [Custom Step Runner Dockerfile](../developing_resources.md#custom-step-runner-dockerfiles), an example of this can be found in the [OpsChain Confluent Example](https://github.com/LimePoint/opschain-examples-confluent/blob/75473f7fbac4150b3d5c583dfc52c6b22044552f/.opschain/Dockerfile#L8).
+
+### Command Argument Defaults
+
+Default values will be supplied for the following RubyTerraform command arguments:
+
+| parameter    | default value | description |
+| :----------- | :------------ | :---------- |
+| directory    | `pwd`         | The root directory of your Project Git Repository within the OpsChain Step Runner. |
+| input        | false         | Indicates that Terraform should not attempt to prompt for input, and instead expect all necessary values to be provided by either configuration files or the command line. |
+| auto_approve | true          | Indicates that Terraform should not require interactive approval before applying a plan.|
+
+_Note: Resources can override these values if required_
+
+### Terraform Automation Environment Variable
+
+The Terraform `TF_IN_AUTOMATION` environment variable is automatically configured when running `terraform_config` actions.  This will indicate to Terraform that there is some wrapping application executing terraform and cause it to make adjustments to its output to de-emphasize specific commands to run next.  For further information see [Controlling Terraform Output in Automation](https://learn.hashicorp.com/tutorials/terraform/automate-terraform#controlling-terraform-output-in-automation).
+
+### Example
+
+The [Confluent OpsChain Example Project](https://github.com/LimePoint/opschain-examples-confluent) demonstrates how these Resource Types can be used.
+
+# Licence & Authors
+- Author:: LimePoint (support@limepoint.com)
+
+See [LICENCE](../../LICENCE)

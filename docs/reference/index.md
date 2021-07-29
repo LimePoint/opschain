@@ -16,6 +16,10 @@ An in-depth guide to the terminology used to define actions, resources and resou
 
 An in-depth guide to the OpsChain Properties framework.
 
+## [Included Resource Types](included_resource_types.md)
+
+A summary of the pre-defined Resource Types.
+
 # Licence & Authors
 - Author:: LimePoint (support@limepoint.com)
 

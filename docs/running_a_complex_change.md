@@ -223,10 +223,11 @@ More detailed information about the specific versions of environment and project
 The repository includes two Dockerfiles
 
 1. The `Dockerfile` in `.opschain` builds a custom OpsChain Step Runner image that includes
+    - The Terraform binary required for the `terraform_config` resource_type
     - The JRE Installer required for the Confluent containers
     - The Confluent Installer required for the Confluent containers
 
-2. The `Dockerfile` in the repository root is based off a Centos 7 image and defines the image that is used as the basis for the Confluent containers. This image is built as part of the `provision` action, copying the installers from the custom Step Runner and installing the dynamically generated SSH keys.
+2. The `Dockerfile` in the repository root is based off a Centos image and defines the image that is used as the basis for the Confluent containers. This image is built as part of the `provision` action, copying the installers from the custom Step Runner and installing the dynamically generated SSH keys.
 
 ### OpsChain Runner Network
 
