@@ -1,0 +1,123 @@
+version: '2.4'
+
+networks:
+  opschain-network:
+    name: opschain-network
+  opschain-runner-network:
+    name: opschain-runner-network
+services:
+  opschain-db:
+    image: limepoint/opschain-db:${OPSCHAIN_IMAGE_TAG}
+    environment:
+      PGHOST: ''
+      POSTGRES_DB: ${PGDB}
+      POSTGRES_USER: ${PGUSER}
+      POSTGRES_PASSWORD: ${PGPASSWORD}
+    volumes:
+      - ${OPSCHAIN_DB_DIR}:/var/lib/postgresql/data
+    networks:
+      - opschain-network
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${PGUSER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  opschain-ldap:
+    image: limepoint/opschain-ldap:${OPSCHAIN_IMAGE_TAG}
+    environment:
+      LDAP_ADMIN: ${OPSCHAIN_LDAP_ADMIN}
+      LDAP_ADMIN_PASSWORD: ${OPSCHAIN_LDAP_PASSWORD}
+      LDAP_READONLY_USER: "true"
+      LDAP_READONLY_USER_USERNAME: ${OPSCHAIN_LDAP_HC_USER}
+      LDAP_READONLY_USER_PASSWORD: ${OPSCHAIN_LDAP_HC_USER}
+      LDAP_DOMAIN: ${OPSCHAIN_LDAP_DOMAIN}
+      LDAP_BASE_DN: ${OPSCHAIN_LDAP_BASE_DN}
+      LDAP_ORGANIZATION: OpsChain
+      LDAP_LOG_LEVEL: 1024
+    command: --loglevel error
+    volumes:
+      - ${OPSCHAIN_LDAP_DIR}/ldap:/var/lib/ldap
+      - ${OPSCHAIN_LDAP_DIR}/slapd.d:/etc/ldap/slapd.d
+    networks:
+      - opschain-network
+    healthcheck:
+      test: ["CMD", "ldapsearch", "-x", "-b", "${OPSCHAIN_LDAP_BASE_DN}", "-D", "uid=${OPSCHAIN_LDAP_HC_USER},${OPSCHAIN_LDAP_BASE_DN}", "-w", "${OPSCHAIN_LDAP_HC_USER}", "uid=${OPSCHAIN_LDAP_HC_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  opschain-log-aggregator:
+    image: limepoint/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}
+    env_file:
+      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
+    ports:
+      - ${OPSCHAIN_LOG_AGGREGATOR_PORT}:24224 # must be exposed to docker host logging driver
+    networks:
+      - opschain-network
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:24220/api/plugins.json"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  opschain-api:
+    image: limepoint/opschain-api:${OPSCHAIN_IMAGE_TAG}
+    command: [ "bundle exec rake db:migrate && exec bundle exec rails s" ]
+    env_file:
+      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
+    depends_on:
+      opschain-db:
+        condition: service_healthy
+      opschain-ldap:
+        condition: service_healthy
+    ports:
+      - ${OPSCHAIN_API_PORT}:3000
+    volumes:
+      - ${OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR}:/opt/opschain/opschain_project_git_repos
+    networks:
+      - opschain-network
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:3000/healthcheck"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  opschain-api-worker:
+    image: limepoint/opschain-api:${OPSCHAIN_IMAGE_TAG}
+    command: [ "exec bundle exec rake jobs:work" ]
+    scale: ${OPSCHAIN_API_WORKER_SCALE}
+    env_file:
+      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
+    depends_on:
+      opschain-log-aggregator:
+        condition: service_healthy
+      opschain-api:
+        condition: service_healthy
+    volumes:
+      - ${OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR}:/opt/opschain/opschain_project_git_repos
+      - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
+    networks:
+      - opschain-network
+
+  opschain-cli:
+    scale: 0
+    image: limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG}
+    env_file:
+      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
+    volumes:
+      - ${OPSCHAINRC:-./opschainrc}:/.opschainrc
+      - ${WORKING_DIR:-.}/cli-files:/cli-files
+    networks:
+      - opschain-network
+
+  # for pulling updates and as a step development tool
+  opschain-runner-devenv:
+    scale: 0
+    image: limepoint/opschain-runner:${OPSCHAIN_IMAGE_TAG}
+    env_file:
+      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
+    volumes:
+      - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
+    networks:
+      - opschain-runner-network

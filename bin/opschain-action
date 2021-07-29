@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+working_dir="$(pwd)"
+
+# change to the directory containing the docker-compose.yml and the .env
+CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+cd ..
+
+exec docker-compose run --rm -v "${working_dir}:/opt/opschain" opschain-runner-devenv "$@"

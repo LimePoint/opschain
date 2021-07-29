@@ -1,0 +1,8 @@
+.env
+mintpress.licence
+opschain_db
+opschain_ldap
+opschain_project_git_repos
+cli-files
+
+docker-compose.override.yml

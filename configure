@@ -1,0 +1,262 @@
+#!/bin/bash
+set -eo pipefail
+
+# Most of the util functions in this file are called from within a subshell Eg.
+# myvar=$(<util function>).
+#
+# In the example above, any echo statements issued inside the util function end
+# up being assigned to myvar.  This is awkward if the functions wish to print
+# their error messages or in the case of yn() where it needs to print the
+# question the user is to respond to! To enable the util functions to send
+# messages to STDOUT or STDERR the following redirections are added.  The
+# print_msg function above can then use >&7 to print to stdout and >&8 to print
+# to stderr.
+exec 7>&1 8>&2
+
+print_msg() {
+  local echo_target
+  echo_target=7
+  if [ "$(eval echo \$$#)" == "ERR" ]; then
+    echo_target=8
+    set -- "${@:1:$(($# - 1))}"
+  fi
+  echo "$@" >&${echo_target}
+}
+
+yn() {
+  local lp_prompt
+  local l_answer l_ret_val l_regex
+
+  lp_prompt="$1"
+  l_regex='yes|no'
+
+  until [[ $l_ret_val =~ $l_regex ]]; do
+    print_msg -n "$lp_prompt"
+    read -r -n1 l_answer
+
+    case "$l_answer" in
+    y | Y) l_ret_val=yes ;;
+    n | N) l_ret_val=no ;;
+    *)
+      print_msg "" ERR
+      print_msg "Please try again - only y or n is permitted." ERR
+      ;;
+    esac
+  done
+
+  print_msg
+  echo "$l_ret_val"
+}
+
+load_saved_settings() {
+  local lp_env_file
+  lp_env_file="$1"
+
+  set -o allexport
+  [[ -f "$lp_env_file" ]] && source "$lp_env_file"
+  set +o allexport
+}
+
+validate_settings() {
+  confirm_socket_path
+  approve_socket
+  confirm_db_path
+  confirm_repo_path
+  confirm_ldap_path
+  confirm_port
+  confirm_workers
+}
+
+save_settings() {
+  local lp_env_file example_env_file env_file_contents
+  lp_env_file="$1"
+  example_env_file="$2"
+
+  blank_line="^[[:blank:]]*$"
+  comment_line="^#"
+
+  # use example env file as a template, accumulate key=value pairs
+  while IFS='=' read -r var _; do
+    if ! [[ $var =~ $blank_line || $var =~ $comment_line ]]; then
+      env_file_contents="${env_file_contents}${var}=${!var}\n"
+    fi
+  done < "${example_env_file}"
+
+  echo -e "${env_file_contents}" > "${lp_env_file}"
+  chmod 600 "${lp_env_file}"
+
+  echo "Configuration saved to ${lp_env_file}"
+}
+
+confirm_socket_path() {
+  local l_socket_path l_environment_socket_path
+
+  if [[ -z "$OPSCHAIN_DOCKER_SOCKET_PATH" ]]; then
+    l_environment_socket_path="${DOCKER_HOST#unix://}"
+    OPSCHAIN_DOCKER_SOCKET_PATH="${l_environment_socket_path:-/var/run/docker.sock}"
+  fi
+
+  print_msg -n "Where is your Docker socket file located? [${OPSCHAIN_DOCKER_SOCKET_PATH}]: "
+  read -r l_socket_path
+  l_socket_path="${l_socket_path:-${OPSCHAIN_DOCKER_SOCKET_PATH}}"
+
+  export OPSCHAIN_DOCKER_SOCKET_PATH="${l_socket_path}"
+
+  if ! [ -e "${OPSCHAIN_DOCKER_SOCKET_PATH}" ]; then
+    print_msg "${OPSCHAIN_DOCKER_SOCKET_PATH} does not appear to exist." ERR
+    print_msg "Please ensure that your Docker daemon is running." ERR
+    exit 2
+  fi
+}
+
+confirm_db_path() {
+  local l_db_path
+
+  print_msg -n "Where would you like the OpsChain database files stored? [${OPSCHAIN_DB_DIR}]: "
+  read -r l_db_path
+  l_db_path="${l_db_path:-${OPSCHAIN_DB_DIR}}"
+
+  export OPSCHAIN_DB_DIR="${l_db_path}"
+
+  ensure_path_exists "$OPSCHAIN_DB_DIR"
+}
+
+confirm_repo_path() {
+  local l_repo_path
+
+  print_msg -n "Where would you like the project git repositories stored? [${OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR}]: "
+  read -r l_repo_path
+  l_repo_path="${l_repo_path:-${OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR}}"
+
+  export OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR="${l_repo_path}"
+
+  ensure_path_exists "$OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR"
+}
+
+confirm_ldap_path() {
+  local l_ldap_path
+
+  print_msg -n "Where would you like the project ldap database files stored? [${OPSCHAIN_LDAP_DIR}]: "
+  read -r l_ldap_path
+  l_ldap_path="${l_ldap_path:-${OPSCHAIN_LDAP_DIR}}"
+
+  export OPSCHAIN_LDAP_DIR="${l_ldap_path}"
+
+  ensure_path_exists "$OPSCHAIN_LDAP_DIR"
+}
+
+ensure_path_exists() {
+  local check_path
+  check_path="${1}"
+
+  local l_proceed
+
+  while [ ! -d "${check_path}" ]; do
+    l_proceed="$(yn "The path ${check_path} doesn't exist - would you like to create it? ")"
+    if [ "${l_proceed}" == "yes" ]; then
+      echo "Creating ${check_path}..."
+      if ! mkdir -p "${check_path}" && chmod 777 "${check_path}"; then
+        echo "Failed to create ${check_path} - aborting configuration."
+        exit 2
+      fi
+      echo "${check_path} created successfully."
+    else
+      print_msg "Path must exist in order for OpsChain to work." ERR
+      exit 2
+    fi
+  done
+  echo
+}
+
+function to_int() {
+  local -i num="10#${1}"
+  echo "${num}"
+}
+
+get_integer() {
+  local lp_prompt lp_default
+  local -i lp_min lp_max
+  local l_value l_valid_value
+
+  lp_prompt="$1"
+  lp_min="$2"
+  lp_max="$3"
+  lp_default="$4"
+
+  l_valid_value='N'
+
+  while [ "${l_valid_value}" == 'N' ]; do
+    print_msg
+    print_msg -n "${lp_prompt} (${lp_min}-${lp_max})? [${lp_default}]: "
+    read -r l_value
+    l_value="${l_value:-${lp_default}}"
+
+    int_check=$(to_int "${l_value}" 2>/dev/null)
+
+    if ((int_check < lp_min || int_check > lp_max)); then
+      print_msg "${l_value} is not a valid value - it must be between ${lp_min} and ${lp_max}." ERR
+    else
+      l_valid_value='Y'
+    fi
+  done
+
+  echo "$l_value"
+
+}
+
+confirm_port() {
+  export OPSCHAIN_API_PORT=$(get_integer "Which available port would you like the OpsChain server to listen on" 1 65535 "${OPSCHAIN_API_PORT:-3000}")
+}
+
+confirm_workers() {
+  export OPSCHAIN_API_WORKER_SCALE=$(get_integer "How many OpsChain worker nodes would you like to run (will limit how many actions can run in parallel)" 1 50 "${OPSCHAIN_API_WORKER_SCALE:-2}")
+}
+
+approve_socket() {
+  print_msg
+  print_msg "OpsChain requires access to your host Docker daemon to function."
+  print_msg "This is achieved by volume mapping ${OPSCHAIN_DOCKER_SOCKET_PATH} from the host into the running container."
+  print_msg
+  if [ "$(yn "Do you approve of this mapping being added? ")" != "yes" ]; then
+    print_msg "You must approve this in order to use OpsChain." ERR
+    exit 2
+  fi
+  echo
+}
+
+load_mintpress_licence() {
+  licence_file="mintpress.licence"
+  if [ -e "${licence_file}" ]; then
+    MINTPRESS_SDK_LICENCE_BASE64="$(base64 < "${licence_file}")"
+    # remove whitespace to avoid breaking encoded licence
+    MINTPRESS_SDK_LICENCE_BASE64="${MINTPRESS_SDK_LICENCE_BASE64//[$'\t\r\n ']}"
+    print_msg "Loaded MintPress licence from ${licence_file}"
+    export MINTPRESS_SDK_LICENCE_BASE64
+  else
+    print_msg "Unable to load the MintPress licence from ${licence_file}" ERR
+    exit 2
+  fi
+}
+
+generate_secrets() {
+  OPSCHAIN_ENCRYPTION_KEY=${OPSCHAIN_ENCRYPTION_KEY:-$(openssl rand -hex 32)}
+  OPSCHAIN_LDAP_PASSWORD=${OPSCHAIN_LDAP_PASSWORD:-$(openssl rand -hex 8)}
+  OPSCHAIN_CREATE_LOGS_API_PASSWORD=${OPSCHAIN_CREATE_LOGS_API_PASSWORD:-$(openssl rand -hex 8)}
+}
+
+set_permissions_ids() {
+  OPSCHAIN_UID=${OPSCHAIN_UID:-$(id -u)}
+  OPSCHAIN_GID=${OPSCHAIN_GID:-$(id -g)}
+  echo "OpsChain will run as $OPSCHAIN_UID:$OPSCHAIN_GID (your current user:group)"
+}
+
+example_env_file=".env.example"
+
+load_saved_settings "${example_env_file}"
+load_saved_settings ".env"
+load_mintpress_licence
+generate_secrets
+set_permissions_ids
+
+validate_settings
+save_settings ".env" "${example_env_file}"

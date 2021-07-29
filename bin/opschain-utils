@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+CDPATH='' cd "$(dirname "${BASH_SOURCE[0]}")"
+cd ..
+
+if [ $# -eq 0 ]; then
+  rake_task="-T release | sed 's/rake release://'"
+else
+  rake_task="release:${1}"
+fi
+
+exec docker-compose run -T --rm opschain-api "bundle exec rake ${rake_task}"
