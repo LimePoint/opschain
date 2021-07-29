@@ -14,19 +14,13 @@ After following this guide you should know how to:
 Create a new project:
 
 ```bash
-$ opschain project create --name 'Demo Confluent Project' --description 'My Confluent project' --confirm
+$ opschain project create --code confluent --name 'Demo Confluent Project' --description 'My Confluent project' --confirm
 ```
 
 Verify that your new project appears in the list:
 
 ```bash
 $ opschain project list
-```
-
-Manually copy and set the project ID as a variable, you'll need it for the next steps:
-
-```bash
-$ project_id=XXXXX
 ```
 
 ### Create an Environment
@@ -36,19 +30,13 @@ Environments represent the logical infrastructure environments under a project (
 Create a new environment:
 
 ```bash
-$ opschain environment create --project_id $project_id --code local --name 'Confluent Environment' --description 'My Confluent environment' --confirm
+$ opschain environment create --project_code confluent --code local --name 'Confluent Environment' --description 'My Confluent environment' --confirm
 ```
 
 Verify that your new environment appears in the list:
 
 ```bash
-$ opschain environment list --project_id $project_id
-```
-
-Set the environment code as a variable, you'll need it for the next steps:
-
-```bash
-$ environment_code=local
+$ opschain environment list --project_code confluent
 ```
 
 ### Add the Confluent Example as a Remote to the Project Git Repository
@@ -61,11 +49,13 @@ Navigate to the project's Git repository and fetch the latest code.
 
 _Note: Ensure you return to the opschain-release directory before running further commands._
 ```bash
-$ cd opschain_project_git_repos/production/$project_id
+$ cd opschain_data/opschain_project_git_repos/confluent
 $ git fetch
 $ git checkout master
 $ cd ../../..
 ```
+
+_Note: The confluent path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
 
 ### OpsChain Properties
 
@@ -79,13 +69,15 @@ To load the file, perform the following steps:
 1. Copy the sample file into the opschain-cli temporary directory as follows:
 
 ```bash
-$ cp opschain_project_git_repos/production/"$project_id"/environment_properties.json ./cli-files
+$ cp opschain_data/opschain_project_git_repos/confluent/environment_properties.json ./cli-files
 ```
+
+_Note: The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
 
 2. Set the environment specific [properties](reference/properties.md) using the following command:
 
 ```bash
-$ opschain environment properties-set --project_id $project_id --environment_code $environment_code --file_path cli-files/environment_properties.json --confirm
+$ opschain environment properties-set --project_code confluent --environment_code local --file_path cli-files/environment_properties.json --confirm
 ```
 
 These environment [properties](reference/properties.md) will:
@@ -125,7 +117,7 @@ Note: project or environment [properties](reference/properties.md) set dynamical
 Create a new change for the current `origin/master` branch of your project and run the `default` action:
 
 ```bash
-$ opschain change create --project_id $project_id --environment_code $environment_code --commit_ref origin/master --action default --confirm
+$ opschain change create --project_code confluent --environment_code local --commit_ref origin/master --action default --confirm
 ```
 
 The [steps](reference/concepts.md#step) that comprise the change will be shown as well as their status.

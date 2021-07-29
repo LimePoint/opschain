@@ -13,8 +13,10 @@ services:
       POSTGRES_DB: ${PGDB}
       POSTGRES_USER: ${PGUSER}
       POSTGRES_PASSWORD: ${PGPASSWORD}
+      OPSCHAIN_GID: ${OPSCHAIN_GID}
+      OPSCHAIN_UID: ${OPSCHAIN_UID}
     volumes:
-      - ${OPSCHAIN_DB_DIR}:/var/lib/postgresql/data
+      - ${OPSCHAIN_DATA_DIR}/opschain_db:/var/lib/postgresql/data
     networks:
       - opschain-network
     healthcheck:
@@ -35,10 +37,12 @@ services:
       LDAP_BASE_DN: ${OPSCHAIN_LDAP_BASE_DN}
       LDAP_ORGANIZATION: OpsChain
       LDAP_LOG_LEVEL: 1024
+      LDAP_OPENLDAP_GID: ${OPSCHAIN_GID}
+      LDAP_OPENLDAP_UID: ${OPSCHAIN_UID}
     command: --loglevel error
     volumes:
-      - ${OPSCHAIN_LDAP_DIR}/ldap:/var/lib/ldap
-      - ${OPSCHAIN_LDAP_DIR}/slapd.d:/etc/ldap/slapd.d
+      - ${OPSCHAIN_DATA_DIR}/opschain_ldap/ldap:/var/lib/ldap
+      - ${OPSCHAIN_DATA_DIR}/opschain_ldap/slapd.d:/etc/ldap/slapd.d
     networks:
       - opschain-network
     healthcheck:
@@ -74,7 +78,7 @@ services:
     ports:
       - ${OPSCHAIN_API_PORT}:3000
     volumes:
-      - ${OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR}:/opt/opschain/opschain_project_git_repos
+      - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
     networks:
       - opschain-network
     healthcheck:
@@ -95,7 +99,7 @@ services:
       opschain-api:
         condition: service_healthy
     volumes:
-      - ${OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR}:/opt/opschain/opschain_project_git_repos
+      - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
       - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
     networks:
       - opschain-network

@@ -30,19 +30,13 @@ After following this guide you should know how to:
 Create a new project:
 
 ```bash
-$ opschain project create --name 'Demo Ansible Project' --description 'My Ansible project' --confirm
+$ opschain project create --code ansible --name 'Demo Ansible Project' --description 'My Ansible project' --confirm
 ```
 
 Verify that your new project appears in the list:
 
 ```bash
 $ opschain project list
-```
-
-Manually copy and set the project ID as a variable, you'll need it for the next steps:
-
-```bash
-$ project_id=XXXXX
 ```
 
 ## Create an Environment
@@ -52,19 +46,13 @@ Environments represent the logical infrastructure environments under a project (
 Create a new environment:
 
 ```bash
-$ opschain environment create --project_id $project_id --code ansbl --name 'Ansible Environment' --description 'My Ansible environment' --confirm
+$ opschain environment create --project_code ansible --code ansbl --name 'Ansible Environment' --description 'My Ansible environment' --confirm
 ```
 
 Verify that your new environment appears in the list:
 
 ```bash
-$ opschain environment list --project_id $project_id
-```
-
-Set the environment code as a variable, you'll need it for the next steps:
-
-```bash
-$ environment_code=ansbl
+$ opschain environment list --project_code ansible
 ```
 
 ## Add the Ansible Example as a Remote to the Project Git Repository
@@ -77,11 +65,13 @@ Navigate to the project's Git repository and fetch the latest code.
 
 _Note: Ensure you return to the opschain-release directory before running further commands._
 ```bash
-$ cd opschain_project_git_repos/production/$project_id
+$ cd opschain_data/opschain_project_git_repos/ansible
 $ git fetch
 $ git checkout master
 $ cd ../../..
 ```
+
+_Note: The ansible path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
 
 ### Configure the AWS Credentials
 
@@ -90,14 +80,17 @@ To enable the OpsChain Runner to access your AWS account, configure the [AWS env
 1. Copy the sample project properties file into the opschain-release `cli-files` directory.
 
 ```bash
-$ cp opschain_project_git_repos/production/"$project_id"/project_properties.json ./cli-files
+$ cp opschain_data/opschain_project_git_repos/ansible/project_properties.json ./cli-files
 ```
+
+_Note: The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
+
 2. Using the editor of your choice, open the sample properties file and insert your AWS Access Key ID and Secret Access Key. _Note: The AMI image used to create the EC2 instance for this example is associated with the us-west-2 region. For this reason, please do not alter the AWS_DEFAULT_REGION environment variable_.
 
 3. Import the project properties:
 
 ```bash
-$ opschain project properties-set --project_id $project_id --file_path cli-files/project_properties.json --confirm
+$ opschain project properties-set --project_code ansible --file_path cli-files/project_properties.json --confirm
 ```
 
 _Note: If required, your AWS credentials can be stored at an environment level to enable different credentials to be used when deploying to different environments (eg. Production/Development)._
@@ -107,7 +100,7 @@ _Note: If required, your AWS credentials can be stored at an environment level t
 Create a new change for the current `origin/master` branch of your project and run the `default` action:
 
 ```bash
-$ opschain change create --project_id $project_id --environment_code $environment_code --commit_ref origin/master --action default --confirm
+$ opschain change create --project_code ansible --environment_code ansbl --commit_ref origin/master --action default --confirm
 ```
 
 _Note: the first time you run a change from this project it may take a long time as it constructs the Runner image (with Terraform, Ansible and the AWS CLI)._
@@ -126,7 +119,7 @@ Use the [AWS instances](https://us-west-2.console.aws.amazon.com/EC2/v2/home?reg
 Create a new change for the current `origin/master` branch of your project and run the `nginx_host:deploy_index` action:
 
 ```bash
-$ opschain change create --project_id $project_id --environment_code $environment_code --commit_ref origin/master --action nginx_host:deploy_index --confirm
+$ opschain change create --project_code ansible --environment_code ansbl --commit_ref origin/master --action nginx_host:deploy_index --confirm
 ```
 
 Refresh the OpsChain AWS Ansible Demo welcome page page and note the last changed date has been updated to reflect the new deployment.
@@ -136,7 +129,7 @@ Refresh the OpsChain AWS Ansible Demo welcome page page and note the last change
 The EC2 instance, security group and key pair can be removed by running:
 
 ```bash
-$ opschain change create --project_id $project_id --environment_code $environment_code --commit_ref origin/master --action destroy --confirm
+$ opschain change create --project_code ansible --environment_code ansbl --commit_ref origin/master --action destroy --confirm
 ```
 
 _Note: the AWS Console pages described in the [Verify Change Deployment](#verify_change_deployment) steps above can be used to confirm the aws resources have been removed/terminated._

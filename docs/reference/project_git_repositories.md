@@ -14,7 +14,7 @@ Add the project Git repository as a [remote](https://git-scm.com/book/en/v2/Git-
 
 ```bash
 # Note: to avoid potentially storing the repository credentials in the shell history the `--url` argument can be omitted and filled in when prompted
-$ opschain project git-remote-set -p $project_id --name origin --url "https://{username}:{password / personal access token}@github.com/LimePoint/{repository name}.git"
+$ opschain project git-remote-set --project_code <project code> --name origin --url "https://{username}:{password / personal access token}@github.com/LimePoint/{repository name}.git"
 ```
 
 ### Project Git Repository Remote Credentials

@@ -12,6 +12,10 @@ Install your OpsChain environment and run a simple change.
 
 Run a simple change using our example Terraform project.
 
+## [Running an AWS Ansible Change](running_an_aws_ansible_change.md)
+
+Run a simple change to use Terraform and Ansible to build an AWS EC2 host and configure nginx.
+
 ## [Running a Complex Change](running_a_complex_change.md)
 
 Run a more complex change using our example [Confluent](https://www.confluent.io) project.

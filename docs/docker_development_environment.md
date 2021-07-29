@@ -18,10 +18,13 @@ OpsChain resources and actions can be developed using the `opschain-action` or t
 Commands such as `opschain-action` or `opschain-dev` that use the development container must be run from an OpsChain project Git repository. The files in that directory will then be made available in the container using a [Docker bind mount](https://docs.docker.com/storage/bind-mounts/).
 
 ```bash
-$ cd opschain_project_git_repos/production/$project_id
+$ cd opschain_data/opschain_project_git_repos/<project code>
 ```
 
-_Note: The `opschain-action` commands below assume the OpsChain development environment is being run in the original "Demo Hello World" project (created in the Getting Started guide), including setting the `project_id` variable. If using a different project, modify these commands to reflect the OpsChain actions available._
+Notes:
+- _The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
+- _The `opschain-action` commands below assume the OpsChain development environment is being run in the original "Demo Hello World" project (created in the Getting Started guide). If using a different project, modify these commands to reflect the OpsChain actions available._
+
 
 #### Create a `step_context.json` (optional)
 
@@ -30,8 +33,8 @@ The `opschain-action` script uses a `.opschain/step_context.json` file if it exi
 If your action requires [properties](reference/properties.md) then you can use the `opschain` `properties-show` sub command to output the required properties values:
 
 ```bash
-$ opschain project properties-show --project_id $project_id
-$ opschain environment properties-show --project_id $project_id --environment_code $environment_code
+$ opschain project properties-show --project_code demo
+$ opschain environment properties-show --project_code demo --environment_code dev
 ```
 
 Use the output of these commands to replace the `{}` in the sample properties in the empty file below:

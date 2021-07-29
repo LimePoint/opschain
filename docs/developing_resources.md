@@ -107,8 +107,9 @@ Run the following steps from the `opschain-release` directory to add the Dockerf
 1. Change into your project directory using the Project ID:
 
     ```
-    $ cd opschain_project_git_repos/production/$project_id
+    $ cd opschain_data/opschain_project_git_repos/<project code>
     ```
+_Note: The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
 
 2. Create the `.opschain` directory the Dockerfile will reside in:
 

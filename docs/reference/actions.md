@@ -488,11 +488,11 @@ The `step_context.json` file has the following structure:
 
 #### File Content
 
-The `project/properties` value is the output from `$ opschain project properties-show --project_id $project_id`.
+The `project/properties` value is the output from `$ opschain project properties-show --project_code <project code>`.
 
-The `environment/properties` value is the output from `$ opschain environment properties-show --project_id $project_id --environment_code $environment_code`
+The `environment/properties` value is the output from `$ opschain environment properties-show --project_code <project code> --environment_code <environment code>`
 
-_Replace the $project_id and $environment_code in the commands above with the values for the project and environment related to the change)_
+_Replace the <project code> and <environment code> in the commands above with the values for the project and environment related to the change)_
 
 ### Step Result JSON
 

@@ -11,7 +11,7 @@ The table below outlines the file to `require` in your resource definition and t
 | :------------------------ | :-------------------- | :----------------------------------- |
 | `opschain-infrastructure` | `infrastructure_host` | Exposes the [`MintPress::Infrastructure::Host` controller](https://docs.limepoint.com/reference/ruby/MintPress/Infrastructure/Host.html) |
 |                           | `transport_factory`   | Exposes the [`MintPress::Infrastructure::TransportFactory` controller](https://docs.limepoint.com/reference/ruby/MintPress/Infrastructure/TransportFactory.html) |
-| `opschain-terraform`      | `terraform_config`    | Exposes the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/tree/v0.64.0) gem |
+| `opschain-terraform`      | `terraform_config`    | Exposes the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/tree/v1.2.0) gem |
 
 _Note: Contact [LimePoint](mailto:opschain@limepoint.com) to obtain the password required to access the MintPress Reference Documentation._
 
@@ -40,25 +40,9 @@ Requiring `opschain-infrastructure` currently provides a minimal set of Resource
 
 ## OpsChain Terraform
 
-Requiring `opschain-terraform` provides the `terraform_config` Resource Type. The Resource Type will accept any of the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/blob/v0.64.0/README.md) command arguments as properties, but will only pass those supported by the command when the action is invoked.
+Requiring `opschain-terraform` provides the `terraform_config` Resource Type. The Resource Type will accept any of the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/blob/v1.2.0/README.md) command arguments as properties, but will only pass those supported by the command when the action is invoked.
 
-| Action        | Properties used |
-| :------------ | :-------------- |
-| init          | from_module, path, backend, get, backend_config, no_color, plugin_dir |
-| get           | directory, update, no_color |
-| plan          | directory, vars, var_file, var_files, target, targets, state, plan, input, destroy, no_color |
-| apply         | directory, vars, var_file, var_files, target, targets, state, backup, input, no_backup, no_color, auto_approve |
-| show          | path, no_color, module_depth, json |
-| destroy       | directory, vars, var_file, var_files, target, targets, state, force, backup, no_backup, no_color |
-| output        | name, state, no_color, module |
-| refresh       | directory, vars, var_file, var_files, target, targets, state, input, no_color |
-| import        | directory, address, id, vars, var_file, var_files, input, state, no_backup, backup, no_color |
-| remote_config | backend, backend_config, no_color |
-| format        | directory, recursive, list, write, check, diff, no_color |
-| validate      | directory, vars, var_file, var_files, no_color, check_variables, json |
-| workspace     | directory, operation, workspac |
-
-Please see the [RubyTerraform README](https://github.com/infrablocks/ruby_terraform/blob/v0.64.0/README.md#usage) for further information about each action.
+Please see the [RubyTerraform Module Documentation](https://infrablocks.github.io/ruby_terraform/RubyTerraform.html) for further information about the available actions and their parameters.
 
 _Note: RubyTerraform supplies `vars` to Terraform on the command line via multiple `-var` parameters. OpsChain overrides this logic by placing the [Input Variables](https://www.terraform.io/docs/language/values/variables.html) in a [var file](https://www.terraform.io/docs/language/values/variables.html#variable-definitions-tfvars-files) and supplying this to Terraform via the `-var-file` parameter to avoid encountering any command line length issues._
 
@@ -82,9 +66,9 @@ Default values will be supplied for the following RubyTerraform command argument
 
 | parameter    | default value | description |
 | :----------- | :------------ | :---------- |
-| directory    | `pwd`         | The root directory of your Project Git Repository within the OpsChain Step Runner. |
-| input        | false         | Indicates that Terraform should not attempt to prompt for input, and instead expect all necessary values to be provided by either configuration files or the command line. |
 | auto_approve | true          | Indicates that Terraform should not require interactive approval before applying a plan.|
+| chdir        | `pwd`         | The root directory of your Project Git Repository within the OpsChain Step Runner. |
+| input        | false         | Indicates that Terraform should not attempt to prompt for input, and instead expect all necessary values to be provided by either configuration files or the command line. |
 
 _Note: Resources can override these values if required_
 

@@ -1,5 +1,27 @@
 # Changelog
 
+## [2021-05-17]
+
+### Important Breaking Changes
+- the `opschain_db`, `opschain_ldap` and `opschain_project_git_repos` directories have been moved into a new `opschain_data` directory (`opschain_data` can be overridden as part of the `configure` process)
+  - you **must** run `configure` after upgrading to reflect the new directory structure in your `.env` file.
+- due to the addition of the project code the OpsChain database needs to be removed and recreated.
+  - the path to the project Git repositories has changed from `./opschain_project_git_repos/production/<uuid>` to `./opschain_data/opschain_project_git_repos/<uuid>`.
+
+### Added
+- a symbolic link is created as part of the project creation, allowing you to navigate to the project's Git repository via `./opschain_data/opschain_project_git_repos/<project code>`
+- **Breaking Change** - projects now use (and require) a unique project code.
+- The OpsChain Terraform resource type now supports version 0.15.
+
+### Changed
+- Environment codes can now be up to 50 characters long.
+- **Breaking Change** - the OpsChain CLI and API have been altered to use the project code as the project identifier rather than the project id.
+- The CLI output for the environment and project list commands has changed - the code field is now shown first and the ID is not shown.
+
+### Removed
+- The environment delete API has been removed.
+- **Breaking Change** - Support for Terraform version 0.14 and lower has been removed from the OpsChain Terraform resource.
+
 ## [2021-05-10]
 
 ### Added

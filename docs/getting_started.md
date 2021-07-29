@@ -158,18 +158,12 @@ $ opschain-utils create_sample_data
 
 This command will also create a sample commit in the project's [Git repository](reference/concepts.md#project-git-repository) containing the OpsChain [action](reference/concepts.md#action) that will be run below (the action implements a simple "hello world" example).
 
-#### Finding the Sample Project ID
+#### Listing Available Projects
 
-Run the OpsChain project list command to find the sample project's ID:
+Run the OpsChain project list command to see the newly created project:
 
 ```bash
 $ opschain project list
-```
-
-Manually copy the project ID displayed in the command output and assign it to a variable, you'll need it for the next steps:
-
-```bash
-$ project_id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
 ## Running OpsChain Actions
@@ -183,8 +177,10 @@ You can use the `opschain-action` utility to list the actions available within t
 Enter the project's Git repository working directory (this is required to use the `opschain-action` command):
 
 ```bash
-$ cd ./opschain_project_git_repos/production/$project_id
+$ cd opschain_data/opschain_project_git_repos/demo
 ```
+
+_Note: The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
 
 You can now list the actions available in this project by running the following command:
 
@@ -265,7 +261,7 @@ You can use the `opschain change create` command to run the sample `hello_world`
 
 ```bash
 # the `hello_world` can be changed to `default` (or even `''`) if you followed the `Adding a New Action` steps
-$ opschain change create --project_id $project_id --environment_code dev --commit_ref HEAD --action hello_world --confirm
+$ opschain change create --project_code demo --environment_code dev --commit_ref HEAD --action hello_world --confirm
 ```
 
 This will run the change using an OpsChain runner which has been started and managed by an OpsChain worker - a part of the OpsChain server.
@@ -281,7 +277,7 @@ $ opschain change logs-show --change_id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # r
 If you ever need to revisit the status of a change you can use the change list and change show commands:
 
 ```bash
-$ opschain change list --project_id $project_id --environment_code dev # if you need to find out about other changes
+$ opschain change list --project_code demo --environment_code dev # if you need to find out about other changes
 $ opschain change show --change_id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace with the ID from the `change list` output
 ```
 

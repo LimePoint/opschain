@@ -60,9 +60,7 @@ load_saved_settings() {
 validate_settings() {
   confirm_socket_path
   approve_socket
-  confirm_db_path
-  confirm_repo_path
-  confirm_ldap_path
+  confirm_data_path
   confirm_port
   confirm_workers
 }
@@ -109,40 +107,16 @@ confirm_socket_path() {
   fi
 }
 
-confirm_db_path() {
-  local l_db_path
+confirm_data_path() {
+  local l_data_path
 
-  print_msg -n "Where would you like the OpsChain database files stored? [${OPSCHAIN_DB_DIR}]: "
-  read -r l_db_path
-  l_db_path="${l_db_path:-${OPSCHAIN_DB_DIR}}"
+  print_msg -n "Where would you like OpsChain to store its data files? [${OPSCHAIN_DATA_DIR}]: "
+  read -r l_data_path
+  l_data_path="${l_data_path:-${OPSCHAIN_DATA_DIR}}"
 
-  export OPSCHAIN_DB_DIR="${l_db_path}"
+  export OPSCHAIN_DATA_DIR="${l_data_path}"
 
-  ensure_path_exists "$OPSCHAIN_DB_DIR"
-}
-
-confirm_repo_path() {
-  local l_repo_path
-
-  print_msg -n "Where would you like the project git repositories stored? [${OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR}]: "
-  read -r l_repo_path
-  l_repo_path="${l_repo_path:-${OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR}}"
-
-  export OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR="${l_repo_path}"
-
-  ensure_path_exists "$OPSCHAIN_PROJECT_GIT_REPOS_BASE_DIR"
-}
-
-confirm_ldap_path() {
-  local l_ldap_path
-
-  print_msg -n "Where would you like the project ldap database files stored? [${OPSCHAIN_LDAP_DIR}]: "
-  read -r l_ldap_path
-  l_ldap_path="${l_ldap_path:-${OPSCHAIN_LDAP_DIR}}"
-
-  export OPSCHAIN_LDAP_DIR="${l_ldap_path}"
-
-  ensure_path_exists "$OPSCHAIN_LDAP_DIR"
+  ensure_path_exists "$OPSCHAIN_DATA_DIR"
 }
 
 ensure_path_exists() {
@@ -151,21 +125,32 @@ ensure_path_exists() {
 
   local l_proceed
 
-  while [ ! -d "${check_path}" ]; do
+  if [ ! -d "${check_path}" ]; then
     l_proceed="$(yn "The path ${check_path} doesn't exist - would you like to create it? ")"
     if [ "${l_proceed}" == "yes" ]; then
       echo "Creating ${check_path}..."
-      if ! mkdir -p "${check_path}" && chmod 777 "${check_path}"; then
-        echo "Failed to create ${check_path} - aborting configuration."
-        exit 2
-      fi
+      create_directory "${check_path}"
+      create_directory "${check_path}/opschain_ldap/ldap"
+      create_directory "${check_path}/opschain_ldap/slapd.d"
       echo "${check_path} created successfully."
     else
       print_msg "Path must exist in order for OpsChain to work." ERR
       exit 2
     fi
-  done
+  fi
   echo
+}
+
+create_directory() {
+  local path
+  path="${1}"
+
+  if [ ! -d "${path}" ]; then
+    if ! mkdir -p "${path}"; then
+      echo "Failed to create ${path} - aborting configuration."
+      exit 2
+    fi
+  fi
 }
 
 function to_int() {
