@@ -1,4 +1,4 @@
-# OpsChain Operations Guides
+# OpsChain operations guides
 
 Copyright 2021 © LimePoint Pty Ltd. All rights reserved.
 
@@ -6,27 +6,27 @@ Copyright 2021 © LimePoint Pty Ltd. All rights reserved.
 
 New features, bug fixes and changes in OpsChain - please read this before performing any upgrades.
 
-## [General Documentation](../)
+## [General documentation](../)
 
 The main OpsChain documentation page.
 
-## [Configuring an External LDAP/AD](configuring_external_ldap.md)
+## [Configuring an external LDAP/AD](configuring_external_ldap.md)
 
 Configure OpsChain to use an external LDAP/AD for user authentication and authorisation.
 
-## [Restricting User Access](restricting_user_access.md)
+## [Restricting user access](restricting_user_access.md)
 
 Enable the OpsChain Authorisation Server and restrict user's access to OpsChain.
 
-## [OpsChain Backups](backups.md)
+## [OpsChain backups](backups.md)
 
 How to perform backups of OpsChain.
 
-## [OpsChain Maintenance: Docker Image Cleanup](docker_image_cleanup.md)
+## [OpsChain maintenance: Docker image cleanup](docker_image_cleanup.md)
 
 Information about regular maintenance tasks to run (or schedule) on your OpsChain host to cleanup Docker images.
 
-## [OpsChain Rootless Docker Install](rootless_install.md)
+## [OpsChain rootless Docker install](rootless_install.md)
 
 Installing and configuring OpsChain on rootless Docker.
 
@@ -34,7 +34,7 @@ Installing and configuring OpsChain on rootless Docker.
 
 Upgrading OpsChain to the latest release.
 
-## Licence & Authors
+## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 

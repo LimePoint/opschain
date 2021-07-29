@@ -1,4 +1,4 @@
-# Actions Reference Guide
+# Actions reference guide
 
 This guide covers how to develop standalone and resource specific actions, how they integrate with the API server and options for utilising additional packages that are not in the standard OpsChain runner container.
 
@@ -9,10 +9,10 @@ After reading this guide you should understand:
   - resources
   - standalone and resource specific actions
   - composite resource types and resources
-- how the API server and Step Runner exchange critical information
-- how to create and use a custom Step Runner Docker container
+- how the API server and step runner exchange critical information
+- how to create and use a custom step runner Docker container
 
-## Defining Standalone Actions
+## Defining standalone actions
 
 Actions are defined in the `actions.rb` file in the root directory of the project Git repository. If required, actions can also be defined in separate files and [required](https://www.rubydoc.info/stdlib/core/Kernel%3Arequire) into the `actions.rb`.
 
@@ -116,7 +116,7 @@ Note: Current limitations:
 - Steps defined on a parent task will override any steps defined on any dependent tasks.
 - In order for a step (and subsequently the change) status to be set to 'error', the `action` must raise an `Exception`.
 
-## Defining Resource Types & Resources
+## Defining resource types & resources
 
 Resource types can be defined using the `resource_type` keyword:
 
@@ -175,7 +175,7 @@ _Note: the `action_methods` keyword will automatically expose each controller me
 
 Resources created from this `city` resource type would have the same actions (and same action output) as those created from the earlier type definition.
 
-#### Controller Actions and Properties
+#### Controller actions and properties
 
 Controllers can define the `resource_type_actions` and/or `resource_type_properties` class methods to expose their default actions and properties to OpsChain. Using these methods, the example above could be re-written as:
 
@@ -212,7 +212,7 @@ _Note: If you supply the `action_methods:` parameter when defining the resource 
 
 _Note: At the beginning of each step, the merged project and environment properties are used to initialize each resource type's controller. Any changes made to the OpsChain environment or project properties during a step will be available in the controller in subsequent steps but will not be reflected in the controller in the current step. If required, the relevant controller's setter method can be called directly to change the value._
 
-### Defining Resource Type Actions
+### Defining resource type actions
 
 Any combination of controller actions and locally defined actions can be used within a Resource or Resource Type.
 
@@ -232,7 +232,7 @@ _Note: In the initial resource type example (without a controller), the city nam
 
 _Note: If you define a resource type action with the same name as a controller action_method, OpsChain will run the controller action, then the resource_type action._
 
-### Using Namespaces to Separate Resources and Actions
+### Using namespaces to separate resources and actions
 
 You can nest namespaces to organise your resources. Namespaces also allow the same resource name to be used multiple times. You can open the same namespace multiple times and the results will be combined:
 
@@ -272,7 +272,7 @@ This would define the following actions:
 - `earth:scotland:perth:report_weather`
 - `earth:scotland:perth:send_postcard`
 
-### Referencing Previous Resources
+### Referencing previous resources
 
 Resources previously defined within the same namespace can be referenced from other resource definitions:
 
@@ -294,9 +294,9 @@ If a resource is referenced, its controller will be set as the property value. I
 
 _Note: Setting the resource property to be the result of `property_value.controller` if `property_value` responds to `controller` is the default behaviour._
 
-### Setting Multiple Properties
+### Setting multiple properties
 
-Multiple resource properties can be assigned values in a single step by taking advantage of the [OpsChain Properties](properties.md) feature. Assuming the OpsChain properties JSON was set to:
+Multiple resource properties can be assigned values in a single step by taking advantage of the [OpsChain properties](properties.md) feature. Assuming the OpsChain properties JSON was set to:
 
 ```json
 {
@@ -315,7 +315,7 @@ city :melbourne do
 end
 ```
 
-If the dynamic nature of [OpsChain Properties](properties.md) is not required, you can directly supply a hash containing the property values, keyed with their property names.
+If the dynamic nature of [OpsChain properties](properties.md) is not required, you can directly supply a hash containing the property values, keyed with their property names.
 
 ```ruby
 city :melbourne do
@@ -323,7 +323,7 @@ city :melbourne do
 end
 ```
 
-#### Property Setting Override Behaviour
+#### Property setting override behaviour
 
 Any combination of individually set properties and calls to `properties` can be used to construct the final set of values used to construct the resource's controller. The set of properties used will follow this behaviour:
 
@@ -369,7 +369,7 @@ The above example would result in the creation of a controller with these proper
 }
 ```
 
-## Defining Resource Actions
+## Defining resource actions
 
 In addition to controller actions and resource type actions, you can also define actions specific to an individual resource:
 
@@ -403,7 +403,7 @@ end
 
 Any actions defined within a resource will run __after__ controller and resource type actions with the same name.
 
-## Defining Composite Resources & Resource Types
+## Defining composite resources & resource types
 
 You can define a composite resource that manages child resources.
 
@@ -449,9 +449,9 @@ This would define the following actions:
 - `melbourne:collingwood:local_team:barrack`
 - `melbourne:barrack_all`
 
-## API - Step Runner Integration
+## API - step runner integration
 
-Each step in an OpsChain change is executed inside an OpsChain Step Runner Docker container. When building the runner, OpsChain includes:
+Each step in an OpsChain change is executed inside an OpsChain step runner Docker container. When building the runner, OpsChain includes:
 
 1. the project's Git repository, reset to the requested revision, in the `/opt/opschain` directory.
 2. the project and environment [properties](properties.md) to be used by the step, in the `/opt/opschain/.opschain/step_context.json` file.
@@ -462,14 +462,25 @@ Upon completion, the step will produce a `/opt/opschain/.opschain/step_result.js
 2. the merged set of properties used by the action
 3. any child steps the action requires to be scheduled (and their execution strategy).
 
-### Step Context JSON
+### Step context JSON
 
-#### File Structure
+#### File structure
 
 The `step_context.json` file has the following structure:
 
-```json
+```text
 {
+  "context": {
+    "project": {
+      "code": "demo",
+      "name": "Demo Project",
+      ...
+    },
+    "environment": ...
+    "change": ...
+    "step": ...,
+    "user": ...
+  },
   "project": {
     "properties": {
       "project_property": "value",
@@ -503,7 +514,9 @@ The `step_context.json` file has the following structure:
 }
 ```
 
-#### File Content - Step Context
+#### File content - step context
+
+The `context` values are derived from the current step. The [OpsChain context guide](context.md) provides more details on the values available.
 
 The `project/properties` value is the output from `$ opschain project properties-show --project-code <project code>`.
 
@@ -511,7 +524,7 @@ The `environment/properties` value is the output from `$ opschain environment pr
 
 _Replace the <project code> and <environment code> in the commands above with the values for the project and environment related to the change)_
 
-### Step Result JSON
+### Step result JSON
 
 The `step_result.json` file has the following structure:
 
@@ -545,7 +558,7 @@ The `step_result.json` file has the following structure:
 }
 ```
 
-#### File Content - Step Result
+#### File content - step result
 
 The `project/properties_diff` and `environment/properties_diff` values contain [RFC6902](http://www.rfc-editor.org/rfc/rfc6902.txt) JSON Patch values, describing the changes to apply to the project or environment properties.
 
@@ -553,40 +566,40 @@ The `step/properties` contains the merged set of properties applied to the actio
 
 The `steps/children` value contains the child steps (and execution strategy) the OpsChain workers will execute.
 
-## Custom Step Runner Dockerfiles
+## Custom step runner Dockerfiles
 
 ### Overview
 
 OpsChain runs all steps using Docker containers. By default these containers use a Centos-based image that provides the MintPress Controller Gems with an associated Ruby installation and the standard Centos base development tooling. The image used by the step container is built as part of every step's execution and relies on Docker build caching functionality to keep this performant.
 
-If your resources or actions rely on external software the image used for these containers can be modified to add extra packages or executables. The image may also be modified to optimise the performance of build steps by performing tasks as part of the step image build rather than as part of the Step execution.
+If your resources or actions rely on external software the image used for these containers can be modified to add extra packages or executables. The image may also be modified to optimise the performance of build steps by performing tasks as part of the step image build rather than as part of the step execution.
 
 _Please Note: The `opschain-action`/`opschain-dev` scripts do not currently support using a custom Dockerfile. A [workaround](../troubleshooting.md#customising-the-opschain-development-environment) may assist with developing / testing resources that require additional packages._
 
-### Dockerfile Location
+### Dockerfile location
 
 To have your project actions run in a custom step runner container, create the Dockerfile for the container in the `.opschain` directory of the OpsChain project's Git repository as `.opschain/Dockerfile`.
 
-This Dockerfile is used from the Commit that the change refers to - so the OpsChain Step Runner Docker image could be different for different Commits.
+This Dockerfile is used from the commit that the change refers to - so the OpsChain step runner Docker image could be different for different Commits.
 
 ### Customising the Dockerfile
 
 This Dockerfile can be modified and committed like any other file in the project Git repository.
 
-NB. If you no longer wish to use a custom Dockerfile then `.opschain/Dockerfile` can be removed from the Project repository.
+NB. If you no longer wish to use a custom Dockerfile then `.opschain/Dockerfile` can be removed from the project repository.
 
 The image is built in a Docker build context with access to the following files:
 
 - `repo.tar` - The complete project Git repository including the .git directory with all commit info.
-  This file will change (and invalidate the build context) when a different commit is used for a Change or when there are changes to the project's Git repository.
-- `step_context_env.json` - The Project and Environment environment variable for use by `opschain-exec`.
-  This file will change if the environment variables in the Project or Environment [properties](properties.md) change.
+  This file will change (and invalidate the build context) when a different commit is used for a change or when there are changes to the project's Git repository.
+- `step_context_env.json` - The environment variables for the project and environment for use by `opschain-exec`.
+  This file will change if the environment variables in the project or environment [properties](properties.md) change.
 
-The [Dockerfile reference](https://docs.docker.com/engine/reference/builder/) and the [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) guide provide more information about writing Dockerfiles.
+The [Dockerfile reference](https://docs.docker.com/engine/reference/builder/) and the [best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) guide provide more information about writing Dockerfiles.
 
-OpsChain uses [BuildKit](https://docs.docker.com/develop/develop-images/build_enhancements/) when building the Step image.
+OpsChain uses [BuildKit](https://docs.docker.com/develop/develop-images/build_enhancements/) when building the step image.
 
-### Supported Customisations
+### Supported customisations
 
 Modifying the Dockerfile allows a lot of flexibility.
 
@@ -596,11 +609,11 @@ More advanced modifications (like modifying the `ENTRYPOINT`) may break OpsChain
 
 Custom Dockerfiles must use the `limepoint/opschain-runner` image as a base (ie `FROM limepoint/opschain-runner`).
 
-### Image Performance - Base Images
+### Image performance - base images
 
-OpsChain runs a Docker build for every Step within a Change.
+OpsChain runs a Docker build for every step within a change.
 
-This is normally performant due to Docker's image build cache - however it is possible to prebuild a custom base image if desired. This may make the image build faster when run for each Step.
+This is normally performant due to Docker's image build cache - however it is possible to prebuild a custom base image if desired. This may make the image build faster when run for each step.
 
 A custom base image can be created as follows:
 
@@ -619,7 +632,7 @@ A custom base image can be created as follows:
     docker build -t my-base-image .
     ```
 
-3. Use the custom base image in the Project custom Dockerfile.
+3. Use the custom base image in the project custom Dockerfile.
 
     ```
     FROM my-base-image # supply the tag used above
@@ -627,18 +640,18 @@ A custom base image can be created as follows:
     ... # the rest of the OpsChain custom Dockerfile
     ```
 
-4. Run your Change as normal. It will now use the `my-base-image` image as the base for the custom Step image.
+4. Run your change as normal. It will now use the `my-base-image` image as the base for the custom step image.
 
 OpsChain relies on configuration done as part of the `limepoint/opschain-runner` base image to work. By basing the custom base image on `limepoint/opschain-runner` the OpsChain configuration still applies and will work as desired.
 
 [Contact us](mailto:opschain@limepoint.com) if you would like to express your interest in this feature.
 
-## What to Do Next
+## What to do next
 
-Learn about the [Docker Development Environment](../docker_development_environment.md)
-Try [Developing Your Own Resources](../developing_resources.md)
+Learn about the [Docker development environment](../docker_development_environment.md).
+Try [developing your own resources](../developing_resources.md).
 
-## Licence & Authors
+## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 

@@ -8,25 +8,30 @@ networks:
 services:
   opschain-db:
     image: limepoint/opschain-db:${OPSCHAIN_IMAGE_TAG}
+    networks:
+      - opschain-network
+    volumes:
+      - ${OPSCHAIN_DATA_DIR}/opschain_db:/var/lib/postgresql/data
     environment:
-      PGHOST: ''
       POSTGRES_DB: ${PGDB}
       POSTGRES_USER: ${PGUSER}
       POSTGRES_PASSWORD: ${PGPASSWORD}
       OPSCHAIN_GID: ${OPSCHAIN_GID}
       OPSCHAIN_UID: ${OPSCHAIN_UID}
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}/opschain_db:/var/lib/postgresql/data
-    networks:
-      - opschain-network
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "${PGUSER}"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: ${HEALTHCHECK_RETRIES:-5}
 
   opschain-ldap:
     image: limepoint/opschain-ldap:${OPSCHAIN_IMAGE_TAG}
+    command: --loglevel error
+    networks:
+      - opschain-network
+    volumes:
+      - ${OPSCHAIN_DATA_DIR}/opschain_ldap/ldap:/var/lib/ldap
+      - ${OPSCHAIN_DATA_DIR}/opschain_ldap/slapd.d:/etc/ldap/slapd.d
     environment:
       LDAP_ADMIN: ${OPSCHAIN_LDAP_ADMIN}
       LDAP_ADMIN_PASSWORD: ${OPSCHAIN_LDAP_PASSWORD}
@@ -36,17 +41,9 @@ services:
       LDAP_LOG_LEVEL: 1024
       LDAP_OPENLDAP_GID: ${OPSCHAIN_GID}
       LDAP_OPENLDAP_UID: ${OPSCHAIN_UID}
-    command: --loglevel error
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}/opschain_ldap/ldap:/var/lib/ldap
-      - ${OPSCHAIN_DATA_DIR}/opschain_ldap/slapd.d:/etc/ldap/slapd.d
-    networks:
-      - opschain-network
 
   opschain-auth:
     image: limepoint/opschain-auth:${OPSCHAIN_IMAGE_TAG}
-    ports:
-      - "127.0.0.1:8181:8181"
     networks:
       - opschain-network
     volumes:
@@ -54,87 +51,87 @@ services:
 
   opschain-log-aggregator:
     image: limepoint/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}
-    env_file:
-      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
-    ports:
-      - ${OPSCHAIN_LOG_AGGREGATOR_PORT}:24224 # must be exposed to docker host logging driver
     networks:
       - opschain-network
+    ports:
+      - "${OPSCHAIN_LOG_AGGREGATOR_PORT_MAPPING}" # must be exposed to docker host logging driver
+    env_file:
+      - .env
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:24220/api/plugins.json"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: ${HEALTHCHECK_RETRIES:-5}
 
   opschain-api:
     image: limepoint/opschain-api:${OPSCHAIN_IMAGE_TAG}
-    command: [ "bundle exec rake db:migrate && exec bundle exec rails s" ]
+    command: [ "exec bin/run_api" ]
+    networks:
+      - opschain-network
+    ports:
+      - "${OPSCHAIN_API_PORT_MAPPING}"
+    volumes:
+      - ${OPSCHAIN_DATA_DIR}/certs:/opt/opschain/certs
+      - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
     env_file:
-      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
+      - .env
     depends_on:
       opschain-auth:
         condition: service_started
       opschain-db:
         condition: service_healthy
-    ports:
-      - ${OPSCHAIN_API_PORT}:3000
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}/certs:/opt/opschain/certs
-      - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
-    networks:
-      - opschain-network
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:3000/healthcheck"]
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: ${HEALTHCHECK_RETRIES:-5}
 
   opschain-api-worker:
+    scale: ${OPSCHAIN_API_WORKER_SCALE}
     image: limepoint/opschain-api:${OPSCHAIN_IMAGE_TAG}
     command: [ "/opt/opschain/bin/run_api_worker" ]
-    scale: ${OPSCHAIN_API_WORKER_SCALE}
+    networks:
+      - opschain-network
+    volumes:
+      - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
+      - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
     env_file:
-      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
+      - .env
     depends_on:
       opschain-log-aggregator:
         condition: service_healthy
       opschain-api:
         condition: service_healthy
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
-      - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
-    networks:
-      - opschain-network
 
   opschain-cli:
     scale: 0
     image: limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG}
-    env_file:
-      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
+    networks:
+      - opschain-network
     volumes:
       - ${OPSCHAINRC:-./opschainrc}:/.opschainrc
       - ${WORKING_DIR:-.}/cli-files:/cli-files
-    networks:
-      - opschain-network
+    env_file:
+      - .env
 
   # for pulling updates and as a step development tool
   opschain-runner-devenv:
     scale: 0
     image: ${OPSCHAIN_RUNNER_IMAGE}
-    env_file:
-      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
-    volumes:
-      - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
     networks:
       - opschain-runner-network
-  # an operations tool in rootless installs
+    volumes:
+      - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
+    env_file:
+      - .env
 
+  # an operations tool in rootless installs
   opschain-ops:
     scale: 0
     image: centos:centos8
-    env_file:
-      - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
+    command: /bin/bash
     volumes:
       - ${OPSCHAIN_DATA_DIR}:/opschain_data
       - .:/opschain-release
-    command: /bin/bash
+    env_file:
+      - .env

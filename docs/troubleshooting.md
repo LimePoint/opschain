@@ -5,17 +5,17 @@ After following this guide you should understand:
 - how to resolve known OpsChain issues
 - workarounds for known OpsChain limitations
 
-## Known Issues
+## Known issues
 
 ### `opschain-exec` / `opschain-action` - Argument list too long
 
-When using the `opschain-exec` or `opschain-action` commands (for example during an OpsChain Step Runner image build or local development activities) the command may fail with the following error:
+When using the `opschain-exec` or `opschain-action` commands (for example during an OpsChain step runner image build or local development activities) the command may fail with the following error:
 
 ```bash
 .../bin/opschain-exec:4:in `exec': Argument list too long - ... (Errno::E2BIG)
 ```
 
-This error indicates that the [Environment Variable](reference/properties.md#environment-variables) properties stored in the OpsChain Properties linked to your project and/or environment are too large.
+This error indicates that the [Environment Variable](reference/properties.md#environment-variables) properties stored in the OpsChain properties linked to your project and/or environment are too large.
 
 Linux systems have a limit on the size of arguments and environment variables when executing commands. This is the `ARG_MAX` property. `opschain-exec` and `opschain-action` are limited by this system limit.
 
@@ -41,7 +41,7 @@ This can happen when you've pulled the latest OpsChain Docker images.
 
 The `Gemfile.lock` in the OpsChain project Git repository specifies a particular version of the `opschain-core` Gem. This version changes when pulling the newer OpsChain images.
 
-#### Solution - Proper Version of OpsChain-Core
+#### Solution - proper version of OpsChain-Core
 
 The simplest solution is to remove the `Gemfile.lock`, eg:
 
@@ -63,7 +63,7 @@ You can then continue with your original command.
 
 _Workarounds or tips mentioned in this section are unsupported and may stop working in the future._
 
-### Git Remotes with SSH Authentication
+### Git remotes with SSH authentication
 
 A workaround to allow adding a Git remote that requires SSH authentication is to bind mount an authorized SSH private key into the OpsChain API container and the OpsChain Worker container.
 
@@ -91,23 +91,7 @@ After doing this the OpsChain Docker containers need to be restarted.
 
 The SSH key and known_hosts are used by the `opschain` user in the containers - which is a user account with the UID from `OPSCHAIN_UID` in `.env`, and the equivalent GID based on `OPSCHAIN_GID`. Hence, the file permissions of the SSH key and known_hosts file must be correct for this user account.
 
-### Customising the OpsChain Development Environment
-
-The [Custom Step Runner Dockerfile](reference/actions.md#custom-step-runner-dockerfiles) feature of OpsChain is not currently supported within the OpsChain development environment (`opschain-dev`). A workaround for this is to manually run the container (from the opschain-release repository root), overriding the entrypoint:
-
-```bash
-[host]$ docker-compose run --rm -v /path/to/project/repository:/opt/opschain --entrypoint="" opschain-runner-devenv /bin/bash
-```
-
-This will start the runner container as root, so you can install any packages you require. Once the container includes all the required software, execute the standard container start script to switch user to the opschain user and ensure the environment is configured for running OpsChain actions:
-
-```bash
-[container]$ /usr/bin/container_start.sh /bin/bash
-```
-
-You can now use the `opschain-action` command per the instructions in the [Developing Your Own Resources](developing_resources.md) guide.
-
-## Licence & Authors
+## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 

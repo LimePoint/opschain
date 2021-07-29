@@ -1,30 +1,38 @@
-# Reference Documentation
+# Reference documentation
 
-## [OpsChain Concepts](concepts.md)
+## [OpsChain concepts](concepts.md)
 
 Introduces various concepts that will help you to understand the tool and its uses.
 
-## [Architecture Overview](architecture.md)
+## [Architecture overview](architecture.md)
 
-A high level guide to the various components that make up the OpsChain Environment.
+An overview of the components that make up OpsChain.
 
 ## [Actions](actions.md)
 
-An in-depth guide to the terminology used to define actions, resources and resource types.
+Defining actions, resources and resource types in OpsChain.
+
+## [Context](context.md)
+
+The context information available to your actions when running steps.
 
 ## [Properties](properties.md)
 
-An in-depth guide to the OpsChain Properties framework.
+Storing environment variables, files and key value pairs in the OpsChain properties framework.
 
-## [Included Resource Types](included_resource_types.md)
+## [Included resource types](included_resource_types.md)
 
-A summary of the pre-defined Resource Types.
+The pre-defined resource types available in OpsChain.
 
 ## [OpsChain CLI](cli.md)
 
 Configuration details and features of the OpsChain CLI.
 
-## Licence & Authors
+## [OpsChain and MintPress](opschain_and_mintpress.md)
+
+OpsChain bundles the MintPress SDK and this guide is intended for existing MintPress customers
+
+## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 

@@ -1,4 +1,4 @@
-# Setting up OpsChain as a Systemd Service
+# Setting up OpsChain as a systemd service
 
 This guide takes you through configuring OpsChain as a systemd service.
 
@@ -7,7 +7,7 @@ After following this guide you should know:
 - how to run services as a non-root users on boot
 - how to run OpsChain as a systemd service
 
-## Run Services on Boot as Non-Root Users
+## Run services on boot as non-root users
 
 To enable systemd services to run as a non-root user (e.g. `opschain`) on boot the following command needs to be run:
 
@@ -15,7 +15,7 @@ To enable systemd services to run as a non-root user (e.g. `opschain`) on boot t
 loginctl enable-linger opschain
 ```
 
-### Additional Configuration for RHEL-7
+### Additional configuration for RHEL-7
 
 On RHEL-7-like systems, non-root users (e.g. `opschain`) need to be configured to allow them to run services via systemd. This is done by creating a service for that user as follows. This needs to be done as the root user.
 
@@ -56,7 +56,7 @@ systemctl enable user@$(id -u opschain).service
 systemctl start user@$(id -u opschain).service
 ```
 
-### Setting up OpsChain as a Service
+### Setting up OpsChain as a service
 
 OpsChain can be run as a systemd service as the root user or as a non-root user. This guide documents the steps for running it as a service as the non-root user. If doing it as the root user the service path will need to change - most likely to a path under `/etc/systemd/system`.
 
@@ -102,7 +102,7 @@ systemctl --user enable opschain.service
 systemctl --user start opschain.service
 ```
 
-#### Viewing the OpsChain Service Logs
+#### Viewing the OpsChain service logs
 
 To view logs for this service the `--user-unit` argument needs to be passed to `journalctl`:
 
@@ -110,7 +110,7 @@ To view logs for this service the `--user-unit` argument needs to be passed to `
 journalctl --user-unit opschain
 ```
 
-## Licence & Authors
+## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 

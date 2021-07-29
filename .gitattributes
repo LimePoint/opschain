@@ -1,0 +1,5 @@
+* text=auto
+
+*.* eol=lf
+/configure eol=lf
+/bin/* eol=lf

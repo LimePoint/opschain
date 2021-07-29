@@ -1,10 +1,10 @@
-# OpsChain Backup & Restore
+# OpsChain backup & restore
 
 After following this guide you should know how to:
 
 - Create and restore a backup of your OpsChain data
 
-## Creating a Backup
+## Creating a backup
 
 OpsChain needs to be stopped to make a backup.
 
@@ -24,7 +24,7 @@ Once the backup has been created OpsChain can be started again.
 docker-compose up
 ```
 
-### OpsChain Rootless Docker Installs
+### OpsChain rootless Docker installs
 
 OpsChain Rootless Docker installs may encounter permissions issues running these steps.
 
@@ -38,9 +38,9 @@ docker-compose run --rm opschain-ops tar -cvJf /opschain-release/opschain-backup
 
 This will create the `opschain-backup.tar.xz` in the `opschain-release` directory.
 
-The [File Ownership](rootless_install.md#file-ownership) section of the OpsChain Rootless install documentation provides more details.
+The [file ownership](rootless_install.md#file-ownership) section of the OpsChain Rootless install documentation provides more details.
 
-## Restoring a Backup
+## Restoring a backup
 
 OpsChain needs to be stopped when restoring a backup.
 
@@ -61,7 +61,7 @@ Once the backup has been restored OpsChain can be started again.
 docker-compose up
 ```
 
-## Licence & Authors
+## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 

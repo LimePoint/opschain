@@ -1,23 +1,23 @@
-# OpsChain Properties Guide
+# OpsChain properties guide
 
-The OpsChain Properties framework provides a location to store:
+The OpsChain properties framework provides a location to store:
 
 - key value pairs
 - environment variables and values (that will be available in the Unix environment running a change action)
 - files (that will be written before running a change action).
 
-OpsChain Properties can be stored in your project's Git repository and also at the project or environment level in the OpsChain database. For those properties stored in the database OpsChain maintains a complete version history of each change made to the OpsChain Properties JSON, enabling you to view and compare the properties used for any change. Similarly, Git version history can be used to identify changes made to the repository properties.
+OpsChain properties can be stored in your project's Git repository and also at the project or environment level in the OpsChain database. For those properties stored in the database OpsChain maintains a complete version history of each change made to the OpsChain properties JSON, enabling you to view and compare the properties used for any change. Similarly, Git version history can be used to identify changes made to the repository properties.
 
 After following this guide you should understand:
 
-- how to incorporate OpsChain Properties into your Git repository.
-- how to import OpsChain Properties into the database using the CLI.
-- how to view project and environment OpsChain Properties from the CLI and API server.
-- the various types of values that can be stored in OpsChain Properties.
+- how to incorporate OpsChain properties into your Git repository.
+- how to import OpsChain properties into the database using the CLI.
+- how to view project and environment OpsChain properties from the CLI and API server.
+- the various types of values that can be stored in OpsChain properties.
 
-## OpsChain Properties
+## OpsChain properties
 
-Within each action, OpsChain Properties are available via `OpsChain.properties` (which will behave like a [Hashie Mash](https://github.com/hashie/hashie#mash)[^1]). The values available are the result of a deep merge of the [change's](concepts.md#change) [project's Git repository](project_git_repositories.md) properties with the [project](concepts.md#project) and [environment](concepts.md#environment) level properties. If a property exists at multiple levels, project values will override repository values and environment values will override project and repository values.
+Within each action, OpsChain properties are available via `OpsChain.properties` (which will behave like a [Hashie Mash](https://github.com/hashie/hashie#mash)[^1])). The values available are the result of a deep merge of the [change's](concepts.md#change) [project's Git repository](project_git_repositories.md) properties with the [project](concepts.md#project) and [environment](concepts.md#environment) level properties. If a property exists at multiple levels, project values will override repository values and environment values will override project and repository values.
 
 Properties can be accessed using dot or square bracket notation with string or symbol keys. These examples are equivalent:
 
@@ -35,9 +35,9 @@ _Notes:_
 2. _Any arrays in the properties will be overwritten during a deep merge (use JSON objects with keys instead to ensure they are merged)_
 3. _The `OpsChain.properties` structure is read only. Please see [modifiable properties](#modifiable-properties) below for information on making changes to the environment or project properties._
 
-## Storage Options
+## Storage options
 
-### Git Repository
+### Git repository
 
 OpsChain will look for the following files in your project's Git repository:
 
@@ -49,14 +49,14 @@ If more than one of these files exist in the repository, they will be merged tog
 
 #### Notes
 
-1. The repository Properties are read only within each action (as OpsChain cannot modify the underling Git repository to store any changes).
-2. Running `opschain-action -AT` from within your Git repository will cause the properties files to be validated. If the schema or structure of the files is invalid, explanatory exceptions will be raised. See the [Docker Development Environment](../docker_development_environment.md) guide for more information.
+1. The repository properties are read only within each action (as OpsChain cannot modify the underling Git repository to store any changes).
+2. Running `opschain-action -AT` from within your Git repository will cause the properties files to be validated. If the schema or structure of the files is invalid, explanatory exceptions will be raised. See the [Docker development environment](../docker_development_environment.md) guide for more information.
 
 ### Database
 
 Properties stored in the database are encrypted prior to being written to disk such that they are encrypted-at-rest. Within each action, project properties are available via `OpsChain.project.properties`. Similarly environment properties are available via `OpsChain.environment.properties`.
 
-#### Loading Properties
+#### Loading properties
 
 The OpsChain CLI allows you to set properties at the project or environment level. The CLI can import JSON files from the `cli-files` directory within the OpsChain repository. First create a JSON file in the cli-files directory. Eg.
 
@@ -85,7 +85,7 @@ opschain environment properties-set --project-code <project code> --environment-
 
 _Note: If the environment or project properties are in use by an active change, the API server will reject the properties-set request. This ensures OpsChain can guarantee the properties state throughout the life of the change._
 
-#### Viewing Properties
+#### Viewing properties
 
 The OpsChain CLI allows you to view the stored properties:
 
@@ -112,9 +112,9 @@ The relevant API response will contain a link to the properties associated with 
 http://<host>>:3000/properties/PROPERTIES_ID/versions/7
 ```
 
-## Properties Content
+## Properties content
 
-### Key Value Pairs
+### Key value pairs
 
 You can use OpsChain key value properties from anywhere in your `actions.rb` to provide environment (or project) specific values to your resource actions. Eg.
 
@@ -125,9 +125,9 @@ database :my_database do
 end
 ```
 
-#### Modifiable Properties
+#### Modifiable properties
 
-In addition to the read only values available from `OpsChain.properties`, the Project and Environment specific properties are available via:
+In addition to the read only values available from `OpsChain.properties`, the project and environment specific properties are available via:
 
 ```ruby
 OpsChain.project.properties
@@ -136,15 +136,15 @@ OpsChain.environment.properties
 
 These are exposed to allow you to add, remove and update properties, with any modifications saved on [step](concepts.md#step) completion. The modified project and environment properties are then available to any subsequent [steps](concepts.md#step) or [changes](concepts.md#change).
 
-##### Creating / Updating Properties Within Actions
+##### Creating / updating properties within actions
 
-The following code will set the Project `server_name` property, creating or updating it as applicable:
+The following code will set the project `server_name` property, creating or updating it as applicable:
 
 ```ruby
 OpsChain.project.properties.server_name = 'server1.limepoint.com'
 ```
 
-_Note. As the Properties behave like a Hashie::Mash, creating multiple levels of property nesting in a single command requires you to supply a hash as the value. Eg._
+_Note. As properties behave like a Hashie::Mash, creating multiple levels of property nesting in a single command requires you to supply a hash as the value. Eg._
 
 ```ruby
 OpsChain.project.properties.parent = { child: { grandchild: 'value' } }
@@ -156,7 +156,7 @@ Once created, nested properties can be updated as follows:
 OpsChain.project.properties.parent.child.grandchild = 'new value'
 ```
 
-##### Deleting Properties
+##### Deleting properties
 
 To delete the grandchild property described above, use the following command:
 
@@ -172,11 +172,11 @@ OpsChain.project.properties.delete(:parent)
 
 ##### Example
 
-An example of setting Properties can be seen in the [Confluent Example](https://github.com/LimePoint/opschain-examples-confluent). The `provision` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) modifies the environment properties to change settings for broker1.
+An example of setting properties can be seen in the [Confluent example](https://github.com/LimePoint/opschain-examples-confluent). The `provision` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) modifies the environment properties to change settings for broker1.
 
-### File Properties
+### File properties
 
-OpsChain File properties are written to the working directory prior to the step action being initiated. Any property under `opschain.files` is interpreted as a file property and will be written to disk.
+OpsChain file properties are written to the working directory prior to the step action being initiated. Any property under `opschain.files` is interpreted as a file property and will be written to disk.
 
 ```json
 {
@@ -208,11 +208,11 @@ format    | The format of the file (optional)
 
 _Note: The example above shows the two file formats OpsChain currently supports - JSON files, and raw (unparsed) file content. Please contact LimePoint if you require additional file format support._
 
-### Storing & Removing Files
+### Storing & removing files
 
 The project or environment properties can be edited directly to add, edit or remove file properties (using a combination of a text editor, the `properties-show` and `properties-set` commands). In addition, OpsChain enables you to store and remove files from within your actions.
 
-#### Project File Properties
+#### Project file properties
 
 To store a file in the project properties
 
@@ -226,7 +226,7 @@ To remove a file from the project properties
   OpsChain.project.remove_file!('/file/to/store.txt')
 ```
 
-#### Environment File Properties
+#### Environment file properties
 
 To store a file in the environment properties
 
@@ -240,16 +240,16 @@ To remove a file from the environment properties
   OpsChain.environment.remove_file!('/file/to/store.txt')
 ```
 
-#### Setting Files Example
+#### Setting files example
 
-An example of setting Files can be seen in the [Confluent Example](https://github.com/LimePoint/opschain-examples-confluent).
+An example of setting files can be seen in the [Confluent example](https://github.com/LimePoint/opschain-examples-confluent).
 
 - The `generate_keys` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store generated SSH keys in the environment properties (for use later when building the base image for the Confluent servers.
 - The `provision` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store the terraform.tfstate file in the environment properties (to ensure the terraform state is available to future runs)
 
-### Environment Variables
+### Environment variables
 
-OpsChain Environment variable properties allow you to configure the process environment prior to running your [step](concepts.md#step) [actions](concepts.md#action). Any property under `opschain.env` will be interpreted as an environment variable property.
+OpsChain environment variable properties allow you to configure the process environment prior to running your [step](concepts.md#step) [actions](concepts.md#action). Any property under `opschain.env` will be interpreted as an environment variable property.
 
 ```json
 {
@@ -262,19 +262,19 @@ OpsChain Environment variable properties allow you to configure the process envi
 }
 ```
 
-#### Action Environment
+#### Action environment
 
 Each [step](concepts.md#step) [action](concepts.md#action) is executed using the `opschain-action` command. This will define an environment variable for each of the OpsChain environment variable properties prior to executing the action.
 
-##### Bundler Credentials
+##### Bundler credentials
 
 [Bundler gem source credentials can be configured via environment variables](https://bundler.io/v1.16/bundle_config.html#CREDENTIALS-FOR-GEM-SOURCES). Defining an OpsChain environment variable with the relevant username/password (eg. `"BUNDLE_BITBUCKET__ORG": "username:password"`) will make this available to bundler.
 
-#### Setting Environment Variables Example
+#### Setting environment variables example
 
-An example of setting Environment Variables can be seen in the [Confluent Example](https://github.com/LimePoint/opschain-examples-confluent). The [`environment_properties.json`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/environment_properties.json) includes the `TF_IN_AUTOMATION` environment variable to instruct Terraform that it is running in non-human interactive mode.
+An example of setting environment variables can be seen in the [Confluent example](https://github.com/LimePoint/opschain-examples-confluent). The [`environment_properties.json`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/environment_properties.json) includes the `TF_IN_AUTOMATION` environment variable to instruct Terraform that it is running in non-human interactive mode.
 
-## Licence & Authors
+## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 

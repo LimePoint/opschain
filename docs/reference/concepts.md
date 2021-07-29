@@ -1,6 +1,10 @@
-# OpsChain Concepts
+# OpsChain concepts
 
-Introduces various concepts that will help you to understand the tool and its uses.
+There are several key OpsChain concepts that are useful to comprehend in order to understand the tool and its uses.
+
+<p align="center">
+  <img alt="Data model of OpsChain concepts and how they relate to each other" src="opschain-concepts.svg">
+</p>
 
 ## Project
 
@@ -22,7 +26,7 @@ An action is a task that can be performed (for example provisioning or restartin
 
 The logic for an action can be provided directly within the action definition, or if the action forms part of a Resource, it can call logic within its associated controller.
 
-See the [Actions Reference Guide](actions.md#defining-standalone-actions) and [Developing Your Own Resources](../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-standalone-actions) and [developing your own resources](../developing_resources.md) guide for more information.
 
 ## Resource
 
@@ -32,29 +36,29 @@ A resource represents something that OpsChain can perform actions on (eg. SOA In
 - Any number of resource properties. These are key value pairs that can be referenced in the action code and are supplied as a hash to the controller's constructor.
 - Any number of action definitions, allowing you to define actions that can be performed on the resource.
 
-See the [Actions Reference Guide](actions.md#defining-resource-types--resources) and [Developing Your Own Resources](../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](../developing_resources.md) guide for more information.
 
-## Resource Type
+## Resource type
 
 A resource type is a template for creating resources. Rather than duplicating the definition for each instance of a resource, the controller, resource properties and action definitions can be defined in the resource type and automatically configured when the resource is created.
 
-See the [Actions Reference Guide](actions.md#defining-resource-types--resources) and [Developing Your Own Resources](../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](../developing_resources.md) guide for more information.
 
-## Composite Resource
+## Composite resource
 
-A composite resource is a resource that encapsulates child resources. An example of this is the confluent broker composite defined in the [resource types](https://github.com/LimePoint/opschain-examples-confluent/blob/master/lib/confluent/resource_types.rb) used in the [Confluent Example](../running_a_complex_change.md). The confluent broker composite provides the definition of the resources required to create one or more child brokers. Each broker will have a host, java installation, confluent installation and broker definition.
+A composite resource is a resource that encapsulates child resources. An example of this is the confluent broker composite defined in the [resource types](https://github.com/LimePoint/opschain-examples-confluent/blob/master/lib/confluent/resource_types.rb) used in the [Confluent example](../running_a_complex_change.md). The confluent broker composite provides the definition of the resources required to create one or more child brokers. Each broker will have a host, java installation, confluent installation and broker definition.
 
 Composite resources also allow you to define actions that will apply to all the composite's children. The confluent broker composite in the example defines three actions (configure, start and install). Executing any of these actions on the composite will execute the equivalent action on each of the child brokers.
 
-See the [Actions Reference Guide](actions.md#defining-composite-resources--resource-types) and [Developing Your Own Resources](../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-composite-resources--resource-types) and [developing your own resources](../developing_resources.md) guide for more information.
 
-## Project Git Repository
+## Project Git repository
 
-See the [OpsChain Project Git Repositories](project_git_repositories.md) guide for more information.
+See the [OpsChain project Git repositories](project_git_repositories.md) guide for more information.
 
 ## Properties
 
-See the [OpsChain Properties](properties.md) guide for more information.
+See the [OpsChain properties](properties.md) guide for more information.
 
 ## Step
 
@@ -66,7 +70,7 @@ A change is the application of an action from a specific commit in the project's
 
 Only one change can be running in an environment at a time. Changes will sit in the `pending` state whilst waiting for the existing change to finish.
 
-### Change & Step lifecycle
+### Change & step lifecycle
 
 Changes, and the steps that make them up, transition between states as they execute.
 
@@ -80,7 +84,7 @@ If the change/step succeeds it transitions to the `success` state. If the change
 
 If a change is cancelled by a user all finalised steps (i.e. in the `success` or `error` state) remain in their existing state, and all `pending`, `queued`, or `running` steps are transitioned to the `cancelled` state. There is no rollback of any kind, steps that have not yet started will not start, and steps that are in progress are stopped immediately.
 
-#### Retrying Changes
+#### Retrying changes
 
 Changes that have failed or been cancelled can be retried.
 
@@ -88,29 +92,18 @@ When retrying a change, the existing change is duplicated as a new change and st
 
 As steps are rerun from the start we suggest only retrying changes/steps that are idempotent.
 
-_Note: the logs for the original change are not included when using the `logs-show` command. They can still be seen in the original change._
+_Note: the logs for the original change are not included when using the `show-logs` command. They can still be seen in the original change._
 
-## Automated Change Rule
+## Automated change rule
 
 An automated change rule allows the automated creation and execution of a change.
 
-They exist to facilitate [automated deployments](#automated-deployment) and in the future will enable scheduled deployments.
+Automated change rules can be configured to automatically create and deploy changes in an environment:
 
-### Automated Deployment
+- at a particular time
+- in response to project Git repository updates
 
-An automated deployment is a type of [automated change rule](#automated-change-rule) that creates a change in a particular environment in response to changes in a project's Git repository.
-
-Automated deployments mean that OpsChain will poll the project Git repository looking for new commits and will create a new change in the targeted environment if a Git ref changes in the project's Git repository.
-
-See [Setting up an Automated Deployment](../automated_deployment.md) for a guide on how to create an automated deployment.
-
-### Scheduled Deployment
-
-A scheduled deployment is a type of [automated change rule](#automated-change-rule) that creates a change in a particular environment based on a [cron schedule](https://crontab.guru/). The cron schedule supports the [fugit cron format](https://github.com/floraison/fugit#fugitcron).
-
-Scheduled deployment rules support optional repetition.
-
-See the [Scheduled Deployment Rules](../automated_deployment.md#scheduled-deployment-rules) section of the [Setting up an Automated Deployment](../automated_deployment.md) guide to learn more.
+See [setting up automated changes](../automated_changes.md) for a guide on how to create an automated change rule.
 
 ## Controller
 
@@ -119,9 +112,9 @@ A controller is a ruby object that can be configured via properties and provides
 - an `initialize` method that accepts a hash containing different properties.
 - one or more action methods (these do not accept parameters)
 
-An example controller is shown in the [Actions Reference Guide](actions.md#controller).
+An example controller is shown in the [actions reference guide](actions.md#controller).
 
-## Licence & Authors
+## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 

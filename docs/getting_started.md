@@ -1,4 +1,4 @@
-# Getting Started
+# Getting started
 
 This guide takes you through installing and configuring your OpsChain environment and running a simple change.
 
@@ -16,7 +16,7 @@ After following this guide you should know how to:
 
 ## Prerequisites
 
-### Required Software
+### Required software
 
 #### Git
 
@@ -30,7 +30,7 @@ As part of configuring the environment, the [OpenSSL](https://www.openssl.org/) 
 
 You must have [Docker Compose](https://docs.docker.com/compose/install/) installed.
 
-##### Docker Version
+##### Docker version
 
 OpsChain supports the following Docker versions:
 
@@ -38,9 +38,9 @@ OpsChain supports the following Docker versions:
 - Linux - the latest Docker release
 - Windows Subsystem for Linux - the latest Docker release (installed in the WSL environment)
 
-### Clone the OpsChain Release Repository
+### Clone the OpsChain release repository
 
-Clone the [OpsChain Release repository](https://github.com/LimePoint/opschain-release) to your local machine using your preferred Git client.
+Clone the [OpsChain release repository](https://github.com/LimePoint/opschain-release) to your local machine using your preferred Git client.
 
 ```bash
 git clone https://github.com/LimePoint/opschain-release
@@ -62,13 +62,13 @@ export DOCKER_CONFIG="$(pwd)/.docker" # this would need to be exported in all op
 docker login --username opschaintrial
 ```
 
-### Install MintPress Licence
+### Install MintPress licence
 
-OpsChain uses [MintPress Controllers](https://www.limepoint.com/mintpress) and for this you will require a licence (_contact [LimePoint](mailto:opschain@limepoint.com) to obtain a licence if you do not have one_).
+OpsChain uses [MintPress controllers](https://www.limepoint.com/mintpress) and for this you will require a licence (_contact [LimePoint](mailto:opschain@limepoint.com) to obtain a licence if you do not have one_).
 
 Copy your licence file to the root of your cloned `opschain-release` working directory and ensure it is named `mintpress.licence`.
 
-## Configure the OpsChain Environment
+## Configure the OpsChain environment
 
 The environment utilises a [Docker Compose .env file](https://docs.docker.com/compose/compose-file/#env_file) to configure the running services.
 You will only need to generate this file once (or if the available configuration options change).
@@ -83,7 +83,7 @@ You will be asked to confirm whether you would like to use certain features and 
 
 _Note: On Windows Subsystem for Linux (WSL) you will need to enable full read-write-execute (777) permissions on the /var/run/docker.sock file._
 
-### Pull Latest OpsChain Images
+### Pull latest OpsChain images
 
 Pull the latest versions of the Docker images:
 
@@ -93,7 +93,7 @@ docker-compose pull
 
 _Note: this may take a while on a slow connection._
 
-### Start OpsChain Containers
+### Start OpsChain containers
 
 Running containers in the foreground will allow you to see any log output directly on the console.
 
@@ -103,11 +103,11 @@ To start all containers in the foreground:
 docker-compose up
 ```
 
-This will start the OpsChain server and its dependent services in separate Docker containers. For more information on these containers see the [Architecture Overview](reference/architecture.md).
+This will start the OpsChain server and its dependent services in separate Docker containers. For more information on these containers see the [architecture overview](reference/architecture.md).
 
 _Note: Use a new terminal to run any CLI commands below._
 
-### Add the OpsChain Commands to the Path
+### Add the OpsChain commands to the path
 
 To add the OpsChain commands to the path run:
 
@@ -126,7 +126,7 @@ Alternatively, the OpsChain commands can be run without adding them to the path 
 
 _The OpsChain commands do not support being executed via symlinks (ie `ln -s opschain /usr/bin/opschain` will not work)._
 
-### Create an OpsChain User
+### Create an OpsChain user
 
 The OpsChain API server requires a valid username and password. To create a user, execute:
 
@@ -134,7 +134,7 @@ The OpsChain API server requires a valid username and password. To create a user
 opschain-utils "create_user['opschain','password']"
 ```
 
-### Create an OpsChain CLI Configuration File
+### Create an OpsChain CLI configuration file
 
 Copy the example CLI configuration file to your home directory:
 
@@ -152,7 +152,7 @@ If you changed the username or password in the create_user command above, please
 
 _Note: If you create a `.opschainrc` file in your current directory, this will be used in precedence to the version in your home directory._
 
-### Create Sample Data
+### Create sample data
 
 Create a sample [project](reference/concepts.md#project) and [environment](reference/concepts.md#environment) in the OpsChain database:
 
@@ -162,7 +162,7 @@ opschain-utils create_sample_data
 
 This command will also create a sample commit in the project's [Git repository](reference/concepts.md#project-git-repository) containing the OpsChain [action](reference/concepts.md#action) that will be run below (the action implements a simple "hello world" example).
 
-#### Listing Available Projects
+#### Listing available projects
 
 Run the OpsChain project list command to see the newly created project:
 
@@ -170,11 +170,11 @@ Run the OpsChain project list command to see the newly created project:
 opschain project list
 ```
 
-## Running OpsChain Actions
+## Running OpsChain actions
 
 OpsChain is a tool for running actions. OpsChain actions can be developed interactively by using the `opschain-action` and `opschain-dev` utilities.
 
-### Running an Action Locally
+### Running an action locally
 
 You can use the `opschain-action` utility to list the actions available within the current project.
 
@@ -201,7 +201,7 @@ $ opschain-action hello_world
 Hello World
 ```
 
-### Adding a New Action (optional)
+### Adding a new action (optional)
 
 Open the `actions.rb` file with your favourite editor so that you can add the new action to the project.
 
@@ -243,9 +243,9 @@ git add actions.rb
 git commit -m "Add a Goodbye action and run hello_world and goodbye_world by default."
 ```
 
-See the [Actions Reference Guide](reference/actions.md) and the [Developing Your Own Resources](developing_resources.md) guide for further information about the `actions.rb` file structure and contents.
+See the [actions reference guide](reference/actions.md) and the [developing your own resources](developing_resources.md) guide for further information about the `actions.rb` file structure and contents.
 
-### Return to the OpsChain Release Directory
+### Return to the OpsChain release directory
 
 Return to the `opschain-release` repository directory to continue following this guide:
 
@@ -253,19 +253,19 @@ Return to the `opschain-release` repository directory to continue following this
 cd ../../..
 ```
 
-## Creating an OpsChain Change
+## Creating an OpsChain change
 
 You can use the OpsChain CLI to create a new [change](reference/concepts.md#change). A change runs an action (which may have dependent actions or steps) on the OpsChain server.
 
 The OpsChain CLI (`opschain`) can be used to interact with an OpsChain server instance. In these examples the server is running on your local machine but in most installations will be installed in a central location and shared.
 
-### Running the Hello World Action via a Change
+### Running the hello world action via a change
 
 You can use the `opschain change create` command to run the sample `hello_world` action as follows:
 
 ```bash
 # the `hello_world` can be changed to `default` (or even `''`) if you followed the `Adding a New Action` steps
-opschain change create --project-code demo --environment-code dev --commit-ref HEAD --action hello_world --confirm
+opschain change create --project-code demo --environment-code dev --git-rev HEAD --action hello_world --confirm
 ```
 
 This will run the change using an OpsChain runner which has been started and managed by an OpsChain worker - a part of the OpsChain server.
@@ -285,33 +285,33 @@ opschain change list --project-code demo --environment-code dev # if you need to
 opschain change show --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace with the ID from the `change list` output
 ```
 
-## What to Do Next
+## What to do next
 
-### Learn More About OpsChain Actions
+### Learn more about OpsChain actions
 
-Follow the [Actions Reference Guide](reference/actions.md) and add more advanced actions to the sample [project](reference/concepts.md#project).
+Follow the [actions reference guide](reference/actions.md) and add more advanced actions to the sample [project](reference/concepts.md#project).
 
-### Learn More About OpsChain Properties
+### Learn more about OpsChain properties
 
-Follow the [Loading Properties](reference/properties.md#loading-properties) guide to try editing some [project](reference/concepts.md#project) or [environment](reference/concepts.md#environment) properties.
+Follow the [loading properties](reference/properties.md#loading-properties) guide to try editing some [project](reference/concepts.md#project) or [environment](reference/concepts.md#environment) properties.
 
-### Try a More Advanced Example
+### Try a more advanced example
 
-- The [Terraform Example](running_a_simple_terraform_change.md) demonstrates how to use OpsChain with Terraform to build a simple nginx Docker container
+- The [Terraform example](running_a_simple_terraform_change.md) demonstrates how to use OpsChain with Terraform to build a simple nginx Docker container
 
-- The [Ansible Example](running_an_aws_ansible_change.md) demonstrates how to use OpsChain with Terraform, Ansible and AWS to build and configure a simple nginx instance on AWS
+- The [Ansible example](running_an_aws_ansible_change.md) demonstrates how to use OpsChain with Terraform, Ansible and AWS to build and configure a simple nginx instance on AWS
 
-- The [Confluent Example](running_a_complex_change.md) demonstrates how to use OpsChain to build and deploy a confluent control-centre, zookeeper and brokers (as Docker containers)
+- The [Confluent example](running_a_complex_change.md) demonstrates how to use OpsChain to build and deploy a confluent control-centre, zookeeper and brokers (as Docker containers)
 
-### Try Developing Your Own Resources
+### Try developing your own resources
 
-The [Developing Your Own Resources](developing_resources.md) guide explains the structure of the `actions.rb` file, along with the keywords available to build your resource types, resources and actions.
+The [developing your own resources](developing_resources.md) guide explains the structure of the `actions.rb` file, along with the keywords available to build your resource types, resources and actions.
 
-### Review the Reference Documentation
+### Review the reference documentation
 
-The [Reference Documentation](reference/index.md) provides in-depth descriptions of many of the features available in OpsChain.
+The [reference documentation](reference/index.md) provides in-depth descriptions of many of the features available in OpsChain.
 
-## Licence & Authors
+## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 

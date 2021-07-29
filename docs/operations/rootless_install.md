@@ -1,4 +1,4 @@
-# Installing OpsChain on Rootless Docker
+# Installing OpsChain on rootless Docker
 
 This guide takes you through installing rootless Docker for use with OpsChain.
 
@@ -11,7 +11,7 @@ This guide is designed for RHEL-like platforms.
 
 For more information on running rootless Docker, see the [rootless mode documentation](https://docs.docker.com/engine/security/rootless/) provided by Docker.
 
-## System Preparation
+## System preparation
 
 OpsChain needs a kernel newer than 4.18. If possible, a kernel newer than 5.11 is preferred - we suggest using the newest available/supported kernel in the distribution you are using. The following commands can be run to check the kernel version and the update can optionally be run as root to get the latest kernel.
 
@@ -57,7 +57,7 @@ dnf install -y fuse-overlayfs # yum can be used rather than dnf if dnf is not av
 
 _Note: If the package is not available you can still proceed through this guide._
 
-### User Setup
+### User setup
 
 The user that will run OpsChain and Docker needs to be created. It also needs to have subuids and subgids configured.
 
@@ -82,7 +82,7 @@ When performing steps as the target user in this guide using `su` or `sudo` to s
 
 ***Note: All steps below are run as the target user rather than as root.***
 
-## Rootless Docker Installation
+## Rootless Docker installation
 
 Docker provides an installation script for rootless Docker.
 
@@ -113,7 +113,7 @@ chmod +x docker-compose
 popd
 ```
 
-### Optional - `fuse-overlayfs` Workaround
+### Optional - `fuse-overlayfs` workaround
 
 If the `fuse-overlayfs` package could not be installed and your kernel is older than 5.11 then the following workaround can be used.
 
@@ -125,9 +125,9 @@ compgen -G 'fuse*' && chmod +x fuse*
 popd
 ```
 
-### Configure the Docker Rootless Daemon
+### Configure the Docker rootless daemon
 
-The steps from the [Run Services on Boot as Non-Root Users](service_setup.md#additional-configuration-for-rhel-7) guide need to be run if running on RHEL version 7 (or equivalent).
+The steps from the [run services on boot as non-root users](service_setup.md#additional-configuration-for-rhel-7) guide need to be run if running on RHEL version 7 (or equivalent).
 
 Create the Docker service unit file as the non-root user (e.g. `opschain`):
 
@@ -174,7 +174,7 @@ systemctl --user enable docker.service
 systemctl --user start docker.service
 ```
 
-#### Viewing the Docker Service Logs
+#### Viewing the Docker service logs
 
 To view logs for this service the `--user-unit` argument needs to be passed to `journalctl`:
 
@@ -182,7 +182,7 @@ To view logs for this service the `--user-unit` argument needs to be passed to `
 journalctl --user-unit docker
 ```
 
-#### Verify the Docker Service
+#### Verify the Docker service
 
 Verify the Docker daemon is working by running the following:
 
@@ -190,11 +190,11 @@ Verify the Docker daemon is working by running the following:
 docker run --rm hello-world
 ```
 
-## OpsChain Install
+## OpsChain install
 
-OpsChain can now be installed as described in the [Getting Started](../getting_started.md#prerequisites) guide.
+OpsChain can now be installed as described in the [getting started](../getting_started.md#prerequisites) guide.
 
-### Configure OpsChain as a Service
+### Configure OpsChain as a service
 
 To configure the rootless installation of OpsChain as a service, first shutdown OpsChain if it is running:
 
@@ -202,11 +202,11 @@ To configure the rootless installation of OpsChain as a service, first shutdown 
 docker-compose down
 ```
 
-Then the steps from the [Setting up OpsChain as a Service](service_setup.md) guide can be followed to setup the OpsChain systemd service.
+Then the steps from the [setting up OpsChain as a service](service_setup.md) guide can be followed to setup the OpsChain systemd service.
 
-The steps from the [Run Services on Boot as Non-Root Users](service_setup.md#additional-configuration-for-rhel-7) guide need to be run if running on RHEL version 7 (or equivalent).
+The steps from the [run services on boot as non-root users](service_setup.md#additional-configuration-for-rhel-7) guide need to be run if running on RHEL version 7 (or equivalent).
 
-## File Ownership
+## File ownership
 
 Using rootless Docker means that some of the files under the `opschain_data` directory will be owned by one of the subuids/subgids of the non-root user (e.g. `opschain`).
 
@@ -227,9 +227,9 @@ To support this usecase OpsChain provides a Docker container that has full permi
 [container] exit
 ```
 
-Refer to the [OpsChain Backups](backups.md) guide for details on using this container to backup and restore OpsChain.
+Refer to the [OpsChain backups](backups.md) guide for details on using this container to backup and restore OpsChain.
 
-## Licence & Authors
+## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 
