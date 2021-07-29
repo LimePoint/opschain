@@ -60,7 +60,7 @@ For example, the log removal job could be configured to only run on weekends as 
 
 ```bash
 docker-compose down
-echo OPSCHAIN_ARCHIVE_LOG_LINES_JOB_CRON='0 23 * * 6-7' >> .env
+echo "OPSCHAIN_ARCHIVE_LOG_LINES_JOB_CRON='0 23 * * 6-7'" >> .env
 docker-compose up
 ```
 

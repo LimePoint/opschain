@@ -10,9 +10,9 @@ New features, bug fixes and changes in OpsChain - please read this before perfor
 
 The main OpsChain documentation page.
 
-## [Configuring an external LDAP/AD](configuring_external_ldap.md)
+## [OpsChain LDAP](opschain_ldap.md)
 
-Configure OpsChain to use an external LDAP/AD for user authentication and authorisation.
+Configure OpsChain's LDAP cache and learn how to connect OpsChain to an external LDAP/AD for user authentication and authorisation.
 
 ## [Configuring external log storage](log_forwarding.md)
 

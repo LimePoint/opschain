@@ -105,7 +105,7 @@ If your resource requires external packages, you will need to include a [custom 
 
 OpsChain provides a template for the step runner image Dockerfile which is the same as the Dockerfile used by OpsChain to build the default step runner image.
 
-Run the following steps from the `opschain-release` directory to add the Dockerfile template to your repository.
+Run the following steps from the `opschain-trial` directory to add the Dockerfile template to your repository.
 
 1. Change into your project directory using the project ID:
 

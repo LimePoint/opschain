@@ -2,10 +2,10 @@
 
 Before starting, ensure that your Docker daemon is running on your OpsChain host.
 
-To upgrade OpsChain go to the location on your OpsChain host where you cloned the [OpsChain release repository](https://github.com/LimePoint/opschain-release), stop OpsChain, pull the latest changes from the remote git repository, and pull the latest Docker images.
+To upgrade OpsChain go to the location on your OpsChain host where you cloned the [OpsChain trial repository](https://github.com/LimePoint/opschain-trial), stop OpsChain, pull the latest changes from the remote git repository, and pull the latest Docker images.
 
 ```bash
-cd opschain-release
+cd opschain-trial
 docker-compose down # or systemctl --user stop opschain.service if running OpsChain as a systemd service
 git pull
 docker-compose pull

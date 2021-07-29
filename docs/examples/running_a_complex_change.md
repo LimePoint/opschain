@@ -48,7 +48,7 @@ Follow [adding a project Git repository as a remote](../reference/project_git_re
 
 Navigate to the project's Git repository and fetch the latest code.
 
-_Note: Ensure you return to the opschain-release directory before running further commands._
+_Note: Ensure you return to the opschain-trial directory before running further commands._
 
 ```bash
 cd opschain_data/opschain_project_git_repos/confluent
@@ -65,7 +65,7 @@ This example takes advantage of the [OpsChain properties](reference/properties.m
 
 ### Import the environment properties
 
-Properties can be loaded from a local file containing a valid JSON object. To make the file available to the opschain-cli container, copy the file into the opschain-release `cli-files` directory. A sample environment properties file is included in the Confluent repository.
+Properties can be loaded from a local file containing a valid JSON object. To make the file available to the opschain-cli container, copy the file into the opschain-trial `cli-files` directory. A sample environment properties file is included in the Confluent repository.
 
 To load the file, perform the following steps:
 

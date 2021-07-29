@@ -67,7 +67,7 @@ _Workarounds or tips mentioned in this section are unsupported and may stop work
 
 A workaround to allow adding a Git remote that requires SSH authentication is to bind mount an authorized SSH private key into the OpsChain API container and the OpsChain Worker container.
 
-In the `opschain-release` directory create a `docker-compose.override.yml` that bind mounts an SSH private key and a known_hosts file into the containers, for example:
+In the `opschain-trial` directory create a `docker-compose.override.yml` that bind mounts an SSH private key and a known_hosts file into the containers, for example:
 
 ```yaml
 version: '2.4'

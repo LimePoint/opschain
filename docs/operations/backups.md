@@ -30,13 +30,13 @@ OpsChain Rootless Docker installs may encounter permissions issues running these
 
 The `opschain-ops` container can be used to handle this situation.
 
-This container also has the `opschain-release` directory bind mounted at `/opschain-release`. This make it possible to make backups using this container.
+This container also has the `opschain-trial` directory bind mounted at `/opschain`. This make it possible to make backups using this container.
 
 ```bash
-docker-compose run --rm opschain-ops tar -cvJf /opschain-release/opschain-backup.tar.xz /opschain_data
+docker-compose run --rm opschain-ops tar -cvJf /opschain/opschain-backup.tar.xz /opschain_data
 ```
 
-This will create the `opschain-backup.tar.xz` in the `opschain-release` directory.
+This will create the `opschain-backup.tar.xz` in the `opschain-trial` directory.
 
 The [file ownership](rootless_install.md#file-ownership) section of the OpsChain Rootless install documentation provides more details.
 

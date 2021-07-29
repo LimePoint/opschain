@@ -38,13 +38,13 @@ OpsChain supports the following Docker versions:
 - Linux - the latest Docker release
 - Windows Subsystem for Linux - the latest Docker release (installed in the WSL environment)
 
-### Clone the OpsChain release repository
+### Clone the OpsChain trial repository
 
-Clone the [OpsChain release repository](https://github.com/LimePoint/opschain-release) to your local machine using your preferred Git client.
+Clone the [OpsChain trial repository](https://github.com/LimePoint/opschain-trial) to your local machine using your preferred Git client.
 
 ```bash
-git clone https://github.com/LimePoint/opschain-release
-cd opschain-release
+git clone https://github.com/LimePoint/opschain-trial
+cd opschain-trial
 ```
 
 ### Configure Docker Hub access
@@ -58,7 +58,7 @@ docker login --username opschaintrial
 TIP: use the DOCKER_CONFIG environment variable if you need to use multiple Docker Hub logins.
 
 ```bash
-export DOCKER_CONFIG="$(pwd)/.docker" # this would need to be exported in all opschain-release terminals
+export DOCKER_CONFIG="$(pwd)/.docker" # this would need to be exported in all opschain-trial terminals
 docker login --username opschaintrial
 ```
 
@@ -66,7 +66,7 @@ docker login --username opschaintrial
 
 OpsChain uses [MintPress controllers](https://www.limepoint.com/mintpress) and for this you will require a licence (_contact [LimePoint](mailto:opschain@limepoint.com) to obtain a licence if you do not have one_).
 
-Copy your licence file to the root of your cloned `opschain-release` working directory and ensure it is named `mintpress.licence`.
+Copy your licence file to the root of your cloned `opschain-trial` working directory and ensure it is named `mintpress.licence`.
 
 ## Configure the OpsChain environment
 
@@ -245,9 +245,9 @@ git commit -m "Add a Goodbye action and run hello_world and goodbye_world by def
 
 See the [actions reference guide](reference/actions.md) and the [developing your own resources](developing_resources.md) guide for further information about the `actions.rb` file structure and contents.
 
-### Return to the OpsChain release directory
+### Return to the OpsChain trial directory
 
-Return to the `opschain-release` repository directory to continue following this guide:
+Return to the `opschain-trial` repository directory to continue following this guide:
 
 ```bash
 cd ../../..

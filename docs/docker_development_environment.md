@@ -135,7 +135,7 @@ If the OpsChain workers are on a remote host or you are yet to run a change with
 
 #### 1. Obtain the standard runner image
 
-The custom Dockerfile must be based on the standard OpsChain runner image (`limepoint/opschain-runner:latest`). Ensure you have the image locally or have run the [configure Docker Hub access](https://github.com/LimePoint/opschain-release/blob/master/docs/getting_started.md#configure-docker-hub-access) steps from the getting started guide.
+The custom Dockerfile must be based on the standard OpsChain runner image (`limepoint/opschain-runner:latest`). Ensure you have the image locally or have run the [configure Docker Hub access](https://github.com/LimePoint/opschain-trial/blob/master/docs/getting_started.md#configure-docker-hub-access) steps from the getting started guide.
 
 #### 2. Create a repository tarball
 

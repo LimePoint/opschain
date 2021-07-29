@@ -77,7 +77,7 @@ WantedBy=default.target
 [Service]
 Environment=DOCKER_HOST=$DOCKER_HOST
 Environment=PATH=/home/$(id -nu)/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-WorkingDirectory=/home/$(id -nu)/opschain-release
+WorkingDirectory=/home/$(id -nu)/opschain-trial
 ExecStartPre=/home/$(id -nu)/bin/docker info
 ExecStartPre=-/home/$(id -nu)/bin/docker-compose down
 ExecStart=/home/$(id -nu)/bin/docker-compose up

@@ -65,7 +65,7 @@ Follow [adding a project Git repository as a remote](reference/project_git_repos
 
 Navigate to the project's Git repository and fetch the latest code.
 
-_Note: Ensure you return to the opschain-release directory before running further commands._
+_Note: Ensure you return to the opschain-trial directory before running further commands._
 
 ```bash
 cd opschain_data/opschain_project_git_repos/ansible
@@ -78,9 +78,9 @@ _Note: The ansible path above assumes the default `opschain_data` path was accep
 
 ### Configure the AWS credentials
 
-To enable the OpsChain Runner to access your AWS account, configure the [AWS environment variables](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) in the runner. To do this, create the [environment variables](https://github.com/LimePoint/opschain-release/blob/master/docs/reference/properties.md#environment-variables) as [properties](../reference/properties.md) linked to the `Ansible Environment`.
+To enable the OpsChain Runner to access your AWS account, configure the [AWS environment variables](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) in the runner. To do this, create the [environment variables](https://github.com/LimePoint/opschain-trial/blob/master/docs/reference/properties.md#environment-variables) as [properties](../reference/properties.md) linked to the `Ansible Environment`.
 
-1. Copy the sample project properties file into the opschain-release `cli-files` directory.
+1. Copy the sample project properties file into the opschain-trial `cli-files` directory.
 
     ```bash
     cp opschain_data/opschain_project_git_repos/ansible/project_properties.json ./cli-files

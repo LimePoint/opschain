@@ -135,6 +135,6 @@ services:
     command: /bin/bash
     volumes:
       - ${OPSCHAIN_DATA_DIR}:/opschain_data
-      - .:/opschain-release
+      - .:/opschain
     env_file:
       - .env

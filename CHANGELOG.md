@@ -1,5 +1,13 @@
 # Changelog
 
+## [2021-07-29]
+
+### Changed
+
+- OpsChain now caches user's LDAP group membership to reduce LDAP load. See [LDAP group membership caching](docs/operations/opschain_ldap.md#LDAP-group-membership-caching) for more details.
+- **Breaking change** - Calling OpsChain API's with missing or invalid parameters now returns a 500 Internal Server Error, and more explicit error messages in the response body.
+- Upgraded MintPress Gems to 3.14.0.
+
 ## [2021-07-19]
 
 ### Added
@@ -74,7 +82,7 @@
 
 - An Oracle WebLogic example project repository is [now available](https://github.com/LimePoint/opschain-examples-weblogic).
 - **Feature preview** - platform native builds of the OpsChain CLI are now available for Windows, macOS and Linux. Contact LimePoint support for access.
-- OpsChain now supports Active Directory for user authentication and authorisation. See [configuring an external LDAP](docs/operations/configuring_external_ldap.md)
+- OpsChain now supports Active Directory for user authentication and authorisation. See [configuring an external LDAP](docs/operations/opschain_ldap.md#configuring-an-external-ldap)
   - **This change requires the `configure` command to be rerun.**
 - OpsChain changes can now be retried from failure or cancellation by using the `opchain change retry` command.
 - Updating now safeguards properties whilst a change is active.
