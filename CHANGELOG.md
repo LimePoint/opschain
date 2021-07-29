@@ -20,6 +20,9 @@
 - Upgraded OpsChain DB Image PostgreSQL to 13.3.
 - Upgraded OpsChain Auth Image Open Policy Agent 0.29.4.
 - Upgraded Bundler to 2.2.19.
+- **Breaking Change** - The OpsChain LDAP database structure has changed. Please remove the files in `OPSCHAIN_DATA_DIR/opschain_ldap` before starting OpsChain.
+
+  _Note: You will need to recreate any users you had created in the OpsChain LDAP._
 
 ## [2021-06-01]
 
