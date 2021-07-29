@@ -17,7 +17,7 @@ _Note: Contact [LimePoint](mailto:opschain@limepoint.com) to obtain the password
 
 ### Usage
 
-The Resource Types are pre-installed in the OpsChain Step Runner Image via the `opschain-resource-types` gem.  To use them, simply add the following line to your `Gemfile` in your Project Git Repository:
+The Resource Types are pre-installed in the OpsChain Step Runner Image via the `opschain-resource-types` gem. To use them, simply add the following line to your `Gemfile` in your Project Git Repository:
 ```ruby
 gem 'opschain-resource-types'
 ```
@@ -36,7 +36,7 @@ end
 
 ## OpsChain Infrastructure
 
-Requiring `opschain-infrastructure` currently provides a minimal set of Resource Types (with minimal actions and properties exposed) for the [Confluent OpsChain Example Project](https://github.com/LimePoint/opschain-examples-confluent).  More support will be added over time.
+Requiring `opschain-infrastructure` currently provides a minimal set of Resource Types (with minimal actions and properties exposed) for the [Confluent OpsChain Example Project](https://github.com/LimePoint/opschain-examples-confluent). More support will be added over time.
 
 ## OpsChain Terraform
 
@@ -60,11 +60,21 @@ Requiring `opschain-terraform` provides the `terraform_config` Resource Type. Th
 
 Please see the [RubyTerraform README](https://github.com/infrablocks/ruby_terraform/blob/v0.64.0/README.md#usage) for further information about each action.
 
-_Note: RubyTerraform supplies `vars` to Terraform on the command line via multiple `-var` parameters.  OpsChain overrides this logic by placing the [Input Variables](https://www.terraform.io/docs/language/values/variables.html) in a [var file](https://www.terraform.io/docs/language/values/variables.html#variable-definitions-tfvars-files) and supplying this to Terraform via the `-var-file` parameter to avoid encountering any command line length issues._
+_Note: RubyTerraform supplies `vars` to Terraform on the command line via multiple `-var` parameters. OpsChain overrides this logic by placing the [Input Variables](https://www.terraform.io/docs/language/values/variables.html) in a [var file](https://www.terraform.io/docs/language/values/variables.html#variable-definitions-tfvars-files) and supplying this to Terraform via the `-var-file` parameter to avoid encountering any command line length issues._
 
 ### Prerequisites
 
-`opschain-terraform` does not include the Terraform binary. Customers wishing to use the Resource Type will need to install Terraform in their Project's Step Runner.  This can be done by using a [Custom Step Runner Dockerfile](../developing_resources.md#custom-step-runner-dockerfiles), an example of this can be found in the [OpsChain Confluent Example](https://github.com/LimePoint/opschain-examples-confluent/blob/75473f7fbac4150b3d5c583dfc52c6b22044552f/.opschain/Dockerfile#L8).
+`opschain-terraform` does not include the Terraform binary. Customers wishing to use the Resource Type will need to install Terraform in their Project's Step Runner. This can be done by using a [Custom Step Runner Dockerfile](../developing_resources.md#custom-step-runner-dockerfiles), an example of this can be found in the [OpsChain Confluent Example](https://github.com/LimePoint/opschain-examples-confluent/blob/75473f7fbac4150b3d5c583dfc52c6b22044552f/.opschain/Dockerfile#L8).
+
+### Automatic Terraform Initialisation
+
+The `terraform_config` resource type will automatically execute `terraform init` in the OpsChain runner prior to running any Terraform action.
+
+### Automatic State Storage
+
+The `terraform_config` resource type will automatically store the `terraform.tfstate` file in the environment properties after running any Terraform action. This ensures it is available to subsequent steps in your change.
+
+_Note: If the `state_out` property of Terraform is used, the resource type does not automatically store the file. Please use the [`store_file!` feature](properties.md#storing--removing-files) (after moving the file to the desired location) to store the file._
 
 ### Command Argument Defaults
 
@@ -80,11 +90,13 @@ _Note: Resources can override these values if required_
 
 ### Terraform Automation Environment Variable
 
-The Terraform `TF_IN_AUTOMATION` environment variable is automatically configured when running `terraform_config` actions.  This will indicate to Terraform that there is some wrapping application executing terraform and cause it to make adjustments to its output to de-emphasize specific commands to run next.  For further information see [Controlling Terraform Output in Automation](https://learn.hashicorp.com/tutorials/terraform/automate-terraform#controlling-terraform-output-in-automation).
+The Terraform `TF_IN_AUTOMATION` environment variable is automatically configured when running `terraform_config` actions. This will indicate to Terraform that there is some wrapping application executing terraform and cause it to make adjustments to its output to de-emphasize specific commands to run next. For further information see [Controlling Terraform Output in Automation](https://learn.hashicorp.com/tutorials/terraform/automate-terraform#controlling-terraform-output-in-automation).
 
 ## Examples
 
 The [OpsChain Terraform Example Project](https://github.com/LimePoint/opschain-examples-terraform) demonstrates how the OpsChain Terraform Resource Type can be used.
+
+The [OpsChain AWS Ansible Example Project](https://github.com/LimePoint/opschain-examples-ansible) demonstrates how the OpsChain Infrastructure and OpsChain Terraform Resource Types can be combined with Ansible to deploy an nginx host on AWS.
 
 The [OpsChain Confluent Example Project](https://github.com/LimePoint/opschain-examples-confluent) demonstrates how the OpsChain Infrastructure and OpsChain Terraform Resource Types can be used together.
 

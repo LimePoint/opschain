@@ -61,7 +61,9 @@ A step is a unit of work that is run by an OpsChain worker. A step typically run
 
 ## Change
 
-A change is the application of an action from a specific commit in the project's Git repository, to a particular project environment.  A step will be created for the change action, with additional steps created for each child action it requests.
+A change is the application of an action from a specific commit in the project's Git repository, to a particular project environment. A step will be created for the change action, with additional steps created for each child action it requests.
+
+Only one change can be running in an environment at a time. Changes will sit in the `pending` state whilst waiting for the existing change to finish.
 
 ## Controller
 

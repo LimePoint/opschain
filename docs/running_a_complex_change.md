@@ -14,7 +14,7 @@ After following this guide you should know how to:
 Create a new project:
 
 ```bash
-$ opschain project create --name 'Demo Confluent Project' --description 'My demo Confluent project' --confirm
+$ opschain project create --name 'Demo Confluent Project' --description 'My Confluent project' --confirm
 ```
 
 Verify that your new project appears in the list:
@@ -36,7 +36,7 @@ Environments represent the logical infrastructure environments under a project (
 Create a new environment:
 
 ```bash
-$ opschain environment create --project_id $project_id --code local --name 'Local Environment' --description 'My Local Environment' --confirm
+$ opschain environment create --project_id $project_id --code local --name 'Confluent Environment' --description 'My Confluent environment' --confirm
 ```
 
 Verify that your new environment appears in the list:
@@ -59,7 +59,7 @@ Follow [Adding a Project Git Repository as a Remote](reference/project_git_repos
 
 Navigate to the project's Git repository and fetch the latest code.
 
-_Note: Ensure you to return to the opschain-release directory before running further commands._
+_Note: Ensure you return to the opschain-release directory before running further commands._
 ```bash
 $ cd opschain_project_git_repos/production/$project_id
 $ git fetch
@@ -130,7 +130,7 @@ Note: project or environment [properties](reference/properties.md) set dynamical
 Create a new change for the current `origin/master` branch of your project and run the `default` action:
 
 ```bash
-$ opschain change create --project_id $project_id --environment_code local --commit_ref origin/master --action default --confirm
+$ opschain change create --project_id $project_id --environment_code $environment_code --commit_ref origin/master --action default --confirm
 ```
 
 The [steps](reference/concepts.md#step) that comprise the change will be shown as well as their status.
@@ -210,7 +210,7 @@ The repository includes two Dockerfiles
 
 ### OpsChain Runner Network
 
-The terraform `main.tf` file specifies the control center, broker and zookeeper containers should be started on the `opschain-runner-network`.  This is the same network as the OpsChain Step Runner containers and allows the Confluent containers to be referred to via their alias (eg broker1).
+The terraform `main.tf` file specifies the control center, broker and zookeeper containers should be started on the `opschain-runner-network`. This is the same network as the OpsChain Step Runner containers and allows the Confluent containers to be referred to via their alias (eg broker1).
 
 ### External Packages
 
@@ -222,7 +222,7 @@ The example makes use of the following packages
 
 ### Create Your Own Project
 
-Try creating a new project using the steps above and instead of adding a remote, author your own commits.  See the [Reference Documentation](reference/index.md) and [Developing Your Own Resources](developing_resources.md) guide for more information.
+Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [Reference Documentation](reference/index.md) and [Developing Your Own Resources](developing_resources.md) guide for more information.
 
 # Licence & Authors
 - Author:: LimePoint (support@limepoint.com)

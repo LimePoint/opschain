@@ -1,5 +1,32 @@
 # Changelog
 
+## [2021-04-27]
+
+### Added
+- An example project for [running an AWS Ansible change](docs/running_an_aws_ansible_change.md).
+- Helper methods available from within actions to store and remove files from Project and Environment Properties. See [Storing & Removing Files](docs/reference/properties.md#storing--removing-files) for more details.
+
+### Changed
+- OpsChain environments are now locked such that only one change can be run in an environment at a time. Changes will sit in the `pending` state whilst waiting for the existing change to finish.
+- The OpsChain properties available via `OpsChain.properties` are frozen, ensuring users receive an error if they attempt to change them (as only `OpsChain.environment.properties` and `OpsChain.project.properties` are persisted)
+- The `terraform_config` resource type now:
+    1. automatically stores the Terraform state file in the environment properties.
+    2. automatically calls terraform init in the OpsChain Runner prior to running Terraform commands.
+- The Confluent and Terraform examples now
+    - use Terraform v0.14.9.
+    - rely on the new automatic features of the `opschain-terraform` resource.
+
+- The OpsChain Runner now uses
+    - Ruby v2.7.3. Please make any necessary adjustments to your project's Git repositories to reflect this change.
+    - v3.11.1 of the MintPress Controllers.
+- **Breaking Change** - the OpsChain [Files Properties](docs/reference/properties.md#file-properties) format has changed. Any files stored in your properties will need to be altered to reflect the new format.
+
+  _Note: The `properties-show` and `properties-set` features can be used to download, upload your properties (allowing you to edit your properties locally)._
+
+### Fixed
+- Hide internal development tasks from the opschain-utils output.
+- OpsChain Runner showing "Connection refused - connect(2) for /var/run/docker.sock.opschain" after container restart.
+
 ## [2021-03-31]
 
 ### Added

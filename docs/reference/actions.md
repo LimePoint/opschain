@@ -170,7 +170,7 @@ Resources created from this `city` resource type would have the same actions (an
 
 #### Controller Actions and Properties
 
-Controllers can define the `resource_type_actions` and/or `resource_type_properties` class methods to expose their default actions and properties to OpsChain.  Using these methods, the example above could be re-written as:
+Controllers can define the `resource_type_actions` and/or `resource_type_properties` class methods to expose their default actions and properties to OpsChain. Using these methods, the example above could be re-written as:
 
 ```ruby
 class CityController
@@ -202,6 +202,8 @@ end
 Once again, resources created from this `city` resource type would have the same actions (and same action output) as those created from the earlier type definitions.
 
 _Note: If you supply the `action_methods:` parameter when defining the resource type's controller, the controller's `resource_type_actions` will be ignored and only those methods passed to `action_methods:` will be exposed._
+
+_Note: At the beginning of each step, the merged project and environment properties are used to initialize each resource type's controller. Any changes made to the OpsChain environment or project properties during a step will be available in the controller in subsequent steps but will not be reflected in the controller in the current step. If required, the relevant controller's setter method can be called directly to change the value._
 
 ### Defining Resource Type Actions
 
@@ -530,7 +532,7 @@ The `step_result.json` file has the following structure:
 
 The `project/properties_diff` and `environment/properties_diff` values contain [RFC6902](http://www.rfc-editor.org/rfc/rfc6902.txt) JSON Patch values, describing the changes to apply to the project or environment properties.
 
-The `step/properties` contains the merged set of properties applied to the action.  These are linked to the step to support future investigation / debugging.
+The `step/properties` contains the merged set of properties applied to the action. These are linked to the step to support future investigation / debugging.
 
 The `steps/children` value contains the child steps (and execution strategy) the OpsChain workers will execute.
 

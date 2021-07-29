@@ -100,7 +100,7 @@ To start all containers in the foreground:
 $ docker-compose up
 ```
 
-This will start the OpsChain server and its dependent services in separate Docker containers.  For more information on these containers see the [Architecture Overview](reference/architecture.md).
+This will start the OpsChain server and its dependent services in separate Docker containers. For more information on these containers see the [Architecture Overview](reference/architecture.md).
 
 _Note: Use a new terminal to run any CLI commands below._
 
@@ -282,7 +282,7 @@ If you ever need to revisit the status of a change you can use the change list a
 
 ```bash
 $ opschain change list --project_id $project_id --environment_code dev # if you need to find out about other changes
-$ opschain change show --change_id $change_id
+$ opschain change show --change_id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace with the ID from the `change list` output
 ```
 
 ## What to Do Next
@@ -297,8 +297,11 @@ Follow the [Loading Properties](reference/properties.md#loading-properties) guid
 
 ### Try a More Advanced Example
 
-- The [Terraform Example](running_a_simple_terraform_change.md) demonstrates how to use OpsChain with Terraform to build a simple Nginx Docker container
-- The [Confluent Example](running_a_complex_change.md) demonstrates how to use OpsChain to build and deploy a confluent control-centre, zookeeper and brokers (as Docker containers)
+- The [Terraform Example](running_a_simple_terraform_change.md) demonstrates how to use OpsChain with Terraform to build a simple nginx Docker container.
+
+- The [Ansible Example](running_an_aws_ansible_change.md) demonstrates how to use OpsChain with Terraform, Ansible and AWS to build and configure a simple nginx instance on AWS.
+
+- The [Confluent Example](running_a_complex_change.md) demonstrates how to use OpsChain to build and deploy a confluent control-centre, zookeeper and brokers (as Docker containers).
 
 ### Try Developing Your Own Resources
 

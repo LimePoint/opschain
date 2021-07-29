@@ -5,10 +5,10 @@ set -eo pipefail
 # myvar=$(<util function>).
 #
 # In the example above, any echo statements issued inside the util function end
-# up being assigned to myvar.  This is awkward if the functions wish to print
+# up being assigned to myvar. This is awkward if the functions wish to print
 # their error messages or in the case of yn() where it needs to print the
 # question the user is to respond to! To enable the util functions to send
-# messages to STDOUT or STDERR the following redirections are added.  The
+# messages to STDOUT or STDERR the following redirections are added. The
 # print_msg function above can then use >&7 to print to stdout and >&8 to print
 # to stderr.
 exec 7>&1 8>&2

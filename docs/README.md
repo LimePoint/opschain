@@ -2,7 +2,7 @@
 
 Copyright 2021 © LimePoint Pty Ltd. All rights reserved.
 
-OpsChain enables you to connect, automate and orchestrate processes and tools across your on-premise and cloud platforms.  OpsChain can be used on Mac, Linux and Windows Subsystem for Linux (WSL).
+OpsChain enables you to connect, automate and orchestrate processes and tools across your on-premise and cloud platforms. OpsChain can be used on Mac, Linux and Windows Subsystem for Linux (WSL).
 
 ## [Getting Started](getting_started.md)
 

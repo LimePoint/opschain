@@ -85,7 +85,7 @@ services:
 
   opschain-api-worker:
     image: limepoint/opschain-api:${OPSCHAIN_IMAGE_TAG}
-    command: [ "exec bundle exec rake jobs:work" ]
+    command: [ "/opt/opschain/bin/run_api_worker" ]
     scale: ${OPSCHAIN_API_WORKER_SCALE}
     env_file:
       - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container

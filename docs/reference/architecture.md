@@ -1,6 +1,6 @@
 ## Architecture Overview
 
-OpsChain provides a fully self contained environment consisting of the command line interface (CLI), API server, a PostgreSQL database and a Fluentd log aggregator.  An optional LDAP server is also provided to make it easy to get started, however it is envisaged that most customers will have their own central LDAP server to integrate with in a production deployment.
+OpsChain provides a fully self contained environment consisting of the command line interface (CLI), API server, a PostgreSQL database and a Fluentd log aggregator. An optional LDAP server is also provided to make it easy to get started, however it is envisaged that most customers will have their own central LDAP server to integrate with in a production deployment.
 
 Each part of this environment is deployed using [Docker Compose](https://docs.docker.com/compose/), see `docker-compose.yml` for more details.
 

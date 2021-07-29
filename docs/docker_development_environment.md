@@ -1,6 +1,6 @@
 # Docker Development Environment
 
-The OpsChain Docker development environment enables you to list and run individual actions in a manner similar to a running change.  After following this guide you should know how to:
+The OpsChain Docker development environment enables you to list and run individual actions in a manner similar to a running change. After following this guide you should know how to:
 - create a `step_context.json` file to provide environment variables and properties for your action(s)
 - list available project resources and actions
 - run individual actions
@@ -21,7 +21,7 @@ Commands such as `opschain-action` or `opschain-dev` that use the development co
 $ cd opschain_project_git_repos/production/$project_id
 ```
 
-_Note: The `opschain-action` commands below assume the OpsChain development environment is being run in the original "Demo Hello World" project (created in the Getting Started guide), including setting the `project_id` variable.  If using a different project, modify these commands to reflect the OpsChain actions available._
+_Note: The `opschain-action` commands below assume the OpsChain development environment is being run in the original "Demo Hello World" project (created in the Getting Started guide), including setting the `project_id` variable. If using a different project, modify these commands to reflect the OpsChain actions available._
 
 #### Create a `step_context.json` (optional)
 

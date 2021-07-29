@@ -1,6 +1,6 @@
 # System Maintenance
 
-As part of regular system maintenance it is recommended that the OpsChain runner images are regularly pruned to limit disk usage.  After following this guide you should know how to:
+As part of regular system maintenance it is recommended that the OpsChain runner images are regularly pruned to limit disk usage. After following this guide you should know how to:
 - remove older OpsChain images
 - remove images for a specific change
 

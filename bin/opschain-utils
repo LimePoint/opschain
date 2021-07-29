@@ -5,7 +5,7 @@ CDPATH='' cd "$(dirname "${BASH_SOURCE[0]}")"
 cd ..
 
 if [ $# -eq 0 ]; then
-  rake_task="-T release | sed 's/rake release://'"
+  rake_task="-T '^release:' | sed 's/rake release://'"
 else
   rake_task="release:${1}"
 fi

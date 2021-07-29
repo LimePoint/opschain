@@ -16,7 +16,7 @@ After following this guide you should understand:
 
 ## Loading Properties
 
-The OpsChain CLI allows you to set properties at the project or environment level. The CLI can import JSON files from the `cli-files` directory within the OpsChain repository. First create a JSON file in the cli-files directory.  Eg.
+The OpsChain CLI allows you to set properties at the project or environment level. The CLI can import JSON files from the `cli-files` directory within the OpsChain repository. First create a JSON file in the cli-files directory. Eg.
 
 ```bash
 $ cat << EOF > cli-files/my_opschain_properties.json
@@ -158,37 +158,66 @@ OpsChain File properties are written to the working directory prior to the step 
 {
   "opschain": {
     "files": {
-      "sample-file1": {
-        "path": "/path/to/file.txt",
+      "/full/path/to/file1.txt": {
         "mode": "0600",
         "content": "contents of the file"
       },
-      "sample-file2": {
-        "path": "/path/to/file.txt",
-        "content": "contents of the file"
+      "/full/path/to/file2.json": {
+        "content": {
+          "json": "file",
+          "values": "here"
+        },
+        "format": "json"
       }
     }
   }
 }
 ```
 
-Each file property can have the following attributes:
+Each file property key is an absolute path and represents the location the file will be written to. Each file property value can include the following attributes:
 
 | Attribute | Description |
 | :-------- | :---------- |
-| path | The path to write the file to, relative to the working directory (mandatory) |
 | mode | The file mode, specified in octal (optional) |
 | content | The content of the file (optional) |
+| format | The format of the file (optional) |
 
-Notes:
-1. The keys under `opschain.files` are used to refer to the file in error messages but are otherwise not used.
-2. If multiple OpsChain Files contain the same target path (with different keys), OpsChain does not guarantee their write order.
+_Note: The example above shows the two file formats OpsChain currently supports - JSON files, and raw (unparsed) file content. Please contact LimePoint if you require additional file format support._
+
+### Storing & Removing Files
+
+The project or environment properties can be edited directly to add, edit or remove file properties (using a combination of a text editor, the `properties-show` and `properties-set` commands). In addition, OpsChain enables you to store and remove files from within your actions.
+
+#### Project File Properties
+
+To store a file in the project properties
+```ruby
+  OpsChain.project.store_file!('/file/to/store.txt')
+```
+
+To remove a file from the project properties
+```ruby
+  OpsChain.project.remove_file!('/file/to/store.txt')
+```
+
+#### Environment File Properties
+
+To store a file in the environment properties
+```ruby
+  OpsChain.environment.store_file!('/file/to/store.txt')
+```
+
+To remove a file from the environment properties
+```ruby
+  OpsChain.environment.remove_file!('/file/to/store.txt')
+```
+
 
 #### Example
 
 An example of setting Files can be seen in the [Confluent Example](https://github.com/LimePoint/opschain-examples-confluent).
-- The `generate_keys` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses the [`Confluent::EnvironmentFiles`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/lib/confluent/environment_files.rb) class to store generated SSH keys in the environment properties (for use later when building the base image for the Confluent servers.
-- The `provision` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses the [`Confluent::EnvironmentFiles`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/lib/confluent/environment_files.rb) class to store the terraform.tfstate file in the environment properties (to ensure the terraform state is available to future runs)
+- The `generate_keys` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store generated SSH keys in the environment properties (for use later when building the base image for the Confluent servers.
+- The `provision` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store the terraform.tfstate file in the environment properties (to ensure the terraform state is available to future runs)
 
 ### Environment Variables
 
