@@ -1,5 +1,15 @@
 # Changelog
 
+## [2021-05-10]
+
+### Added
+- OpsChain now supports [automated deployments](docs/reference/concepts.md#automated-deployment) - a way to automatically create OpsChain changes in response to Git changes. See [Setting up an Automated Deployment](docs/automated_deployment.md) for more information.
+- OpsChain now supports [scheduled deployments](docs/reference/concepts.md#scheduled-deployment) - a way to automatically create OpsChain changes at a scheduled time.
+
+### Changed
+- OpsChain now allows properties to be sourced from a project's Git repository. See the updated [OpsChain Properties Guide](docs/reference/properties.md) for more information.
+- OpsChain now does a Git [forced fetch](https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---force) when fetching a project's Git repository. This means tags can be updated in the remote and reflected in the project Git repository.
+
 ## [2021-04-27]
 
 ### Added

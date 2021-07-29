@@ -1,20 +1,56 @@
 # OpsChain Properties Guide
 
-The OpsChain Properties framework provides a secure, versioned location to store:
+The OpsChain Properties framework provides a location to store:
 * key value pairs
 * environment variables and values (that will be available in the Unix environment running a change action)
 * files (that will be written to the working directory before running a change action).
 
-OpsChain Properties are encrypted prior to being written to disk to ensure they are inaccessible to anyone accessing the underlying OpsChain database.
-
-OpsChain maintains a complete version history of each change made to the OpsChain Properties JSON, enabling you to view and compare the properties used for any change.
+OpsChain Properties can be stored in your project's Git repository and also at the project or environment level in the OpsChain database. For those properties stored in the database OpsChain maintains a complete version history of each change made to the OpsChain Properties JSON, enabling you to view and compare the properties used for any change. Similarly, Git version history can be used to identify changes made to the repository properties.
 
 After following this guide you should understand:
-- how to import OpsChain Properties using the CLI
-- how to view OpsChain Properties from the CLI and API server
-- the various types of values that can be stored in OpsChain Properties
+- how to incorporate OpsChain Properties into your Git repository.
+- how to import OpsChain Properties into the database using the CLI.
+- how to view project and environment OpsChain Properties from the CLI and API server.
+- the various types of values that can be stored in OpsChain Properties.
 
-## Loading Properties
+## OpsChain Properties
+
+Within each action, OpsChain Properties are available via `OpsChain.properties` (which will behave like a [Hashie Mash](https://github.com/hashie/hashie#mash)[^1]). The values available are the result of a deep merge of the [change's](concepts.md#change) [project's Git repository](project_git_repositories.md) properties with the [project](concepts.md#project) and [environment](concepts.md#environment) level properties. If a property exists at multiple levels, project values will override repository values and environment values will override project and repository values.
+
+Properties can be accessed using dot or square bracket notation with string or symbol keys. These examples are equivalent:
+```ruby
+require 'opschain'
+
+OpsChain.properties.server.setting
+OpsChain.properties[:server][:setting]
+OpsChain.properties['server']['setting']
+```
+
+_Notes:_
+1. _You will not be able to use dot notation to access a property with the same name as a method on the properties object (for example `keys`). In this case you must use square bracket notation instead._
+2. _Any arrays in the properties will be overwritten during a deep merge (use JSON objects with keys instead to ensure they are merged)_
+3. _The `OpsChain.properties` structure is read only. Please see [modifiable properties](#modifiable-properties) below for information on making changes to the environment or project properties._
+
+## Storage Options
+
+### Git Repository
+
+OpsChain will look for the following files in your project's Git repository:
+* `.opschain/properties.json`
+* `.opschain/properties.toml`
+* `.opschain/properties.yaml`
+
+If more than one of these files exist in the repository, they will be merged together in the order listed above. Properties defined in properties.yaml will override properties defined in properties.toml and properties.json. Properties defined in properties.toml will override properties defined in properties.json. Within each action, the result of merging these files will be available via `OpsChain.repository.properties`.
+
+_Notes:
+1. _The repository Properties are read only within each action (as OpsChain cannot modify the underling Git repository to store any changes)._
+2. _Running `opschain-action -AT` from within your Git repository will cause the properties files to be validated. If the schema or structure of the files is invalid, explanatory exceptions will be raised. See the [Docker Development Environment](../docker_development_environment.md) guide for more information._
+
+### Database
+
+roperties stored in the database are encrypted prior to being written to disk such that they are encrypted-at-rest. Within each action, project properties are available via `OpsChain.project.properties`. Similarly environment properties are available via `OpsChain.environment.properties`.
+
+#### Loading Properties
 
 The OpsChain CLI allows you to set properties at the project or environment level. The CLI can import JSON files from the `cli-files` directory within the OpsChain repository. First create a JSON file in the cli-files directory. Eg.
 
@@ -41,11 +77,7 @@ or environment:
 $ opschain environment properties-set --project_id $project_id --environment_code $environment_code --file_path cli-files/my_opschain_properties.json --confirm
 ```
 
-Notes:
-1. The values available in an action (via `OpsChain.properties`) are the result of a deep merge of the [change's](concepts.md#change) [project](concepts.md#project) and [environment](concepts.md#environment) level properties. If a property exists at [project](concepts.md#project) and [environment](concepts.md#environment) level, the [environment](concepts.md#environment) value will override the [project](concepts.md#project) value.
-2. Any arrays in the [project](concepts.md#project) or [environment](concepts.md#environment) properties will be overwritten during a deep merge (use JSON objects with keys instead to ensure they are merged)
-
-## Viewing Properties
+#### Viewing Properties
 
 The OpsChain CLI allows you to view the stored properties:
 
@@ -85,22 +117,6 @@ database :my_database do
 end
 ```
 
-#### Read Only properties
-
-Properties will behave like a [Hashie Mash](https://github.com/hashie/hashie#mash)[^1].
-
-Properties can be accessed using dot or square bracket notation with string or symbol keys. These examples are equivalent:
-```ruby
-require 'opschain'
-
-OpsChain.properties.server.setting
-OpsChain.properties[:server][:setting]
-OpsChain.properties['server']['setting']
-```
-
-You will not be able to use dot notation to access a property with the same name as a method on the properties object (for example `keys`). In this case you must use square bracket notation instead.
-
-The values available from `OpsChain.properties` are the result of a merge of the Change's Project and Environment level properties. If a property exists at Project and Environment level, the Environment value will override the Project value.
 
 #### Modifiable Properties
 

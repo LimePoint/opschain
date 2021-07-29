@@ -5,7 +5,7 @@ Run a more complex change that builds a multi-node [Confluent](https://www.confl
 After following this guide you should know how to:
 - create a project and environment
 - add a remote Git repository as a project remote
-- set/view properties on the project and environment
+- set/view properties on the environment
 - view the properties used during a change
 - understand how to provide a custom Dockerfile
 
@@ -68,25 +68,21 @@ $ cd ../../..
 ```
 
 ### OpsChain Properties
-#### Import the Confluent Example Properties
 
-Properties can be loaded from a local file containing a valid JSON object. To make the file available to the opschain-cli container, copy the file into the opschain-release `cli-files` directory. Sample Project and Environment Properties files are included in the confluent repository.
+This example takes advantage of the [OpsChain Properties](reference/properties.md) feature of OpsChain to provide the configuration for the various Confluent servers. The `.opschain/properties.json` file in the Git repository provides the bulk of the configuration information. In addition, an example environment properties file is provided to highlight overriding the project repository defaults with specific values.
 
-To load the files, perform the following steps:
-1. Copy the sample files into the opschain-cli temporary directory as follows:
+#### Import the Environment Properties
 
-```bash
-$ cp opschain_project_git_repos/production/"$project_id"/*properties.json ./cli-files
-```
-2. Set the project specific [properties](reference/properties.md) using the following command:
+Properties can be loaded from a local file containing a valid JSON object. To make the file available to the opschain-cli container, copy the file into the opschain-release `cli-files` directory. A sample Environment Properties file is included in the Confluent repository.
+
+To load the file, perform the following steps:
+1. Copy the sample file into the opschain-cli temporary directory as follows:
 
 ```bash
-$ opschain project properties-set --project_id $project_id --file_path cli-files/project_properties.json --confirm
+$ cp opschain_project_git_repos/production/"$project_id"/environment_properties.json ./cli-files
 ```
 
-These project [properties](reference/properties.md) will provide the common properties to configure the various hosts and confluent products.
-
-3. Set the environment specific [properties](reference/properties.md) using the following command:
+2. Set the environment specific [properties](reference/properties.md) using the following command:
 
 ```bash
 $ opschain environment properties-set --project_id $project_id --environment_code $environment_code --file_path cli-files/environment_properties.json --confirm
@@ -97,11 +93,10 @@ These environment [properties](reference/properties.md) will:
 - override values from the project [properties](reference/properties.md)
   - `auto.create.topics.enable` - set to false
   - `log.retention.check.interval.ms` - set to 301
-- set the `TF_IN_AUTOMATION` Terraform environment variable to instruct Terraform that it is running in non-human interactive mode.
 
 #### Setting Properties Dynamically
 
-The `actions.rb` provided in the confluent repository includes logic to set environment specific [properties](reference/properties.md) as part of the provision action:
+The `actions.rb` provided in the Confluent repository includes logic to set environment specific [properties](reference/properties.md) as part of the provision action:
 ```
 action provision: ['build_confluent_docker_base', 'terraform:apply'] do
   OpsChain.environment.properties.brokers =
@@ -117,7 +112,7 @@ action provision: ['build_confluent_docker_base', 'terraform:apply'] do
 ```
 This set of properties will:
 
-- override a confluent broker default value:
+- override a Confluent broker default value:
   - `num.network.threads` - set to 5 (default is 3)
 
 - override the project level property:

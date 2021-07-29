@@ -36,7 +36,7 @@ end
 
 ## OpsChain Infrastructure
 
-Requiring `opschain-infrastructure` currently provides a minimal set of Resource Types (with minimal actions and properties exposed) for the [Confluent OpsChain Example Project](https://github.com/LimePoint/opschain-examples-confluent). More support will be added over time.
+Requiring `opschain-infrastructure` currently provides a minimal set of Resource Types for the [Confluent OpsChain Example Project](https://github.com/LimePoint/opschain-examples-confluent). More support will be added over time.
 
 ## OpsChain Terraform
 

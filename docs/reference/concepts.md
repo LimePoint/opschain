@@ -38,7 +38,6 @@ A resource type is a template for creating resources. Rather than duplicating th
 
 See the [Actions Reference Guide](actions.md#defining-resource-types--resources) and [Developing Your Own Resources](../developing_resources.md) guide for more information.
 
-
 ## Composite Resource
 
 A composite resource is a resource that encapsulates child resources. An example of this is the confluent broker composite defined in the [resource types](https://github.com/LimePoint/opschain-examples-confluent/blob/master/lib/confluent/resource_types.rb) used in the [Confluent Example](../running_a_complex_change.md). The confluent broker composite provides the definition of the resources required to create one or more child brokers. Each broker will have a host, java installation, confluent installation and broker definition.
@@ -64,6 +63,28 @@ A step is a unit of work that is run by an OpsChain worker. A step typically run
 A change is the application of an action from a specific commit in the project's Git repository, to a particular project environment. A step will be created for the change action, with additional steps created for each child action it requests.
 
 Only one change can be running in an environment at a time. Changes will sit in the `pending` state whilst waiting for the existing change to finish.
+
+## Automated Change Rule
+
+An automated change rule allows the automated creation and execution of a change.
+
+They exist to facilitate [automated deployments](#automated-deployment) and in the future will enable scheduled deployments.
+
+### Automated Deployment
+
+An automated deployment is a type of [automated change rule](#automated-change-rule) that creates a change in a particular environment in response to changes in a project's Git repository.
+
+Automated deployments mean that OpsChain will poll the project Git repository looking for new commits and will create a new change in the targeted environment if a Git ref changes in the project's Git repository.
+
+See [Setting up an Automated Deployment](../automated_deployment.md) for a guide on how to create an automated deployment.
+
+### Scheduled Deployment
+
+A scheduled deployment is a type of [automated change rule](#automated-change-rule) that creates a change in a particular environment based on a [cron schedule](https://crontab.guru/). The cron schedule supports the [fugit cron format](https://github.com/floraison/fugit#fugitcron).
+
+Scheduled deployment rules support optional repetition.
+
+See the [Scheduled Deployment Rules](../automated_deployment.md#scheduled-deployment-rules) section of the [Setting up an Automated Deployment](../automated_deployment.md) guide to learn more.
 
 ## Controller
 
