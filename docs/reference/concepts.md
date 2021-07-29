@@ -5,11 +5,12 @@ Introduces various concepts that will help you to understand the tool and its us
 ## Project
 
 Projects are used to organise environments and changes and are analogous to [JIRA projects](https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-project/). Each project has
-* a Git repository containing configuration for that project.
-* [properties](properties.md) where you can store project specific:
-  * key value pairs
-  * environment variables and values (that will be available in the Unix environment running a change action)
-  * files (that will be written to the working directory before running a change action).
+
+- a Git repository containing configuration for that project.
+- [properties](properties.md) where you can store project specific:
+  - key value pairs
+  - environment variables and values (that will be available in the Unix environment running a change action)
+  - files (that will be written to the working directory before running a change action).
 
 ## Environment
 
@@ -26,9 +27,10 @@ See the [Actions Reference Guide](actions.md#defining-standalone-actions) and [D
 ## Resource
 
 A resource represents something that OpsChain can perform actions on (eg. SOA Instance, Confluent Broker, Linux Host, etc.) and is an instance of a resource type. A resource may include:
-* A controller class that will provide logic for some (or all) of the resource actions.
-* Any number of resource properties. These are key value pairs that can be referenced in the action code and are supplied as a hash to the controller's constructor.
-* Any number of action definitions, allowing you to define actions that can be performed on the resource.
+
+- A controller class that will provide logic for some (or all) of the resource actions.
+- Any number of resource properties. These are key value pairs that can be referenced in the action code and are supplied as a hash to the controller's constructor.
+- Any number of action definitions, allowing you to define actions that can be performed on the resource.
 
 See the [Actions Reference Guide](actions.md#defining-resource-types--resources) and [Developing Your Own Resources](../developing_resources.md) guide for more information.
 
@@ -78,6 +80,16 @@ If the change/step succeeds it transitions to the `success` state. If the change
 
 If a change is cancelled by a user all finalised steps (i.e. in the `success` or `error` state) remain in their existing state, and all `pending`, `queued`, or `running` steps are transitioned to the `cancelled` state. There is no rollback of any kind, steps that have not yet started will not start, and steps that are in progress are stopped immediately.
 
+#### Retrying Changes
+
+Changes that have failed or been cancelled can be retried.
+
+When retrying a change, the existing change is duplicated as a new change and started from where the existing change ended. Any successfully completed steps are not rerun - they will stay in the `success` state with their original started and finished times. Steps that were being run by a worker when the change ended are restarted from the start as OpsChain does not track step internals.
+
+As steps are rerun from the start we suggest only retrying changes/steps that are idempotent.
+
+_Note: the logs for the original change are not included when using the `logs-show` command. They can still be seen in the original change._
+
 ## Automated Change Rule
 
 An automated change rule allows the automated creation and execution of a change.
@@ -103,12 +115,14 @@ See the [Scheduled Deployment Rules](../automated_deployment.md#scheduled-deploy
 ## Controller
 
 A controller is a ruby object that can be configured via properties and provides the logic for completing different actions. A controller class must have:
-1. an `initialize` method that accepts a hash containing different properties.
-2. one or more action methods (these do not accept parameters)
+
+- an `initialize` method that accepts a hash containing different properties.
+- one or more action methods (these do not accept parameters)
 
 An example controller is shown in the [Actions Reference Guide](actions.md#controller).
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

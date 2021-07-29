@@ -10,6 +10,14 @@ New features, bug fixes and changes in OpsChain - please read this before perfor
 
 The main OpsChain documentation page.
 
+## [Configuring an External LDAP/AD](configuring_external_ldap.md)
+
+Configure OpsChain to use an external LDAP/AD for user authentication and authorisation.
+
+## [Restricting User Access](restricting_user_access.md)
+
+Enable the OpsChain Authorisation Server and restrict user's access to OpsChain.
+
 ## [OpsChain Backups](backups.md)
 
 How to perform backups of OpsChain.
@@ -27,6 +35,7 @@ Installing and configuring OpsChain on rootless Docker.
 Upgrading OpsChain to the latest release.
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

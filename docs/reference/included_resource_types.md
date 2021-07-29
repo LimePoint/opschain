@@ -2,7 +2,6 @@
 
 A collection of Resource Types come pre-installed on the OpsChain Step Runner image, this guide covers what they are and how to use them.
 
-
 ## Resource Type Summary
 
 The table below outlines the file to `require` in your resource definition and the Resource Types that will become available.
@@ -18,6 +17,7 @@ _Note: Contact [LimePoint](mailto:opschain@limepoint.com) to obtain the password
 ### Usage
 
 The Resource Types are pre-installed in the OpsChain Step Runner Image via the `opschain-resource-types` gem. To use them, simply add the following line to your `Gemfile` in your Project Git Repository:
+
 ```ruby
 gem 'opschain-resource-types'
 ```
@@ -64,13 +64,13 @@ _Note: If the `state_out` property of Terraform is used, the resource type does 
 
 Default values will be supplied for the following RubyTerraform command arguments:
 
-| parameter    | default value | description |
-| :----------- | :------------ | :---------- |
-| auto_approve | true          | Indicates that Terraform should not require interactive approval before applying a plan.|
-| chdir        | `pwd`         | The root directory of your Project Git Repository within the OpsChain Step Runner. |
-| input        | false         | Indicates that Terraform should not attempt to prompt for input, and instead expect all necessary values to be provided by either configuration files or the command line. |
+Parameter    | Default Value | Description
+:----------- | :------------ | :-------------------------------------------------------------------------------
+auto_approve | true          | Indicates that Terraform should not require interactive approval before applying a plan.
+chdir        | `pwd`         | The root directory of your Project Git Repository within the OpsChain Step Runner.
+input        | false         | Indicates that Terraform should not attempt to prompt for input, and instead expect all necessary values to be provided by either configuration files or the command line.
 
-_Note: Resources can override these values if required_
+_Note: Resources can override these values if required._
 
 ### Terraform Automation Environment Variable
 
@@ -85,6 +85,7 @@ The [OpsChain AWS Ansible Example Project](https://github.com/LimePoint/opschain
 The [OpsChain Confluent Example Project](https://github.com/LimePoint/opschain-examples-confluent) demonstrates how the OpsChain Infrastructure and OpsChain Terraform Resource Types can be used together.
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

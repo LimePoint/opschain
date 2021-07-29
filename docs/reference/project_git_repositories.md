@@ -20,6 +20,7 @@ $ opschain project git-remote-set --project-code <project code> --name origin --
 ### Project Git Repository Remote Credentials
 
 To be used by OpsChain, the remote must be either:
+
 - An unauthenticated Git remote.
 - A http(s) authenticated Git remote where the username and password are embedded in the remote URL. For example `https://username:password@github.com/LimePoint/opschain-examples-confluent.git`.
 
@@ -28,6 +29,7 @@ OpsChain does not support any other authentication mechanisms for Git remotes.
 _Using SSH keys for authentication is not supported however some users have reported success with this [unsupported workaround](troubleshooting.md#git-remotes-with-ssh-authentication)._
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

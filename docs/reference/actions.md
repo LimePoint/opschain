@@ -3,11 +3,12 @@
 This guide covers how to develop standalone and resource specific actions, how they integrate with the API server and options for utilising additional packages that are not in the standard OpsChain runner container.
 
 After reading this guide you should understand:
+
 - how to define
-    - resource types
-    - resources
-    - standalone and resource specific actions
-    - composite resource types and resources
+  - resource types
+  - resources
+  - standalone and resource specific actions
+  - composite resource types and resources
 - how the API server and Step Runner exchange critical information
 - how to create and use a custom Step Runner Docker container
 
@@ -34,7 +35,9 @@ action :do_something_else_before do
   # runs before do_something
 end
 ```
+
 In the above example actions would run in this order:
+
 1. `do_something_before`
 2. `do_something_else_before`
 3. `do_something`
@@ -58,6 +61,7 @@ end
 ```
 
 In the above example actions would run in this order:
+
 1. `do_something`
 2. `do_something_after`
 3. `do_something_else_after`
@@ -81,6 +85,7 @@ end
 ```
 
 In the above example actions would run in this order:
+
 1. `do_something`
 2. `do_something_after` and `do_something_else_after`
 
@@ -99,12 +104,14 @@ end
 ```
 
 Running the `say_hello` action as it is defined above would produce the following output:
-```
+
+```text
 First hello
 Second hello
 ```
 
 Note: Current limitations:
+
 - Any `action` steps defined by subsequent steps will not be discovered upfront and hence not visible via the OpsChain CLI until the parent step is executed.
 - Steps defined on a parent task will override any steps defined on any dependent tasks.
 - In order for a step (and subsequently the change) status to be set to 'error', the `action` must raise an `Exception`.
@@ -255,7 +262,9 @@ namespace :earth do
   end
 end
 ```
+
 This would define the following actions:
+
 - `earth:australia:perth:report_weather`
 - `earth:australia:perth:send_postcard`
 - `earth:australia:sydney:report_weather`
@@ -288,6 +297,7 @@ _Note: Setting the resource property to be the result of `property_value.control
 ### Setting Multiple Properties
 
 Multiple resource properties can be assigned values in a single step by taking advantage of the [OpsChain Properties](properties.md) feature. Assuming the OpsChain properties JSON was set to:
+
 ```json
 {
   "melbourne_resource": {
@@ -296,6 +306,7 @@ Multiple resource properties can be assigned values in a single step by taking a
   }
 }
 ```
+
 The `melbourne` city resource could be created as follows:
 
 ```ruby
@@ -315,10 +326,10 @@ end
 #### Property Setting Override Behaviour
 
 Any combination of individually set properties and calls to `properties` can be used to construct the final set of values used to construct the resource's controller. The set of properties used will follow this behaviour:
+
 - successive calls to `properties` will deep merge into any previously set via that method
 - individually set properties will override any set via `properties`
 - successive calls to set an individual property will override any previous values set
-
 
 ```ruby
 first_props = {
@@ -347,6 +358,7 @@ end
 ```
 
 The above example would result in the creation of a controller with these properties:
+
 ```ruby
 {
   name: 'Melbs',
@@ -430,7 +442,9 @@ city :melbourne do
   children suburb_properties
 end
 ```
+
 This would define the following actions:
+
 - `melbourne:richmond:local_team:barrack`
 - `melbourne:collingwood:local_team:barrack`
 - `melbourne:barrack_all`
@@ -438,20 +452,23 @@ This would define the following actions:
 ## API - Step Runner Integration
 
 Each step in an OpsChain change is executed inside an OpsChain Step Runner Docker container. When building the runner, OpsChain includes:
+
 1. the project's Git repository, reset to the requested revision, in the `/opt/opschain` directory.
 2. the project and environment [properties](properties.md) to be used by the step, in the `/opt/opschain/.opschain/step_context.json` file.
 
-Upon completion, the step will produce a `/opt/opschain/.opschain/step_result.json` file to be processed by the API server, detailing
+Upon completion, the step will produce a `/opt/opschain/.opschain/step_result.json` file to be processed by the API server, detailing:
+
 1. any changes to the project and environment [properties](properties.md) the action has performed
 2. the merged set of properties used by the action
 3. any child steps the action requires to be scheduled (and their execution strategy).
 
 ### Step Context JSON
+
 #### File Structure
 
 The `step_context.json` file has the following structure:
 
-```
+```json
 {
   "project": {
     "properties": {
@@ -464,7 +481,7 @@ The `step_context.json` file has the following structure:
         }
       },
       "env": {
-        "VARIABLE_NAME": "variable value",
+        "VARIABLE_NAME": "variable value"
       }
     }
   },
@@ -479,14 +496,14 @@ The `step_context.json` file has the following structure:
         }
       },
       "env": {
-        "VARIABLE_NAME": "variable value",
+        "VARIABLE_NAME": "variable value"
       }
     }
   }
 }
 ```
 
-#### File Content
+#### File Content - Step Context
 
 The `project/properties` value is the output from `$ opschain project properties-show --project-code <project code>`.
 
@@ -498,7 +515,7 @@ _Replace the <project code> and <environment code> in the commands above with th
 
 The `step_result.json` file has the following structure:
 
-```
+```json
 {
   "project": {
     "properties_diff": [
@@ -528,7 +545,7 @@ The `step_result.json` file has the following structure:
 }
 ```
 
-#### File Content
+#### File Content - Step Result
 
 The `project/properties_diff` and `environment/properties_diff` values contain [RFC6902](http://www.rfc-editor.org/rfc/rfc6902.txt) JSON Patch values, describing the changes to apply to the project or environment properties.
 
@@ -559,10 +576,11 @@ This Dockerfile can be modified and committed like any other file in the project
 NB. If you no longer wish to use a custom Dockerfile then `.opschain/Dockerfile` can be removed from the Project repository.
 
 The image is built in a Docker build context with access to the following files:
+
 - `repo.tar` - The complete project Git repository including the .git directory with all commit info.
-  * This file will change (and invalidate the build context) when a different commit is used for a Change or when there are changes to the project's Git repository.
+  This file will change (and invalidate the build context) when a different commit is used for a Change or when there are changes to the project's Git repository.
 - `step_context_env.json` - The Project and Environment environment variable for use by `opschain-exec`.
-  * This file will change if the environment variables in the Project or Environment [properties](properties.md) change.
+  This file will change if the environment variables in the Project or Environment [properties](properties.md) change.
 
 The [Dockerfile reference](https://docs.docker.com/engine/reference/builder/) and the [Best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) guide provide more information about writing Dockerfiles.
 
@@ -598,7 +616,7 @@ A custom base image can be created as follows:
 2. Build and distribute the base image, assigning it a unique tag (the `my-base-image` used below is for example purposes only).
 
     ```bash
-    $ docker build -t my-base-image .
+    docker build -t my-base-image .
     ```
 
 3. Use the custom base image in the Project custom Dockerfile.
@@ -621,6 +639,7 @@ Learn about the [Docker Development Environment](../docker_development_environme
 Try [Developing Your Own Resources](../developing_resources.md)
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

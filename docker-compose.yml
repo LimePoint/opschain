@@ -45,11 +45,6 @@ services:
       - ${OPSCHAIN_DATA_DIR}/opschain_ldap/slapd.d:/etc/ldap/slapd.d
     networks:
       - opschain-network
-    healthcheck:
-      test: ["CMD", "ldapsearch", "-x", "-b", "${OPSCHAIN_LDAP_BASE_DN}", "-D", "uid=${OPSCHAIN_LDAP_HC_USER},${OPSCHAIN_LDAP_BASE_DN}", "-w", "${OPSCHAIN_LDAP_HC_USER}", "uid=${OPSCHAIN_LDAP_HC_USER}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   opschain-auth:
     image: limepoint/opschain-auth:${OPSCHAIN_IMAGE_TAG}
@@ -84,11 +79,10 @@ services:
         condition: service_started
       opschain-db:
         condition: service_healthy
-      opschain-ldap:
-        condition: service_healthy
     ports:
       - ${OPSCHAIN_API_PORT}:3000
     volumes:
+      - ${OPSCHAIN_DATA_DIR}/certs:/opt/opschain/certs
       - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
     networks:
       - opschain-network
@@ -137,6 +131,7 @@ services:
     networks:
       - opschain-runner-network
   # an operations tool in rootless installs
+
   opschain-ops:
     scale: 0
     image: centos:centos8

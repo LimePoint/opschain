@@ -1,5 +1,26 @@
 # Changelog
 
+## [2021-06-10]
+
+### Added
+- An Oracle WebLogic example project repository is [now available](https://github.com/LimePoint/opschain-examples-weblogic).
+- **Feature preview** - platform native builds of the OpsChain CLI are now available for Windows, macOS and Linux. Contact LimePoint support for access.
+- OpsChain now supports Active Directory for user authentication and authorisation. See [Configuring an External LDAP](docs/operations/configuring_external_ldap.md)
+  - **This change requires the `configure` script to be rerun.**
+- OpsChain changes can now be retried from failure or cancellation by using the `opchain change retry` command.
+- Updating now safeguards properties whilst a change is active.
+  - Step properties are immutable.
+  - Project and environment properties can't be updated if they are in use by an active change.
+
+### Changed
+- Upgraded Terraform to 0.15.4 in the OpsChain examples.
+- Upgraded Terraform plugins in the OpsChain examples - see the commit history of each repository for details.
+- Upgraded OpsChain Log Aggregator Image Fluentd to 1.12.4.
+- Upgraded MintPress Gems to 3.13.0.
+- Upgraded OpsChain DB Image PostgreSQL to 13.3.
+- Upgraded OpsChain Auth Image Open Policy Agent 0.29.4.
+- Upgraded Bundler to 2.2.19.
+
 ## [2021-06-01]
 
 ### Added

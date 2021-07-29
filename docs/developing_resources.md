@@ -1,19 +1,21 @@
 # Developing Your Own Resources
 
 Resources and the Resource Types are the building blocks for OpsChain changes. After following this guide you should understand:
+
 - the relationship between resources, resource types, controllers and actions.
 - how to use the OpsChain logger to assist with resource development
 - how to create your own custom step runner Dockerfiles
 
-_Note: Iterating on resource type, resource and action definitions is made easier by using the [Docker Development Environment](docker_development_environment.md)_
+_Note: Iterating on resource type, resource and action definitions is made easier by using the [Docker Development Environment](docker_development_environment.md)._
 
 ## Develop a Resource Controller
 
 The bulk of the logic for your resource should be enclosed within a [controller](reference/concepts.md#controller) class. This simplifies unit testing and reduces complexity in `resource_types.rb`.
 
 Notes:
-* The class constructor must accept a single [Ruby hash](https://ruby-doc.org/core-2.7.0/Hash.html) parameter, which will include each of the resource properties defined on the resource.
-* The action methods must not require parameters.
+
+- The class constructor must accept a single [Ruby hash](https://ruby-doc.org/core-2.7.0/Hash.html) parameter, which will include each of the resource properties defined on the resource.
+- The action methods must not require parameters.
 
 Example controllers can be seen in the [Actions Reference Guide](reference/actions.md#controller) and within the [Confluent OpsChain Example Project](https://github.com/LimePoint/opschain-examples-confluent).
 
@@ -21,7 +23,7 @@ Example controllers can be seen in the [Actions Reference Guide](reference/actio
 
 Once the controller class has been written and tested, define your [resource type](reference/concepts.md#resource-type), referencing your custom controller class. Use the `action_methods` keyword to create actions for those controller methods that do not require pre or post requisite actions (see [Defining Standalone Actions](reference/actions.md#defining-standalone-actions) for more details)
 
-_Note: Resource Types are commonly stored in `resource_types.rb` but can be included in any file that is required by your `actions.rb`_
+_Note: Resource Types are commonly stored in `resource_types.rb` but can be included in any file that is required by your `actions.rb`._
 
 ### Define Resource Properties
 
@@ -48,6 +50,7 @@ end
 ```
 
 The `install_and_startup` action will:
+
 1. execute the `copy_installer` pre-requisite action (to execute the `copy_installer` controller method)
 2. execute the `install` controller method (manually called from within the action body)
 3. request the `startup` action be run as a child step (to execute the `startup` controller method).
@@ -106,39 +109,39 @@ Run the following steps from the `opschain-release` directory to add the Dockerf
 
 1. Change into your project directory using the Project ID:
 
+    ```bash
+    cd opschain_data/opschain_project_git_repos/<project code>
     ```
-    $ cd opschain_data/opschain_project_git_repos/<project code>
-    ```
-_Note: The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
+
+    _Note: The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
 
 2. Create the `.opschain` directory the Dockerfile will reside in:
 
-    ```
-    $ mkdir -p .opschain
+    ```bash
+    mkdir -p .opschain
     ```
 
 3. Use the `opschain-utils` script to output the template into the Dockerfile:
 
-    ```
-    $ opschain-utils dockerfile_template > .opschain/Dockerfile
+    ```bash
+    opschain-utils dockerfile_template > .opschain/Dockerfile
     ```
 
 4. You can now make any modifications to the Dockerfile you desire (See the [Supported Customisations](reference/actions.md#supported-customisations) section of the Reference Guide for more information).
 
 5. Add and commit the Dockerfile:
 
+    ```bash
+    git add .opschain/Dockerfile
+    git commit -m "Adding a custom Dockerfile."
     ```
-    $ git add .opschain/Dockerfile
-    $ git commit -m "Adding a custom Dockerfile."
-    ```
 
-When running your Steps OpsChain will now use this Dockerfile when running changes.
+    When running your Steps OpsChain will now use this Dockerfile when running changes.
 
-_Note: Commits before this point won't use the custom Dockerfile because it is not present._
-
-
+    _Note: Commits before this point won't use the custom Dockerfile because it is not present._
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

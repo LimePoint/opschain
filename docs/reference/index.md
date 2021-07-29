@@ -25,6 +25,7 @@ A summary of the pre-defined Resource Types.
 Configuration details and features of the OpsChain CLI.
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

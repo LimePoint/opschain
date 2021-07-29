@@ -3,15 +3,16 @@
 This guide takes you through configuring OpsChain as a systemd service.
 
 After following this guide you should know:
-- How to run services as a non-root users on boot
-- How to run OpsChain as a systemd service
+
+- how to run services as a non-root users on boot
+- how to run OpsChain as a systemd service
 
 ## Run Services on Boot as Non-Root Users
 
 To enable systemd services to run as a non-root user (e.g. `opschain`) on boot the following command needs to be run:
 
-```
-$ loginctl enable-linger opschain
+```bash
+loginctl enable-linger opschain
 ```
 
 ### Additional Configuration for RHEL-7
@@ -50,9 +51,9 @@ EOH
 Then enable and start the service:
 
 ```bash
-$ systemctl daemon-reload
-$ systemctl enable user@$(id -u opschain).service
-$ systemctl start user@$(id -u opschain).service
+systemctl daemon-reload
+systemctl enable user@$(id -u opschain).service
+systemctl start user@$(id -u opschain).service
 ```
 
 ### Setting up OpsChain as a Service
@@ -62,7 +63,7 @@ OpsChain can be run as a systemd service as the root user or as a non-root user.
 Create the OpsChain service unit file as the non-root user (e.g. `opschain`):
 
 ```bash
-$ mkdir -p ~/.local/share/systemd/user/
+mkdir -p ~/.local/share/systemd/user/
 # the DOCKER_HOST environment variable needs to be set if a custom value is being used (e.g. if using rootless docker)
 $ cat > ~/.local/share/systemd/user/opschain.service <<EOH
 [Unit]
@@ -96,9 +97,9 @@ _Note that the paths will vary if you've installed OpsChain to a different locat
 Now enable and start the service:
 
 ```bash
-$ systemctl --user daemon-reload
-$ systemctl --user enable opschain.service
-$ systemctl --user start opschain.service
+systemctl --user daemon-reload
+systemctl --user enable opschain.service
+systemctl --user start opschain.service
 ```
 
 #### Viewing the OpsChain Service Logs
@@ -106,10 +107,11 @@ $ systemctl --user start opschain.service
 To view logs for this service the `--user-unit` argument needs to be passed to `journalctl`:
 
 ```bash
-$ journalctl --user-unit opschain
+journalctl --user-unit opschain
 ```
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../../LICENCE)

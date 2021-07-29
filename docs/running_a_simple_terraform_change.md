@@ -4,50 +4,51 @@ Run a simple change that builds an nginx Docker container on your local Docker i
 It is based on the [Terraform quick start tutorial](https://learn.hashicorp.com/tutorials/terraform/install-cli?in=terraform/aws-get-started#quick-start-tutorial).
 
 After following this guide you should know how to:
+
 - create a project and environment
 - add a remote Git repository as a project remote
 - understand how to provide a custom Dockerfile
 
-### Create a Project
+## Create a Project
 
 Create a new project:
 
 ```bash
-$ opschain project create --code terraform --name 'Demo Terraform Project' --description 'My Terraform project' --confirm
+opschain project create --code terraform --name 'Demo Terraform Project' --description 'My Terraform project' --confirm
 ```
 
 Verify that your new project appears in the list:
 
 ```bash
-$ opschain project list
+opschain project list
 ```
 
-### Create an Environment
+## Create an Environment
 
 Environments represent the logical infrastructure environments under a project (for example Development or Production).
 
 Create a new environment:
 
 ```bash
-$ opschain environment create --project-code terraform --code tform --name 'Terraform Environment' --description 'My Terraform environment' --confirm
+opschain environment create --project-code terraform --code tform --name 'Terraform Environment' --description 'My Terraform environment' --confirm
 ```
 
 Verify that your new environment appears in the list:
 
 ```bash
-$ opschain environment list --project-code terraform
+opschain environment list --project-code terraform
 ```
 
-### Add the Terraform Example as a Remote to the Project Git Repository
+## Add the Terraform Example as a Remote to the Project Git Repository
 
 Follow [Adding a Project Git Repository as a Remote](reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the OpsChain Terraform Example repository remote URL `https://username:password@github.com/LimePoint/opschain-examples-terraform.git`.
 
-### Create a Change
+## Create a Change
 
 Create a new change for the current `origin/master` branch of your project and run the `default` action:
 
 ```bash
-$ opschain change create --project-code terraform --environment-code tform --commit-ref origin/master --action default --confirm
+opschain change create --project-code terraform --environment-code tform --commit-ref origin/master --action default --confirm
 ```
 
 The [steps](reference/concepts.md#step) that comprise the change will be shown as well as their status.
@@ -56,26 +57,26 @@ _Note: the first step in this change may take a long time as it downloads an ngi
 
 **Use the `opschain change logs-show` command to see the log output from the change (including any failures).**
 
-### Verify Change Deployment
+## Verify Change Deployment
 
-#### Check Running Container
+### Check Running Container
 
 Use Docker to check that you have a **tutorial** container running:
 
 ```bash
-$ docker ps -f name=tutorial
+docker ps -f name=tutorial
 ```
 
-#### View nginx Welcome Page
+### View nginx Welcome Page
 
 Navigate to your [locally running nginx container](http://localhost:8000) to see the welcome page.
 
-#### Destroy the Container
+### Destroy the Container
 
 The container can be stopped and removed by running:
 
 ```bash
-$ opschain change create --project-code terraform --environment-code tform --commit-ref origin/master --action destroy --confirm
+opschain change create --project-code terraform --environment-code tform --commit-ref origin/master --action destroy --confirm
 ```
 
 _Note: the [Verify Change Deployment](#verify_change_deployment) steps above can be re-run to verify that the container has been stopped._
@@ -103,6 +104,7 @@ The example makes use of the [Terraform Docker Provider](https://www.terraform.i
 Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [Reference Documentation](reference/index.md) and [Developing Your Own Resources](developing_resources.md) guide for more information.
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

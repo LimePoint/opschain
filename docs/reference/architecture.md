@@ -1,4 +1,4 @@
-## Architecture Overview
+# Architecture Overview
 
 OpsChain provides a fully self contained environment consisting of the command line interface (CLI), API server, a PostgreSQL database and a Fluentd log aggregator. An optional LDAP server is also provided to make it easy to get started, however it is envisaged that most customers will have their own central LDAP server to integrate with in a production deployment.
 
@@ -15,3 +15,9 @@ Each part of this environment is deployed using [Docker Compose](https://docs.do
 - **ldap** is a lightweight LDAP server that is used for authorisation and authentication
 - **db** is the inbuilt database used by both the API and its workers
 - **runner** represents the transient containers that will be spawned by the workers to complete each step
+
+## Licence & Authors
+
+- Author:: LimePoint (support@limepoint.com)
+
+See [LICENCE](../../LICENCE)

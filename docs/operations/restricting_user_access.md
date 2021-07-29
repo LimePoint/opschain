@@ -3,6 +3,7 @@
 Restricting access to OpsChain projects and environments allows you to control user access to view (or perform operations on) OpsChain objects (eg. properties, changes, logs, etc.) .
 
 After following this guide you should know how to:
+
 - enable the OpsChain Open Policy Agent security provider.
 - view, edit and change the OpsChain security configuration.
 
@@ -15,7 +16,8 @@ The OpsChain access restriction model works on an exclusion basis. That is, user
 ### Enable Authorisation Service
 
 By default, the OpsChain Authorisation Service is disabled. To enable it, edit your `.env` file and set:
-```
+
+```bash
 OPSCHAIN_AUTH_SERVICE=OPA
 ```
 
@@ -38,7 +40,6 @@ services:
 EOF
 ```
 
-
 _Note: See the [ports](https://docs.docker.com/compose/compose-file/compose-file-v2/#ports) section of the Docker Compose documentation for more details._
 
 ### Restart the OpsChain Containers
@@ -58,7 +59,7 @@ The following example assumes you have completed the [Getting Started](getting_s
 List the `demo` project environments to verify the `dev` environment is available:
 
 ```bash
-$ opschain environment list -p demo
+opschain environment list -p demo
 ```
 
 ### Update the Security Configuration
@@ -78,9 +79,9 @@ When OpsChain is started, it initialises its security configuration from the `op
 ```
 
 The JSON above will:
+
 1. restrict users in `ldap-group-1` from all OpsChain objects related to the `ansible` project and all objects related to the `dev` environment.
 2. restrict users in `ldap-group-2` from all OpsChain objects related to the `local` and `tform` environments.
-
 
 _Note: The `security_configuration.json` file is case sensitive - all keys and codes must be lowercase._
 
@@ -92,9 +93,9 @@ curl -k http://localhost:8181/v1/data -H "Content-Type: application/json" -X PUT
 
 ### Assign LDAP Group
 
-Add the `opschain` user to the `ldap-group-1` group. This can be done manually using an LDAP editor (such as [Apache Directory Studio](https://directory.apache.org/studio/)), or by importing the following LDIF file:
+Add the `opschain` user to the `ldap-group-1` group. This can be done manually using an LDAP editor (such as [Apache Directory Studio](https://directory.apache.org/studio/) or [LDAP Browser for MAC](http://www.ldapbrowsermac.com/)), or by importing the following LDIF file:
 
-```
+```ldif
 version: 1
 
 dn: cn=ldap-group-1,ou=groups,dc=opschain,dc=io
@@ -112,13 +113,13 @@ _Note: You can connect to the LDAP server at `localhost:389`. The administrator 
 After assigning `opschain` to `ldap-group-1`, re-run the environment list command, verifying the `dev` environment is no longer displayed:
 
 ```bash
-$ opschain environment list -p demo
+opschain environment list -p demo
 ```
 
 Try creating a change to run the `hello_world` action, noting that the change creation fails as the environment is not found:
 
 ```bash
-$ opschain change create -p demo -e dev -a hello_world -c master --confirm
+opschain change create -p demo -e dev -a hello_world -c master --confirm
 ```
 
 ## Combining Group Restrictions
@@ -130,9 +131,11 @@ If an OpsChain user is assigned to multiple LDAP groups, the user is restricted 
 1. The `security_configuration.json` is read each time OpsChain is started (`docker-compose up`). POSTing the file to the server (using the `curl` command listed above) allows this configuration to be changed without needing to restart OpsChain.
 
     _Note: Changes POSTed to the server that are not replicated in the `security_configuration.json` file will be lost on OpsChain restart._
+
 2. Issuing a GET request to the `http://localhost:8181/v1/data` endpoint will return the current configuration.
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

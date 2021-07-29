@@ -3,6 +3,7 @@
 This guide takes you through creating an automated deployment in OpsChain.
 
 After following this guide you should know:
+
 - how automated change deployments work
 - how to create, list and delete automated deployment rules
 - the basics of scheduled deployment rules
@@ -25,7 +26,7 @@ The OpsChain CLI provides commands for interacting with automated deployment rul
 
 A new automated deployment rule can be created by using the `opschain change automated-deployment-create` subcommand in the CLI.
 
-```
+```bash
 opschain change automated-deployment-create --project-code demo --environment-code dev --ref master --action hello_world --confirm
 ```
 
@@ -41,7 +42,7 @@ Once the update has been committed to the project Git repository it can take a m
 
 Once a minute or two has passed, run the OpsChain Change list command to list changes in this environment:
 
-```
+```bash
 opschain change list --project-code demo --environment-code dev
 ```
 
@@ -55,7 +56,7 @@ _Note that when referring to a remote branch, the remote name needs to be used a
 
 Automated deployment rules configured in an environment can be listed by using the `opschain change automated-deployment-list` subcommand in the CLI.
 
-```
+```bash
 opschain change automated-deployment-list --project-code demo --environment-code dev
 ```
 
@@ -67,7 +68,7 @@ Take note of the ID shown as it will be used to delete the automated deployment.
 
 Automated deployment rules can be deleted by using the `opschain change automated-deployment-delete` subcommand in the CLI.
 
-```
+```bash
 opschain change automated-deployment-delete --automated-deployment-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --confirm
 ```
 
@@ -75,22 +76,24 @@ opschain change automated-deployment-delete --automated-deployment-id xxxxxxxx-x
 
 ### Scheduled Deployment Rules
 
-Scheduled deployment rules are similar to automated deployment rules, however:
- - the time the change is created can be configured.
- - the change is created whether there are Git changes or not.
- - the rule may optionally be configured to repeat automatically.
+Scheduled deployment rules are similar to automated deployment rules, however the:
+
+- time the change is created can be configured
+- change is created whether there are Git changes or not
+- rule may optionally be configured to repeat automatically
 
 Scheduled deployment rules are configured using the `scheduled-deployment-create`, `scheduled-deployment-delete` and `scheduled-deployment-list` commands.
 
 The pattern of interaction is the same as `automated-deployment-create`, `automated-deployment-delete` and `automated-deployment-list` however the creation arguments vary.
 
-Running `opschain change automated-deployment-create --help` will show details of the scheduled deployment rule configuration arguments.
+Running `opschain change scheduled-deployment-create --help` will show details of the scheduled deployment rule configuration arguments.
 
 ## What to Do Next
 
 Try creating a scheduled deployment rule by following the same concepts demonstrated in this guide.
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

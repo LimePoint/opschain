@@ -1,10 +1,12 @@
 # Troubleshooting
 
 After following this guide you should understand:
+
 - how to resolve known OpsChain issues
 - workarounds for known OpsChain limitations
 
 ## Known Issues
+
 ### `opschain-exec` / `opschain-action` - Argument list too long
 
 When using the `opschain-exec` or `opschain-action` commands (for example during an OpsChain Step Runner image build or local development activities) the command may fail with the following error:
@@ -19,7 +21,7 @@ Linux systems have a limit on the size of arguments and environment variables wh
 
 The `Limits on size of arguments and environment` section in `man 2 execve` talks more about this limit, or more details can be found via your favourite search engine.
 
-#### Solution
+#### Solution - E2BIG
 
 You will need to reduce the size of the environment variables in your project or environment [properties](reference/properties.md)
 
@@ -39,20 +41,20 @@ This can happen when you've pulled the latest OpsChain Docker images.
 
 The `Gemfile.lock` in the OpsChain project Git repository specifies a particular version of the `opschain-core` Gem. This version changes when pulling the newer OpsChain images.
 
-#### Solution
+#### Solution - Proper Version of OpsChain-Core
 
 The simplest solution is to remove the `Gemfile.lock`, eg:
 
 ```bash
-$ rm -f Gemfile.lock
+rm -f Gemfile.lock
 ```
 
 Alternatively, the `Gemfile.lock` can be updated by running:
 
 ```bash
-[host] $ opschain-dev
-[container] $ bundle update opschain-core
-[container] $ exit
+[host] opschain-dev
+[container] bundle update opschain-core
+[container] exit
 ```
 
 You can then continue with your original command.
@@ -67,7 +69,7 @@ A workaround to allow adding a Git remote that requires SSH authentication is to
 
 In the `opschain-release` directory create a `docker-compose.override.yml` that bind mounts an SSH private key and a known_hosts file into the containers, for example:
 
-```
+```yaml
 version: '2.4'
 
 services:
@@ -106,6 +108,7 @@ This will start the runner container as root, so you can install any packages yo
 You can now use the `opschain-action` command per the instructions in the [Developing Your Own Resources](developing_resources.md) guide.
 
 ## Licence & Authors
+
 - Author:: LimePoint (support@limepoint.com)
 
 See [LICENCE](../LICENCE)

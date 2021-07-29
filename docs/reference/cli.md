@@ -6,17 +6,23 @@ The OpsChain CLI uses an `.opschainrc` configuration file. If `.opschainrc` is p
 
 An [example .opschainrc](../../.opschainrc.example) is provided in this repository.
 
+### Native CLI Binary Configuration
+
+With native builds the OpsChain configuration is loaded by the `rc` package. The [`rc` documentation](https://www.npmjs.com/package/rc#standards) specifies the locations where the configuration file can be placed - the `appname` is `opschain`.
+
+_On Windows the `USERPROFILE` directory is used as the home directory._
+
 ### OpsChain CLI Configuration Settings
 
 The `.opschainrc` file must be valid JSON and supports the following configuration:
 
-| Configuration Key | Optional | Description                                         |
-| :---------------- | :------- | :-------------------------------------------------- |
-| `apiBaseUrl`      | no       | OpsChain API server URL                             |
-| `username`        | no       | OpsChain API username                               |
-| `password`        | no       | OpsChain API password                               |
-| `projectCode`     | yes      | default OpsChain project code used for commands     |
-| `environmentCode` | yes      | default OpsChain environment code used for commands |
+Configuration Key | Optional | Description
+:---------------- | :------- | :--------------------------------------------------
+`apiBaseUrl`      | no       | OpsChain API server URL
+`username`        | no       | OpsChain API username
+`password`        | no       | OpsChain API password
+`projectCode`     | yes      | default OpsChain project code used for commands
+`environmentCode` | yes      | default OpsChain environment code used for commands
 
 ### Environment Variable Configuration
 
@@ -25,8 +31,8 @@ OpsChain configuration can be overridden by using environment variables. This ca
 Prefix the configuration key with `opschain_` and set as an environment variable to override the value from the `.opschainrc`.
 
 ```bash
-$ export opschain_projectCode=dev
-$ opschain environment ls # this will list environments in the dev project without prompting
+export opschain_projectCode=dev
+opschain environment ls # this will list environments in the dev project without prompting
 ```
 
 ## Using the OpsChain CLI with a Proxy
@@ -34,9 +40,9 @@ $ opschain environment ls # this will list environments in the dev project witho
 The OpsChain CLI supports using a http(s) proxy by setting the relevant environment variables:
 
 ```bash
-$ export HTTP_PROXY=http://localhost:8080
-$ export HTTPS_PROXY=http://localhost:8080
-$ opschain change ls # or any other command
+export HTTP_PROXY=http://localhost:8080
+export HTTPS_PROXY=http://localhost:8080
+opschain change ls # or any other command
 ```
 
 `HTTP_PROXY` is used when the OpsChain `apiBaseUrl` is an HTTP address. `HTTPS_PROXY` is used when the OpsChain `apiBaseUrl` is an HTTPS address.
@@ -46,6 +52,12 @@ $ opschain change ls # or any other command
 The OpsChain CLI can be configured to ignore TLS/SSL certificate verification errors as follows:
 
 ```bash
-$ export NODE_TLS_REJECT_UNAUTHORIZED=0
-$ opschain change ls # or any other command
+export NODE_TLS_REJECT_UNAUTHORIZED=0
+opschain change ls # or any other command
 ```
+
+## Licence & Authors
+
+- Author:: LimePoint (support@limepoint.com)
+
+See [LICENCE](../../LICENCE)
