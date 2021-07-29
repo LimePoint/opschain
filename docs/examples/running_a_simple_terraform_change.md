@@ -95,9 +95,9 @@ The example makes use of the [Terraform Docker provider](https://www.terraform.i
 
 ### Try a more advanced example
 
-- The [Ansible example](running_an_aws_ansible_change.md) demonstrates how to use OpsChain with Terraform, Ansible and AWS to build and configure a simple nginx instance on AWS.
+- The [Ansible example](running_an_aws_ansible_change.md) demonstrates how to use OpsChain with Terraform, Ansible and AWS to build and configure a simple nginx instance on AWS
 
-- The [Confluent example](running_a_complex_change.md) demonstrates how to use OpsChain to build and deploy a full [Confluent](https://www.confluent.io) environment using Docker.
+- The [Confluent example](running_a_complex_change.md) demonstrates how to use OpsChain to build and deploy a full [Confluent](https://www.confluent.io) environment using Docker
 
 ### Create your own project
 

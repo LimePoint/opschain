@@ -4,16 +4,16 @@ The OpsChain properties framework provides a location to store:
 
 - key value pairs
 - environment variables and values (that will be available in the Unix environment running a change action)
-- files (that will be written before running a change action).
+- files (that will be written before running a change action)
 
 OpsChain properties can be stored in your project's Git repository and also at the project or environment level in the OpsChain database. For those properties stored in the database OpsChain maintains a complete version history of each change made to the OpsChain properties JSON, enabling you to view and compare the properties used for any change. Similarly, Git version history can be used to identify changes made to the repository properties.
 
 After following this guide you should understand:
 
-- how to incorporate OpsChain properties into your Git repository.
-- how to import OpsChain properties into the database using the CLI.
-- how to view project and environment OpsChain properties from the CLI and API server.
-- the various types of values that can be stored in OpsChain properties.
+- how to incorporate OpsChain properties into your Git repository
+- how to import OpsChain properties into the database using the CLI
+- how to view project and environment OpsChain properties from the CLI and API server
+- the various types of values that can be stored in OpsChain properties
 
 ## OpsChain properties
 
@@ -58,7 +58,7 @@ Properties stored in the database are encrypted prior to being written to disk s
 
 #### Loading properties
 
-The OpsChain CLI allows you to set properties at the project or environment level. The CLI can import JSON files from the `cli-files` directory within the OpsChain repository. First create a JSON file in the cli-files directory. Eg.
+The OpsChain CLI allows you to set properties at the project or environment level. The CLI can import JSON files from the `cli-files` directory within the OpsChain repository. First create a JSON file in the cli-files directory. E.g.
 
 ```bash
 $ cat << EOF > cli-files/my_opschain_properties.json
@@ -106,7 +106,7 @@ The environment API location (the link below will respond with all environments 
 http://<host>:3000/environments?project-code=<project code>
 ```
 
-The relevant API response will contain a link to the properties associated with that object in `/data/relationships/properties/links/related`. This will return the current properties values, including the current version number (in `/data/attributes/version`). To request a different version of the properties, simply append `/versions/VERSION_NUMBER` to the url. Eg.
+The relevant API response will contain a link to the properties associated with that object in `/data/relationships/properties/links/related`. This will return the current properties values, including the current version number (in `/data/attributes/version`). To request a different version of the properties, simply append `/versions/VERSION_NUMBER` to the url. E.g.
 
 ```text
 http://<host>>:3000/properties/PROPERTIES_ID/versions/7
@@ -116,7 +116,7 @@ http://<host>>:3000/properties/PROPERTIES_ID/versions/7
 
 ### Key value pairs
 
-You can use OpsChain key value properties from anywhere in your `actions.rb` to provide environment (or project) specific values to your resource actions. Eg.
+You can use OpsChain key value properties from anywhere in your `actions.rb` to provide environment (or project) specific values to your resource actions. E.g.
 
 ```ruby
 database :my_database do
@@ -144,7 +144,7 @@ The following code will set the project `server_name` property, creating or upda
 OpsChain.project.properties.server_name = 'server1.limepoint.com'
 ```
 
-_Note. As properties behave like a Hashie::Mash, creating multiple levels of property nesting in a single command requires you to supply a hash as the value. Eg._
+_Note. As properties behave like a Hashie::Mash, creating multiple levels of property nesting in a single command requires you to supply a hash as the value. E.g._
 
 ```ruby
 OpsChain.project.properties.parent = { child: { grandchild: 'value' } }
@@ -206,7 +206,15 @@ mode      | The file mode, specified in octal (optional)
 content   | The content of the file (optional)
 format    | The format of the file (optional)
 
-_Note: The example above shows the two file formats OpsChain currently supports - JSON files, and raw (unparsed) file content. Please contact LimePoint if you require additional file format support._
+#### File formats
+
+The file format attribute provides OpsChain with information on how to serialise the file content (for storage in OpsChain properties), and de-serialise the content (before writing to the Opschain runner filesystem). The following formats are currently supported:
+
+- base64
+- json
+- raw (default)
+
+_Please contact LimePoint if you require other file formats._
 
 ### Storing & removing files
 
@@ -244,7 +252,7 @@ To remove a file from the environment properties
 
 An example of setting files can be seen in the [Confluent example](https://github.com/LimePoint/opschain-examples-confluent).
 
-- The `generate_keys` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store generated SSH keys in the environment properties (for use later when building the base image for the Confluent servers.
+- The `generate_keys` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store generated SSH keys in the environment properties (for use later when building the base image for the Confluent servers
 - The `provision` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store the terraform.tfstate file in the environment properties (to ensure the terraform state is available to future runs)
 
 ### Environment variables
@@ -268,7 +276,7 @@ Each [step](concepts.md#step) [action](concepts.md#action) is executed using the
 
 ##### Bundler credentials
 
-[Bundler gem source credentials can be configured via environment variables](https://bundler.io/v1.16/bundle_config.html#CREDENTIALS-FOR-GEM-SOURCES). Defining an OpsChain environment variable with the relevant username/password (eg. `"BUNDLE_BITBUCKET__ORG": "username:password"`) will make this available to bundler.
+[Bundler gem source credentials can be configured via environment variables](https://bundler.io/v1.16/bundle_config.html#CREDENTIALS-FOR-GEM-SOURCES). Defining an OpsChain environment variable with the relevant username/password (e.g. `"BUNDLE_BITBUCKET__ORG": "username:password"`) will make this available to bundler.
 
 #### Setting environment variables example
 

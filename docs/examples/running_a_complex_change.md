@@ -203,7 +203,7 @@ The repository includes two Dockerfiles
 
 ### OpsChain runner network
 
-The Terraform `main.tf` file specifies the control center, broker and zookeeper containers should be started on the `opschain-runner-network`. This is the same network as the OpsChain step runner containers and allows the Confluent containers to be referred to via their alias (eg broker1).
+The Terraform `main.tf` file specifies the control center, broker and zookeeper containers should be started on the `opschain-runner-network`. This is the same network as the OpsChain step runner containers and allows the Confluent containers to be referred to via their alias (e.g. broker1).
 
 ### External packages
 

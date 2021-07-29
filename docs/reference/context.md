@@ -29,20 +29,20 @@ action :print_context do
 end
 ```
 
-The logs from this change will include all of the context attributes available to you. Eg.
+The logs from this change will include all of the context attributes available to you. E.g.
 
 ```yaml
-context:
-  project:
-    code: demo
-    name: Demo Project
-    ...
-  environment: ...
-  change: ...
-  step: ...
-  user:
-    name: 'opschain'
-    groups: []
+---
+project:
+  code: demo
+  name: Demo Project
+  ...
+environment: ...
+change: ...
+step: ...
+user:
+  name: 'opschain'
+  groups: []
 ```
 
 #### User information

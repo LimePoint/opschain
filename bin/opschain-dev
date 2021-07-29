@@ -1,10 +1,8 @@
 #!/usr/bin/env bash
 set -eo pipefail
 
-working_dir="$(pwd)"
+export EXTRA_ARGS=--entrypoint=/usr/bin/container_start.sh
 
-# change to the directory containing the docker-compose.yml and the .env
-CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
-cd ..
+bin_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")"; pwd)"
 
-exec docker-compose run --rm -v "${working_dir}:/opt/opschain" --entrypoint=/usr/bin/container_start.sh opschain-runner-devenv /bin/bash
+exec bash "${bin_dir}"/_opschain-dev.sh /bin/bash

@@ -1,5 +1,24 @@
 # Changelog
 
+## [2021-07-08]
+
+### Added
+
+- The [Oracle WebLogic example](https://github.com/LimePoint/opschain-examples-weblogic) now includes a sample WAR file and related `deploy`, `redeploy` and `undeploy` actions.
+- A HashiCorp Vault example project repository is [now available](https://github.com/LimePoint/opschain-examples-vault).
+- The OpsChain CLI now helps you track the progress of a change by showing the expected step tree.
+- The `opchain-action` and `opschain-dev` commands now inherit environment variables starting with `opschain_` (case insensitive).
+- The `opschain-action` command now supports the `OPSCHAIN_DRY_RUN` environment variable to see the full expected step tree without running the action.
+- OpsChain file properties now supports storing binary files with the new base64 format. See [file formats](docs/reference/properties.md#file-formats) for more details.
+
+### Changed
+
+- Upgraded Terraform to 1.0.1 in the OpsChain examples.
+- Upgraded Terraform plugins in the OpsChain examples - see the commit history of each repository for details.
+- Upgraded OpsChain Log Aggregator Image Fluentd to 1.13.1.
+- Upgraded OpsChain Auth Image Open Policy Agent 0.30.1.
+- Upgraded Bundler to 2.2.21.
+
 ## [2021-06-24]
 
 ### Added

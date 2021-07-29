@@ -1,11 +1,11 @@
 # Restricting user access
 
-Restricting access to OpsChain projects and environments allows you to control user access to view (or perform operations on) OpsChain objects (eg. properties, changes, logs, etc.) .
+Restricting access to OpsChain projects and environments allows you to control user access to view (or perform operations on) OpsChain objects (e.g. properties, changes, logs, etc.).
 
 After following this guide you should know how to:
 
-- enable the OpsChain Open Policy Agent security provider.
-- view, edit and change the OpsChain security configuration.
+- enable the OpsChain Open Policy Agent security provider
+- view, edit and change the OpsChain security configuration
 
 ## Background
 

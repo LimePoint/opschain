@@ -88,7 +88,7 @@ To enable the OpsChain Runner to access your AWS account, configure the [AWS env
 
     _Note: The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
 
-2. Using the editor of your choice, open the sample properties file and insert your AWS Access Key ID and Secret Access Key. _Note: The AMI image used to create the EC2 instance for this example is associated with the us-west-2 region. For this reason, please do not alter the AWS_DEFAULT_REGION environment variable_.
+2. Using the editor of your choice, open the sample properties file and insert your AWS Access Key ID and Secret Access Key. _Note: The AMI image used to create the EC2 instance for this example is associated with the us-west-2 region. For this reason, please do not alter the AWS_DEFAULT_REGION environment variable._
 
 3. Import the project properties:
 
@@ -96,7 +96,7 @@ To enable the OpsChain Runner to access your AWS account, configure the [AWS env
     opschain project properties-set --project-code ansible --file-path cli-files/project_properties.json --confirm
     ```
 
-    _Note: If required, your AWS credentials can be stored at an environment level to enable different credentials to be used when deploying to different environments (eg. Production/Development)._
+    _Note: If required, your AWS credentials can be stored at an environment level to enable different credentials to be used when deploying to different environments (e.g. Production/Development)._
 
 ### Create a change
 

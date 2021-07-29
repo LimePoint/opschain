@@ -2,7 +2,7 @@
 
 Resources and the resource types are the building blocks for OpsChain changes. After following this guide you should understand:
 
-- the relationship between resources, resource types, controllers and actions.
+- the relationship between resources, resource types, controllers and actions
 - how to use the OpsChain logger to assist with resource development
 - how to create your own custom step runner Dockerfiles
 
@@ -53,7 +53,7 @@ The `install_and_startup` action will:
 
 1. execute the `copy_installer` pre-requisite action (to execute the `copy_installer` controller method)
 2. execute the `install` controller method (manually called from within the action body)
-3. request the `startup` action be run as a child step (to execute the `startup` controller method).
+3. request the `startup` action be run as a child step (to execute the `startup` controller method)
 
 ## Define a resource
 

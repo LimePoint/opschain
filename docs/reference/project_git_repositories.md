@@ -2,6 +2,22 @@
 
 A project Git repository is where you store the actions and related configuration to apply to the project's environments. OpsChain will read all action and resource definitions from the `actions.rb` file in the repository root directory. See the [actions reference guide](actions.md) and [developing your own resources](../developing_resources.md) guide for further information about the contents of the `actions.rb` file.
 
+## Minimum Requirements
+
+Each project Git repository must include a `Gemfile` and an `actions.rb` in the root directory.
+
+- The `Gemfile` must include the `opschain-core` gem.
+
+  ```ruby
+  gem 'opschain-core'
+  ```
+
+- The `actions.rb` must include a `require` for the `opschain-core` gem.
+
+  ```ruby
+  require 'opschain-core'
+  ```
+
 ## Adding a project Git repository as a remote
 
 ### Create a GitHub personal access token
@@ -21,8 +37,8 @@ $ opschain project git-remote-set --project-code <project code> --name origin --
 
 To be used by OpsChain, the remote must be either:
 
-- An unauthenticated Git remote.
-- A http(s) authenticated Git remote where the username and password are embedded in the remote URL. For example `https://username:password@github.com/LimePoint/opschain-examples-confluent.git`.
+- An unauthenticated Git remote
+- A http(s) authenticated Git remote where the username and password are embedded in the remote URL. For example `https://username:password@github.com/LimePoint/opschain-examples-confluent.git`
 
 OpsChain does not support any other authentication mechanisms for Git remotes.
 

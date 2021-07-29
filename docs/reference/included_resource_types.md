@@ -1,10 +1,10 @@
 # Included resource types
 
-A collection of Resource Types come pre-installed on the OpsChain step runner image, this guide covers what they are and how to use them.
+A collection of resource types come pre-installed on the OpsChain step runner image, this guide covers what they are and how to use them.
 
 ## Resource type summary
 
-The table below outlines the file to `require` in your resource definition and the Resource Types that will become available.
+The table below outlines the file to `require` in your resource definition and the resource types that will become available.
 
 | Require                   | Resource Type      | Description                          |
 | :------------------------ | :-------------------- | :----------------------------------- |
@@ -16,7 +16,7 @@ _Note: Contact [LimePoint](mailto:opschain@limepoint.com) to obtain the password
 
 ### Usage
 
-The Resource Types are pre-installed in the OpsChain step runner image via the `opschain-resource-types` gem. To use them, simply add the following line to your `Gemfile` in your project Git repository:
+The resource types are pre-installed in the OpsChain step runner image via the `opschain-resource-types` gem. To use them, simply add the following line to your `Gemfile` in your project Git repository:
 
 ```ruby
 gem 'opschain-resource-types'
@@ -36,11 +36,11 @@ end
 
 ## OpsChain infrastructure
 
-Requiring `opschain-infrastructure` currently provides a minimal set of Resource Types for the [Confluent OpsChain example project](https://github.com/LimePoint/opschain-examples-confluent). More support will be added over time.
+Requiring `opschain-infrastructure` currently provides a minimal set of resource types for the [Confluent OpsChain example project](https://github.com/LimePoint/opschain-examples-confluent). More support will be added over time.
 
 ## OpsChain Terraform
 
-Requiring `opschain-terraform` provides the `terraform_config` Resource Type. The Resource Type will accept any of the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/blob/v1.2.0/README.md) command arguments as properties, but will only pass those supported by the command when the action is invoked.
+Requiring `opschain-terraform` provides the `terraform_config` resource type. The resource type will accept any of the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/blob/v1.2.0/README.md) command arguments as properties, but will only pass those supported by the command when the action is invoked.
 
 Please see the [RubyTerraform module documentation](https://infrablocks.github.io/ruby_terraform/RubyTerraform.html) for further information about the available actions and their parameters.
 

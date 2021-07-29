@@ -53,7 +53,7 @@ cat << EOF > .opschain/step_context.json
 EOF
 ```
 
-If your actions rely on [OpsChain context](reference/context.md) values, include the required values in a "context" section in the file. Eg.
+If your actions rely on [OpsChain context](reference/context.md) values, include the required values in a "context" section in the file. E.g.
 
 ```text
 {
@@ -75,9 +75,21 @@ Unlike when actions are run as part of an OpsChain change, the OpsChain developm
 Subsequent steps shown in the `step_result.json` can be run manually either individually or in a sequence, for example:
 
 ```bash
- opschain-action sample:hello_world_1:run # just run the child step
- opschain-action hello_world sample:hello_world_1:run # run the original step and the child step in sequence
+opschain-action sample:hello_world_1:run # just run the child step
+opschain-action hello_world sample:hello_world_1:run # run the original step and the child step in sequence
 ```
+
+### Viewing step dependencies
+
+The `opschain-action` command can be used to view the expected step tree for an action. Using the `OPSCHAIN_DRY_RUN` environment variable means the step tree will be output without any of the actions running.
+
+_Note: The steps listed may not be accurate during execution because the step information may change dynamically._
+
+```bash
+OPSCHAIN_DRY_RUN=true opschain-action hello_world
+```
+
+The `step_result.json` will now contain an `expected_step_tree` field showing the complete known step tree for the action.
 
 ## Running a step using the interactive development environment
 

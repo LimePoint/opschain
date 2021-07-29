@@ -10,11 +10,11 @@ There are several key OpsChain concepts that are useful to comprehend in order t
 
 Projects are used to organise environments and changes and are analogous to [JIRA projects](https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-project/). Each project has
 
-- a Git repository containing configuration for that project.
+- a Git repository containing configuration for that project
 - [properties](properties.md) where you can store project specific:
   - key value pairs
   - environment variables and values (that will be available in the Unix environment running a change action)
-  - files (that will be written to the working directory before running a change action).
+  - files (that will be written to the working directory before running a change action)
 
 ## Environment
 
@@ -30,11 +30,11 @@ See the [actions reference guide](actions.md#defining-standalone-actions) and [d
 
 ## Resource
 
-A resource represents something that OpsChain can perform actions on (eg. SOA Instance, Confluent Broker, Linux Host, etc.) and is an instance of a resource type. A resource may include:
+A resource represents something that OpsChain can perform actions on (e.g. SOA Instance, Confluent Broker, Linux Host, etc.) and is an instance of a resource type. A resource may include:
 
-- A controller class that will provide logic for some (or all) of the resource actions.
-- Any number of resource properties. These are key value pairs that can be referenced in the action code and are supplied as a hash to the controller's constructor.
-- Any number of action definitions, allowing you to define actions that can be performed on the resource.
+- A controller class that will provide logic for some (or all) of the resource actions
+- Any number of resource properties. These are key value pairs that can be referenced in the action code and are supplied as a hash to the controller's constructor
+- Any number of action definitions, allowing you to define actions that can be performed on the resource
 
 See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](../developing_resources.md) guide for more information.
 
@@ -109,7 +109,7 @@ See [setting up automated changes](../automated_changes.md) for a guide on how t
 
 A controller is a ruby object that can be configured via properties and provides the logic for completing different actions. A controller class must have:
 
-- an `initialize` method that accepts a hash containing different properties.
+- an `initialize` method that accepts a hash containing different properties
 - one or more action methods (these do not accept parameters)
 
 An example controller is shown in the [actions reference guide](actions.md#controller).

@@ -522,7 +522,7 @@ The `project/properties` value is the output from `$ opschain project properties
 
 The `environment/properties` value is the output from `$ opschain environment properties-show --project-code <project code> --environment-code <environment code>`
 
-_Replace the <project code> and <environment code> in the commands above with the values for the project and environment related to the change)_
+_Replace the `<project code>` and `<environment code>` in the commands above with the values for the project and environment related to the change._
 
 ### Step result JSON
 
