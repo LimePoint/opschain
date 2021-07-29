@@ -51,6 +51,15 @@ services:
       timeout: 5s
       retries: 5
 
+  opschain-auth:
+    image: limepoint/opschain-auth:${OPSCHAIN_IMAGE_TAG}
+    ports:
+      - "127.0.0.1:8181:8181"
+    networks:
+      - opschain-network
+    volumes:
+      - ${OPSCHAIN_DATA_DIR}/opschain_auth/security_configuration.json:/opschain/security_configuration.json
+
   opschain-log-aggregator:
     image: limepoint/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}
     env_file:
@@ -71,6 +80,8 @@ services:
     env_file:
       - .env # this file is substituted into docker-compose.yml AND used to expose ENV vars to the container
     depends_on:
+      opschain-auth:
+        condition: service_started
       opschain-db:
         condition: service_healthy
       opschain-ldap:

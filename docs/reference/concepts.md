@@ -64,6 +64,20 @@ A change is the application of an action from a specific commit in the project's
 
 Only one change can be running in an environment at a time. Changes will sit in the `pending` state whilst waiting for the existing change to finish.
 
+### Change & Step lifecycle
+
+Changes, and the steps that make them up, transition between states as they execute.
+
+Changes are created in the `pending` state and are in this state until they start execution. A change stays in the `pending` state while waiting for any existing changes in the same environment to finish. A step stays in the `pending` state until its prerequisites are complete. If a prerequisite step fails any dependent steps will remain in the `pending` state and will not transition further.
+
+When a change starts executing it enters the `queued` state. Changes and steps stay in the `queued` state while they are waiting for an OpsChain worker to start executing them (e.g. if all workers are already busy).
+
+Whilst a change or step is actively executing it is in the `running` state.
+
+If the change/step succeeds it transitions to the `success` state. If the change/step fails it transitions to the `error` state.
+
+If a change is cancelled by a user all finalised steps (i.e. in the `success` or `error` state) remain in their existing state, and all `pending`, `queued`, or `running` steps are transitioned to the `cancelled` state. There is no rollback of any kind, steps that have not yet started will not start, and steps that are in progress are stopped immediately.
+
 ## Automated Change Rule
 
 An automated change rule allows the automated creation and execution of a change.

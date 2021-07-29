@@ -261,7 +261,7 @@ You can use the `opschain change create` command to run the sample `hello_world`
 
 ```bash
 # the `hello_world` can be changed to `default` (or even `''`) if you followed the `Adding a New Action` steps
-$ opschain change create --project_code demo --environment_code dev --commit_ref HEAD --action hello_world --confirm
+$ opschain change create --project-code demo --environment-code dev --commit-ref HEAD --action hello_world --confirm
 ```
 
 This will run the change using an OpsChain runner which has been started and managed by an OpsChain worker - a part of the OpsChain server.
@@ -271,14 +271,14 @@ This command will show you an overview of the action as it executes. It will not
 To see the output you can use the `opschain change logs-show` command as follows:
 
 ```bash
-$ opschain change logs-show --change_id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace with the ID from the `change create` output
+$ opschain change logs-show --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace with the ID from the `change create` output
 ```
 
 If you ever need to revisit the status of a change you can use the change list and change show commands:
 
 ```bash
-$ opschain change list --project_code demo --environment_code dev # if you need to find out about other changes
-$ opschain change show --change_id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace with the ID from the `change list` output
+$ opschain change list --project-code demo --environment-code dev # if you need to find out about other changes
+$ opschain change show --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace with the ID from the `change list` output
 ```
 
 ## What to Do Next

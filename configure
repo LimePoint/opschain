@@ -117,6 +117,10 @@ confirm_data_path() {
   export OPSCHAIN_DATA_DIR="${l_data_path}"
 
   ensure_path_exists "$OPSCHAIN_DATA_DIR"
+  create_directory "${OPSCHAIN_DATA_DIR}/opschain_ldap/ldap"
+  create_directory "${OPSCHAIN_DATA_DIR}/opschain_ldap/slapd.d"
+  create_directory "${OPSCHAIN_DATA_DIR}/opschain_auth"
+  cp -n opschain_auth.tmpl/* "${OPSCHAIN_DATA_DIR}/opschain_auth"
 }
 
 ensure_path_exists() {
@@ -130,8 +134,6 @@ ensure_path_exists() {
     if [ "${l_proceed}" == "yes" ]; then
       echo "Creating ${check_path}..."
       create_directory "${check_path}"
-      create_directory "${check_path}/opschain_ldap/ldap"
-      create_directory "${check_path}/opschain_ldap/slapd.d"
       echo "${check_path} created successfully."
     else
       print_msg "Path must exist in order for OpsChain to work." ERR

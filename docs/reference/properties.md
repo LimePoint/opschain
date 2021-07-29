@@ -68,13 +68,13 @@ EOF
 Now import the properties against the project:
 
 ```bash
-$ opschain project properties-set --project_code <project code> --file_path cli-files/my_opschain_properties.json --confirm
+$ opschain project properties-set --project-code <project code> --file-path cli-files/my_opschain_properties.json --confirm
 ```
 
 or environment:
 
 ```bash
-$ opschain environment properties-set --project_code <project code> --environment_code <environment_code> --file_path cli-files/my_opschain_properties.json --confirm
+$ opschain environment properties-set --project-code <project code> --environment-code <environment_code> --file-path cli-files/my_opschain_properties.json --confirm
 ```
 
 #### Viewing Properties
@@ -82,8 +82,8 @@ $ opschain environment properties-set --project_code <project code> --environmen
 The OpsChain CLI allows you to view the stored properties:
 
 ```bash
-$ opschain project properties-show --project_code <project code>
-$ opschain environment properties-show --project_code <project code> --environment_code <environment_code>
+$ opschain project properties-show --project-code <project code>
+$ opschain environment properties-show --project-code <project code> --environment-code <environment_code>
 ```
 
 The CLI does not currently support viewing prior versions of the properties. To do this you will need to interact directly with the OpsChain API server. The project API location:
@@ -95,7 +95,7 @@ http://<host>:3000/projects/<project code>
 The environment API location (the link below will respond with all environments for the project specified - review the output for the environment of interest):
 
 ```
-http://<host>:3000/environments?project_code=<project code>
+http://<host>:3000/environments?project-code=<project code>
 ```
 
 The relevant API response will contain a link to the properties associated with that object in `/data/relationships/properties/links/related`. This will return the current properties values, including the current version number (in `/data/attributes/version`). To request a different version of the properties, simply append `/versions/VERSION_NUMBER` to the url. Eg.

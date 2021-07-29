@@ -33,8 +33,8 @@ The `opschain-action` script uses a `.opschain/step_context.json` file if it exi
 If your action requires [properties](reference/properties.md) then you can use the `opschain` `properties-show` sub command to output the required properties values:
 
 ```bash
-$ opschain project properties-show --project_code demo
-$ opschain environment properties-show --project_code demo --environment_code dev
+$ opschain project properties-show --project-code demo
+$ opschain environment properties-show --project-code demo --environment-code dev
 ```
 
 Use the output of these commands to replace the `{}` in the sample properties in the empty file below:

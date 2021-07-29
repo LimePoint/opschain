@@ -1,5 +1,14 @@
 # Changelog
 
+## [2021-05-26]
+
+### Added
+- The OpsChain platform now includes an Authorisation Server allowing you to restrict user access to projects and environments. See [Restricting User Access](docs/restricting_user_access.md) for more information.
+- OpsChain changes can now be cancelled by using the `opschain change cancel` command.
+
+## Changed
+- **Breaking Change** - The OpsChain CLI now uses kebab-case-arguments (rather than snake_case_arguments) so all multi word arguments have changed.
+
 ## [2021-05-17]
 
 ### Important Breaking Changes

@@ -30,13 +30,13 @@ Environments represent the logical infrastructure environments under a project (
 Create a new environment:
 
 ```bash
-$ opschain environment create --project_code confluent --code local --name 'Confluent Environment' --description 'My Confluent environment' --confirm
+$ opschain environment create --project-code confluent --code local --name 'Confluent Environment' --description 'My Confluent environment' --confirm
 ```
 
 Verify that your new environment appears in the list:
 
 ```bash
-$ opschain environment list --project_code confluent
+$ opschain environment list --project-code confluent
 ```
 
 ### Add the Confluent Example as a Remote to the Project Git Repository
@@ -77,7 +77,7 @@ _Note: The path above assumes the default `opschain_data` path was accepted when
 2. Set the environment specific [properties](reference/properties.md) using the following command:
 
 ```bash
-$ opschain environment properties-set --project_code confluent --environment_code local --file_path cli-files/environment_properties.json --confirm
+$ opschain environment properties-set --project-code confluent --environment-code local --file-path cli-files/environment_properties.json --confirm
 ```
 
 These environment [properties](reference/properties.md) will:
@@ -117,7 +117,7 @@ Note: project or environment [properties](reference/properties.md) set dynamical
 Create a new change for the current `origin/master` branch of your project and run the `default` action:
 
 ```bash
-$ opschain change create --project_code confluent --environment_code local --commit_ref origin/master --action default --confirm
+$ opschain change create --project-code confluent --environment-code local --commit-ref origin/master --action default --confirm
 ```
 
 The [steps](reference/concepts.md#step) that comprise the change will be shown as well as their status.
@@ -177,7 +177,7 @@ hello there
 It can be useful for troubleshooting to know which [properties](reference/properties.md) were used by a change when it ran (whether the change was successful or had an error). You can view the merged set of [properties](reference/properties.md) that the change started with:
 
 ```bash
-$ opschain change properties-show --change_id $change_id
+$ opschain change properties-show --change-id $change_id
 ```
 
 More detailed information about the specific versions of environment and project [properties](reference/properties.md) supplied to each [step](reference/concepts.md#step) of the change is available directly from the API server. Using your browser, navigate to http://localhost:3000/changes/CHANGE_ID _(where CHANGE_ID is the ID of the change)_. In the API response, each [step](reference/concepts.md#step) has a reference to the project and environment [properties](reference/properties.md) versions supplied to the [step](reference/concepts.md#step).

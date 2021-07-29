@@ -29,13 +29,13 @@ Environments represent the logical infrastructure environments under a project (
 Create a new environment:
 
 ```bash
-$ opschain environment create --project_code terraform --code tform --name 'Terraform Environment' --description 'My Terraform environment' --confirm
+$ opschain environment create --project-code terraform --code tform --name 'Terraform Environment' --description 'My Terraform environment' --confirm
 ```
 
 Verify that your new environment appears in the list:
 
 ```bash
-$ opschain environment list --project_code terraform
+$ opschain environment list --project-code terraform
 ```
 
 ### Add the Terraform Example as a Remote to the Project Git Repository
@@ -47,7 +47,7 @@ Follow [Adding a Project Git Repository as a Remote](reference/project_git_repos
 Create a new change for the current `origin/master` branch of your project and run the `default` action:
 
 ```bash
-$ opschain change create --project_code terraform --environment_code tform --commit_ref origin/master --action default --confirm
+$ opschain change create --project-code terraform --environment-code tform --commit-ref origin/master --action default --confirm
 ```
 
 The [steps](reference/concepts.md#step) that comprise the change will be shown as well as their status.
@@ -75,7 +75,7 @@ Navigate to your [locally running nginx container](http://localhost:8000) to see
 The container can be stopped and removed by running:
 
 ```bash
-$ opschain change create --project_code terraform --environment_code tform --commit_ref origin/master --action destroy --confirm
+$ opschain change create --project-code terraform --environment-code tform --commit-ref origin/master --action destroy --confirm
 ```
 
 _Note: the [Verify Change Deployment](#verify_change_deployment) steps above can be re-run to verify that the container has been stopped._

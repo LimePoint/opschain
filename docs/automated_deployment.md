@@ -26,7 +26,7 @@ The OpsChain CLI provides commands for interacting with automated deployment rul
 A new automated deployment rule can be created by using the `opschain change automated-deployment-create` subcommand in the CLI.
 
 ```
-opschain change automated-deployment-create --project_code demo --environment_code dev --ref master --action hello_world --confirm
+opschain change automated-deployment-create --project-code demo --environment-code dev --ref master --action hello_world --confirm
 ```
 
 This creates an automated change rule that will create an OpsChain change to run the `hello_world` action whenever the project's Git repository's `master` branch changes.
@@ -42,7 +42,7 @@ Once the update has been committed to the project Git repository it can take a m
 Once a minute or two has passed, run the OpsChain Change list command to list changes in this environment:
 
 ```
-opschain change list --project_code demo --environment_code dev
+opschain change list --project-code demo --environment-code dev
 ```
 
 The output will now include a new change that has been created in response to our new Git change. (The change may still be underway.)
@@ -56,7 +56,7 @@ _Note that when referring to a remote branch, the remote name needs to be used a
 Automated deployment rules configured in an environment can be listed by using the `opschain change automated-deployment-list` subcommand in the CLI.
 
 ```
-opschain change automated-deployment-list --project_code demo --environment_code dev
+opschain change automated-deployment-list --project-code demo --environment-code dev
 ```
 
 This will show any automated deployments configured in the `dev` environment.
@@ -68,7 +68,7 @@ Take note of the ID shown as it will be used to delete the automated deployment.
 Automated deployment rules can be deleted by using the `opschain change automated-deployment-delete` subcommand in the CLI.
 
 ```
-opschain change automated-deployment-delete --automated_deployment_id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --confirm
+opschain change automated-deployment-delete --automated-deployment-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --confirm
 ```
 
 ## Other Deployment Rules

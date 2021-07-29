@@ -20,6 +20,10 @@ Run a simple change to use Terraform and Ansible to build an AWS EC2 host and co
 
 Run a more complex change using our example [Confluent](https://www.confluent.io) project.
 
+## [Restricting User Access](restricting_user_access.md)
+
+Enable the OpsChain Authorisation Server and restrict user's access to OpsChain.
+
 ## [Docker Development Environment](docker_development_environment.md)
 
 Understand the OpsChain Docker development environment.
