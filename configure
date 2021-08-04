@@ -13,6 +13,10 @@ set -eo pipefail
 # to stderr.
 exec 7>&1 8>&2
 
+quote() {
+  printf %s\\n "$1" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/'/"
+}
+
 print_msg() {
   local echo_target
   echo_target=7
@@ -87,7 +91,7 @@ save_settings() {
 
   # use example env file as a template, accumulate key=value pairs
   for var in $(read_configuration_keys "${example_env_file}" "${lp_env_file}"); do
-    env_file_contents="${env_file_contents}${var}=${!var@Q}\n"
+    env_file_contents="${env_file_contents}${var}=$(quote "${!var}")\n"
   done
 
   echo -e "${env_file_contents}" > "${lp_env_file}"
@@ -224,7 +228,7 @@ approve_socket() {
 }
 
 load_mintpress_licence() {
-  licence_file="mintpress.licence"
+  licence_file="$(shopt -s nullglob; set -- mintpress.licen[cs]e; echo -n "${1:-mintpress.licence}")"
   if [ -e "${licence_file}" ]; then
     MINTPRESS_SDK_LICENCE_BASE64="$(base64 < "${licence_file}")"
     # remove whitespace to avoid breaking encoded licence

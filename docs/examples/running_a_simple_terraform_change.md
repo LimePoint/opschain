@@ -55,7 +55,7 @@ The [steps](../reference/concepts.md#step) that comprise the change will be show
 
 _Note: the first step in this change may take a long time as it downloads an nginx Docker image._
 
-**Use the `opschain change logs-show` command to see the log output from the change (including any failures).**
+**Use the `opschain change show-logs` command to see the log output from the change (including any failures).**
 
 ## Verify change deployment
 
@@ -101,7 +101,7 @@ The example makes use of the [Terraform Docker provider](https://www.terraform.i
 
 ### Create your own project
 
-Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](reference/index.md) and [developing your own resources](developing_resources.md) guide for more information.
+Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/index.md) and [developing your own resources](../developing_resources.md) guide for more information.
 
 ## Licence & authors
 

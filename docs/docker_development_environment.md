@@ -30,11 +30,11 @@ Notes:
 
 The `opschain-action` command uses a `.opschain/step_context.json` file if it exists within the project Git repository working directory. For more information about the `step_context.json` file, see the [actions reference guide](reference/actions.md#step-context-json).
 
-If your action requires [properties](reference/properties.md) then you can use the `opschain` `properties-show` sub command to output the required properties values:
+If your action requires [properties](reference/properties.md) then you can use the `opschain` `show-properties` sub command to output the required properties values:
 
 ```bash
- opschain project properties-show --project-code demo
- opschain environment properties-show --project-code demo --environment-code dev
+ opschain project show-properties --project-code demo
+ opschain environment show-properties --project-code demo --environment-code dev
 ```
 
 Use the output of these commands to replace the `{}` in the project and environment properties below:

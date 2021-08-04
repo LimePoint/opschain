@@ -74,24 +74,24 @@ EOF
 Now import the properties against the project:
 
 ```bash
-opschain project properties-set --project-code <project code> --file-path cli-files/my_opschain_properties.json --confirm
+opschain project set-properties --project-code <project code> --file-path cli-files/my_opschain_properties.json --confirm
 ```
 
 or environment:
 
 ```bash
-opschain environment properties-set --project-code <project code> --environment-code <environment_code> --file-path cli-files/my_opschain_properties.json --confirm
+opschain environment set-properties --project-code <project code> --environment-code <environment_code> --file-path cli-files/my_opschain_properties.json --confirm
 ```
 
-_Note: If the environment or project properties are in use by an active change, the API server will reject the properties-set request. This ensures OpsChain can guarantee the properties state throughout the life of the change._
+_Note: If the environment or project properties are in use by an active change, the API server will reject the set-properties request. This ensures OpsChain can guarantee the properties state throughout the life of the change._
 
 #### Viewing properties
 
 The OpsChain CLI allows you to view the stored properties:
 
 ```bash
-opschain project properties-show --project-code <project code>
-opschain environment properties-show --project-code <project code> --environment-code <environment_code>
+opschain project show-properties --project-code <project code>
+opschain environment show-properties --project-code <project code> --environment-code <environment_code>
 ```
 
 The CLI does not currently support viewing prior versions of the properties. To do this you will need to interact directly with the OpsChain API server. The project API location:
@@ -218,7 +218,7 @@ _Please contact LimePoint if you require other file formats._
 
 ### Storing & removing files
 
-The project or environment properties can be edited directly to add, edit or remove file properties (using a combination of a text editor, the `properties-show` and `properties-set` commands). In addition, OpsChain enables you to store and remove files from within your actions.
+The project or environment properties can be edited directly to add, edit or remove file properties (using a combination of a text editor, the `show-properties` and `set-properties` commands). In addition, OpsChain enables you to store and remove files from within your actions.
 
 #### Project file properties
 

@@ -93,7 +93,7 @@ To enable the OpsChain Runner to access your AWS account, configure the [AWS env
 3. Import the project properties:
 
     ```bash
-    opschain project properties-set --project-code ansible --file-path cli-files/project_properties.json --confirm
+    opschain project set-properties --project-code ansible --file-path cli-files/project_properties.json --confirm
     ```
 
     _Note: If required, your AWS credentials can be stored at an environment level to enable different credentials to be used when deploying to different environments (e.g. Production/Development)._
@@ -166,7 +166,7 @@ The [Confluent example](running_a_complex_change.md) demonstrates how to use Ops
 
 ### Create your own project
 
-Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](reference/index.md) and [developing your own resources](developing_resources.md) guide for more information.
+Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/index.md) and [developing your own resources](../developing_resources.md) guide for more information.
 
 ## Licence & authors
 

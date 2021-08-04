@@ -518,9 +518,9 @@ The `step_context.json` file has the following structure:
 
 The `context` values are derived from the current step. The [OpsChain context guide](context.md) provides more details on the values available.
 
-The `project/properties` value is the output from `$ opschain project properties-show --project-code <project code>`.
+The `project/properties` value is the output from `$ opschain project show-properties --project-code <project code>`.
 
-The `environment/properties` value is the output from `$ opschain environment properties-show --project-code <project code> --environment-code <environment code>`
+The `environment/properties` value is the output from `$ opschain environment show-properties --project-code <project code> --environment-code <environment code>`
 
 _Replace the `<project code>` and `<environment code>` in the commands above with the values for the project and environment related to the change._
 

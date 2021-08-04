@@ -57,7 +57,7 @@ $ docker-compose up
 
 ## Restricting project and environment access
 
-The following example assumes you have completed the [getting started](getting_started.md) guide. The example security configuration makes use of projects and environments created as part of the [Terraform](running_a_simple_terraform_change.md), [Confluent](running_a_complex_change.md) and [Ansible](running_an_aws_ansible_change.md) examples. These will help to highlight the restrictions applied to OpsChain but are not necessary to complete the example.
+The following example assumes you have completed the [getting started](../getting_started.md) guide. The example security configuration makes use of projects and environments created as part of the [Terraform](../examples/running_a_simple_terraform_change.md), [Confluent](../examples/running_a_complex_change.md) and [Ansible](../examples/running_an_aws_ansible_change.md) examples. These will help to highlight the restrictions applied to OpsChain but are not necessary to complete the example.
 
 ### List project environments
 
@@ -142,4 +142,4 @@ If an OpsChain user is assigned to multiple LDAP groups, the user is restricted 
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../LICENCE)
+See [LICENCE](../../LICENCE)

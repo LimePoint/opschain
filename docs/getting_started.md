@@ -36,7 +36,8 @@ OpsChain supports the following Docker versions:
 
 - macOS - Docker Desktop Community 3.1.0 and above
 - Linux - the latest Docker release
-- Windows Subsystem for Linux - the latest Docker release (installed in the WSL environment)
+- Windows Subsystem for Linux (WSL) - the latest Docker release (installed in the WSL environment)
+  - _Note: Prior to running the OpsChain Docker containers in WSL, we recommend adjusting the "memory" setting in your [WSL 2 Settings](https://docs.microsoft.com/en-us/windows/wsl/wsl-config#wsl-2-settings). The default setting can cause WSL to consume most of the machine's memory when running Docker containers in WSL._
 
 ### Clone the OpsChain trial repository
 
@@ -133,6 +134,8 @@ The OpsChain API server requires a valid username and password. To create a user
 ```bash
 opschain-utils "create_user['opschain','password']"
 ```
+
+_Note: Please ensure there are no spaces included in the parameter you supply to `opschain_utils`._
 
 ### Create an OpsChain CLI configuration file
 
@@ -272,10 +275,10 @@ This will run the change using an OpsChain runner which has been started and man
 
 This command will show you an overview of the action as it executes. It will not show the `hello_world` task output because it has been sent to the OpsChain log aggregator.
 
-To see the output you can use the `opschain change logs-show` command as follows:
+To see the output you can use the `opschain change show-logs` command as follows:
 
 ```bash
-opschain change logs-show --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace with the ID from the `change create` output
+opschain change show-logs --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace with the ID from the `change create` output
 ```
 
 If you ever need to revisit the status of a change you can use the change list and change show commands:
@@ -297,11 +300,11 @@ Follow the [loading properties](reference/properties.md#loading-properties) guid
 
 ### Try a more advanced example
 
-- The [Terraform example](running_a_simple_terraform_change.md) demonstrates how to use OpsChain with Terraform to build a simple nginx Docker container
+- The [Terraform example](examples/running_a_simple_terraform_change.md) demonstrates how to use OpsChain with Terraform to build a simple nginx Docker container
 
-- The [Ansible example](running_an_aws_ansible_change.md) demonstrates how to use OpsChain with Terraform, Ansible and AWS to build and configure a simple nginx instance on AWS
+- The [Ansible example](examples/running_an_aws_ansible_change.md) demonstrates how to use OpsChain with Terraform, Ansible and AWS to build and configure a simple nginx instance on AWS
 
-- The [Confluent example](running_a_complex_change.md) demonstrates how to use OpsChain to build and deploy a confluent control-centre, zookeeper and brokers (as Docker containers)
+- The [Confluent example](examples/running_a_complex_change.md) demonstrates how to use OpsChain to build and deploy a confluent control-centre, zookeeper and brokers (as Docker containers)
 
 ### Try developing your own resources
 

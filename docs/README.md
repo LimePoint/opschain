@@ -12,9 +12,9 @@ Install your OpsChain environment and run a simple change.
 
 ### Tutorials
 
-- [Terraform example](running_a_simple_terraform_change.md) - Run a simple change to use Terraform to provision a Centos Docker container
-- [AWS Ansible example](running_an_aws_ansible_change.md) - Run a simple change to use Terraform and Ansible to build an AWS EC2 host and configure nginx
-- [Confluent example](running_a_complex_change.md) - Run a more complex change to provision a multi-node [Confluent](https://www.confluent.io) environment
+- [Terraform example](examples/running_a_simple_terraform_change.md) - Run a simple change to use Terraform to provision a Centos Docker container
+- [AWS Ansible example](examples/running_an_aws_ansible_change.md) - Run a simple change to use Terraform and Ansible to build an AWS EC2 host and configure nginx
+- [Confluent example](examples/running_a_complex_change.md) - Run a more complex change to provision a multi-node [Confluent](https://www.confluent.io) environment
 
 ### Samples
 

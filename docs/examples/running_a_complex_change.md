@@ -80,7 +80,7 @@ To load the file, perform the following steps:
 2. Set the environment specific [properties](../reference/properties.md) using the following command:
 
     ```bash
-    opschain environment properties-set --project-code confluent --environment-code local --file-path cli-files/environment_properties.json --confirm
+    opschain environment set-properties --project-code confluent --environment-code local --file-path cli-files/environment_properties.json --confirm
     ```
 
     These environment [properties](../reference/properties.md) will:
@@ -135,7 +135,7 @@ Manually copy and set the change ID as a variable, you'll need it for the next s
 change_id=XXXXX
 ```
 
-**Use the `opschain change logs-show` command to see the log output from the change (including any failures).**
+**Use the `opschain change show-logs` command to see the log output from the change (including any failures).**
 
 ## Verify change deployment
 
@@ -182,7 +182,7 @@ hello there
 It can be useful for troubleshooting to know which [properties](../reference/properties.md) were used by a change when it ran (whether the change was successful or had an error). You can view the merged set of [properties](../reference/properties.md) that the change started with:
 
 ```bash
-opschain change properties-show --change-id $change_id
+opschain change show-properties --change-id $change_id
 ```
 
 More detailed information about the specific versions of environment and project [properties](../reference/properties.md) supplied to each [step](../reference/concepts.md#step) of the change is available directly from the API server. Using your browser, navigate to `http://localhost:3000/changes/CHANGE_ID` _(where CHANGE_ID is the ID of the change)_. In the API response, each [step](../reference/concepts.md#step) has a reference to the project and environment [properties](../reference/properties.md) versions supplied to the [step](../reference/concepts.md#step).
@@ -216,7 +216,7 @@ The example makes use of the following packages
 
 ### Create your own project
 
-Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](reference/index.md) and [developing your own resources](developing_resources.md) guide for more information.
+Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/index.md) and [developing your own resources](../developing_resources.md) guide for more information.
 
 ## Licence & authors
 

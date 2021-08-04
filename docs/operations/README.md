@@ -30,9 +30,9 @@ How to perform backups of OpsChain.
 
 Information about regular maintenance tasks to run (or schedule) on your OpsChain host to cleanup Docker images.
 
-## [OpsChain maintenance: Change log retention](change_log_retention.md)
+## [OpsChain maintenance: data retention](data_retention.md)
 
-Information about configuration in OpsChain to remove old change logs.
+Information about configuration in OpsChain to remove old change logs and events.
 
 ## [OpsChain rootless Docker install](rootless_install.md)
 

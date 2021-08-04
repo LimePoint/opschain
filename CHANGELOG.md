@@ -1,5 +1,32 @@
 # Changelog
 
+## [2021-08-04]
+
+### Added
+
+- Support for alternative spelling of `mintpress.license` in the `configure` script.
+
+### Changed
+
+- The OpsChain change log retention guide has moved and been renamed to [OpsChain data retention](docs/operations/data_retention.md).
+- **Breaking change** - the `OPSCHAIN_ARCHIVE_LOG_LINES_JOB_CRON` config variable has been renamed to `OPSCHAIN_CLEAN_OLD_DATA_JOB_CRON`.
+
+### Changed
+
+- **Breaking change** - Upgraded Ruby to 2.7.4 on the OpsChain Step Runner.
+  - If required, please update the `.ruby_version` in your project Git repositories.
+- Upgraded Bundler to 2.2.25.
+- Upgraded OpsChain Log Aggregator Image to Fluentd 1.13.3.
+- Upgraded OpsChain Auth Image to Open Policy Agent 0.31.0.
+- Upgraded Terraform to 1.0.3 in the OpsChain examples.
+- Upgraded Terraform hashicorp/aws plugin to 3.52.0 in the OpsChain Ansible example.
+- Upgraded Terraform kreuzwerker/docker plugin to 2.14.0 in the OpsChain Confluent, Terraform & Weblogic examples.
+- Upgraded HashiCorp Vault to 1.8.0 in the OpsChain Vault example.
+
+### Fixed
+
+- A bug with the configure script on macOS has been fixed - `./configure: line 90: ${env_file_contents}${var}=${!var@Q}\n: bad substitution`.
+
 ## [2021-07-29]
 
 ### Changed
@@ -224,7 +251,7 @@
   - Replaced encrypted project properties with unencrypted properties.
   - The host environment for the brokers and control center is now sourced from OpsChain properties.
 
-  _Please note, you will need to [update the project properties](running_a_complex_change.md#import-the-confluent-example-properties) with the new `project_properties.json` before re-running the example._
+  _Please note, you will need to [update the project properties](docs/examples/running_a_complex_change.md#import-the-confluent-example-properties) with the new `project_properties.json` before re-running the example._
 
 - The Terraform binary is now installed in the custom step runner Dockerfile as part of the [OpsChain Confluent example](https://github.com/LimePoint/opschain-examples-confluent/blob/75473f7fbac4150b3d5c583dfc52c6b22044552f/.opschain/Dockerfile#L8)
 
@@ -254,4 +281,4 @@ _Please note:_
 1. Project Git repositories will need to be updated:
     - [Terraform 0.12 -> 0.13](https://www.terraform.io/upgrade-guides/0-13.html) - will assist in creating a `versions.tf` in your project Git repository(s).
     - [Terraform 0.13 -> 0.14](https://www.terraform.io/upgrade-guides/0-14.html) - provides information on the new `.terraform.lock.hcl` lock file.
-2. You will need to [update the environment properties](running_a_complex_change.md#import-the-confluent-example-properties) with the `environment_properties.json` before re-running the example (to remove the old `tfstate` information).
+2. You will need to [update the environment properties](docs/examples/running_a_complex_change.md#import-the-confluent-example-properties) with the `environment_properties.json` before re-running the example (to remove the old `tfstate` information).
