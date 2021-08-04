@@ -10,9 +10,6 @@
 
 - The OpsChain change log retention guide has moved and been renamed to [OpsChain data retention](docs/operations/data_retention.md).
 - **Breaking change** - the `OPSCHAIN_ARCHIVE_LOG_LINES_JOB_CRON` config variable has been renamed to `OPSCHAIN_CLEAN_OLD_DATA_JOB_CRON`.
-
-### Changed
-
 - **Breaking change** - Upgraded Ruby to 2.7.4 on the OpsChain Step Runner.
   - If required, please update the `.ruby_version` in your project Git repositories.
 - Upgraded Bundler to 2.2.25.
