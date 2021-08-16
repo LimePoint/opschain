@@ -1,6 +1,6 @@
 # Getting started
 
-This guide takes you through installing and configuring your OpsChain environment and running a simple change.
+This guide takes you through installing and configuring OpsChain and running a simple change.
 
 After following this guide you should know how to:
 
@@ -44,7 +44,7 @@ OpsChain supports the following Docker versions:
 Clone the [OpsChain trial repository](https://github.com/LimePoint/opschain-trial) to your local machine using your preferred Git client.
 
 ```bash
-git clone https://github.com/LimePoint/opschain-trial
+git clone git@github.com:LimePoint/opschain-trial.git
 cd opschain-trial
 ```
 
@@ -155,6 +155,14 @@ If you changed the username or password in the create_user command above, please
 
 _Note: If you create a `.opschainrc` file in your current directory, this will be used in precedence to the version in your home directory._
 
+#### Download the native CLI (optional)
+
+OpsChain has native CLI binaries for Windows, macOS and Linux. The native CLI has better performance than the CLI bundled in the `opschain-trial` repository, as well as native filesystem access.
+
+Once downloaded, the native CLI will need to be added to the path or used directly. The `apiBaseUrl` configuration in the `~/.opschainrc` configuration file will also need to be updated.
+
+[Read our documentation about downloading the native CLI.](reference/cli.md#opschain-native-cli)
+
 ### Create sample data
 
 Create a sample [project](reference/concepts.md#project) and [environment](reference/concepts.md#environment) in the OpsChain database:
@@ -163,7 +171,7 @@ Create a sample [project](reference/concepts.md#project) and [environment](refer
 opschain-utils create_sample_data
 ```
 
-This command will also create a sample commit in the project's [Git repository](reference/concepts.md#project-git-repository) containing the OpsChain [action](reference/concepts.md#action) that will be run below (the action implements a simple "hello world" example).
+This command will also create a sample commit in the project's [Git repository](reference/concepts.md#project-git-repository) - `./opschain_project_git_repos/demo` located in the folder you nominated earlier using `./configure`. This folder contains the OpsChain [action](reference/concepts.md#action) that will be run below (the action implements a simple "hello world" example).
 
 #### Listing available projects
 

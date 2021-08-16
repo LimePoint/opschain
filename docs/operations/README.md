@@ -10,6 +10,10 @@ New features, bug fixes and changes in OpsChain - please read this before perfor
 
 The main OpsChain documentation page.
 
+## [Configuration options](configuring_opschain.md)
+
+Explore the available configuration options that can be included in the `.env` file.
+
 ## [OpsChain LDAP](opschain_ldap.md)
 
 Configure OpsChain's LDAP cache and learn how to connect OpsChain to an external LDAP/AD for user authentication and authorisation.

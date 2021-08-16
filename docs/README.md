@@ -33,6 +33,10 @@ Understand the OpsChain Docker development environment.
 
 Learn the basics of developing your own resources.
 
+## [Events](events.md)
+
+Learn about the events OpsChain tracks for auditing and reporting purposes.
+
 ## [Reference documentation](reference/index.md)
 
 OpsChain concepts, system architecture, actions and properties.

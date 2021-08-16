@@ -89,6 +89,8 @@ save_settings() {
   blank_line="^[[:blank:]]*$"
   comment_line="^#"
 
+  env_file_contents="# Note: See docs/operations/configuring_opschain.md for the complete list of configurable options\n\n"
+
   # use example env file as a template, accumulate key=value pairs
   for var in $(read_configuration_keys "${example_env_file}" "${lp_env_file}"); do
     env_file_contents="${env_file_contents}${var}=$(quote "${!var}")\n"
@@ -208,7 +210,9 @@ get_integer() {
 }
 
 confirm_port() {
-  export OPSCHAIN_API_PORT=$(get_integer "Which available port would you like the OpsChain server to listen on" 1 65535 "${OPSCHAIN_API_PORT:-3000}")
+  api_port=${OPSCHAIN_API_PORT_MAPPING%:*}
+  api_port=$(get_integer "Which available port would you like the OpsChain server to listen on" 1 65535 "${api_port:-3000}")
+  export OPSCHAIN_API_PORT_MAPPING="${api_port}:3000"
 }
 
 confirm_workers() {
@@ -242,6 +246,7 @@ load_mintpress_licence() {
 }
 
 generate_secrets() {
+  PGPASSWORD=${PGPASSWORD:-$(openssl rand -hex 8)}
   OPSCHAIN_ENCRYPTION_KEY=${OPSCHAIN_ENCRYPTION_KEY:-$(openssl rand -hex 32)}
   OPSCHAIN_LDAP_PASSWORD=${OPSCHAIN_LDAP_PASSWORD:-$(openssl rand -hex 8)}
   OPSCHAIN_CREATE_LOGS_API_PASSWORD=${OPSCHAIN_CREATE_LOGS_API_PASSWORD:-$(openssl rand -hex 8)}

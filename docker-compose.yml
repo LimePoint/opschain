@@ -12,14 +12,11 @@ services:
       - opschain-network
     volumes:
       - ${OPSCHAIN_DATA_DIR}/opschain_db:/var/lib/postgresql/data
-    environment:
-      POSTGRES_DB: ${PGDB}
-      POSTGRES_USER: ${PGUSER}
-      POSTGRES_PASSWORD: ${PGPASSWORD}
-      OPSCHAIN_GID: ${OPSCHAIN_GID}
-      OPSCHAIN_UID: ${OPSCHAIN_UID}
+    env_file:
+      - .env.internal
+      - .env
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${PGUSER}"]
+      test: "pg_isready -U $${PGUSER}"
       interval: 10s
       timeout: 5s
       retries: ${HEALTHCHECK_RETRIES:-5}
@@ -32,15 +29,9 @@ services:
     volumes:
       - ${OPSCHAIN_DATA_DIR}/opschain_ldap/ldap:/var/lib/ldap
       - ${OPSCHAIN_DATA_DIR}/opschain_ldap/slapd.d:/etc/ldap/slapd.d
-    environment:
-      LDAP_ADMIN: ${OPSCHAIN_LDAP_ADMIN}
-      LDAP_ADMIN_PASSWORD: ${OPSCHAIN_LDAP_PASSWORD}
-      LDAP_DOMAIN: ${OPSCHAIN_LDAP_DOMAIN}
-      LDAP_BASE_DN: ${OPSCHAIN_LDAP_BASE_DN}
-      LDAP_ORGANIZATION: OpsChain
-      LDAP_LOG_LEVEL: 1024
-      LDAP_OPENLDAP_GID: ${OPSCHAIN_GID}
-      LDAP_OPENLDAP_UID: ${OPSCHAIN_UID}
+    env_file:
+      - .env.internal
+      - .env
 
   opschain-auth:
     image: limepoint/opschain-auth:${OPSCHAIN_IMAGE_TAG}
@@ -54,11 +45,12 @@ services:
     networks:
       - opschain-network
     ports:
-      - "${OPSCHAIN_LOG_AGGREGATOR_PORT_MAPPING}" # must be exposed to docker host logging driver
+      - '0.0.0.0::24224'
     volumes:
       - ${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/plugin:/etc/fluent/plugin
       - ${OPSCHAIN_DATA_DIR}/opschain_log_aggregator:/opschain
     env_file:
+      - .env.internal
       - .env
     healthcheck:
       test: ["CMD", "curl", "-fsS", "http://localhost:24220/api/plugins.json"]
@@ -77,6 +69,7 @@ services:
       - ${OPSCHAIN_DATA_DIR}/certs:/opt/opschain/certs
       - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
     env_file:
+      - .env.internal
       - .env
     depends_on:
       opschain-auth:
@@ -99,6 +92,7 @@ services:
       - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
       - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
     env_file:
+      - .env.internal
       - .env
     depends_on:
       opschain-log-aggregator:

@@ -59,7 +59,7 @@ opschain environment list --project-code ansible
 
 ## Add the Ansible example as a remote to the project Git repository
 
-Follow [adding a project Git repository as a remote](reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the OpsChain Ansible example repository remote URL `https://username:password@github.com/LimePoint/opschain-examples-ansible.git`.
+Follow [adding a project Git repository as a remote](../reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the [OpsChain Ansible example repository](https://github.com/LimePoint/opschain-examples-ansible) remote URL `https://username:password@github.com/LimePoint/opschain-examples-ansible.git`.
 
 ### Fetch the latest Ansible example code
 
@@ -134,7 +134,7 @@ The EC2 instance, security group and key pair can be removed by running:
 opschain change create --project-code ansible --environment-code ansbl --git-rev origin/master --action destroy --confirm
 ```
 
-_Note: the AWS Console pages described in the [verify change deployment](#verify_change_deployment) steps above can be used to confirm the aws resources have been removed/terminated._
+_Note: the AWS Console pages described in the [verify change deployment](#verify-change-deployment) steps above can be used to confirm the aws resources have been removed/terminated._
 
 ## Notes on the Ansible example
 
@@ -148,7 +148,7 @@ The [nginx_host resource](https://github.com/LimePoint/opschain-examples-ansible
 
 ### Repository Dockerfile
 
-The `Dockerfile` in `.opschain` builds a custom OpsChain step runner image that includes the:
+The [`Dockerfile`](https://github.com/LimePoint/opschain-examples-ansible/blob/master/.opschain/Dockerfile) in `.opschain` builds a custom OpsChain step runner image that includes the:
 
 - AWS CLI
 - Ansible yum package

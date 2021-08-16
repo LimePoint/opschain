@@ -33,6 +33,8 @@ Add the project Git repository as a [remote](https://git-scm.com/book/en/v2/Git-
 $ opschain project set-git-remote --project-code <project code> --name origin --url "https://{username}:{password / personal access token}@github.com/LimePoint/{repository name}.git"
 ```
 
+_Note: If your password/token contains special characters, they must be [URL encoded](https://www.w3schools.com/tags/ref_urlencode.asp) in order to use them in the URL parameter._
+
 ### Project Git repository remote credentials
 
 To be used by OpsChain, the remote must be either:
@@ -42,7 +44,7 @@ To be used by OpsChain, the remote must be either:
 
 OpsChain does not support any other authentication mechanisms for Git remotes.
 
-_Using SSH keys for authentication is not supported however some users have reported success with this [unsupported workaround](troubleshooting.md#git-remotes-with-ssh-authentication)._
+_Using SSH keys for authentication is not supported however some users have reported success with this [unsupported workaround](../troubleshooting.md#git-remotes-with-ssh-authentication)._
 
 ## Licence & authors
 

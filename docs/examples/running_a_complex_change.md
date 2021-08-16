@@ -42,7 +42,7 @@ opschain environment list --project-code confluent
 
 ## Add the Confluent example as a remote to the project Git repository
 
-Follow [adding a project Git repository as a remote](../reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the OpsChain Confluent Example repository remote URL `https://username:password@github.com/LimePoint/opschain-examples-confluent.git`.
+Follow [adding a project Git repository as a remote](../reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the [OpsChain Confluent Example repository](https://github.com/LimePoint/opschain-examples-confluent) remote URL `https://username:password@github.com/LimePoint/opschain-examples-confluent.git`.
 
 ## Fetch the latest Confluent example code
 
@@ -61,7 +61,7 @@ _Note: The confluent path above assumes the default `opschain_data` path was acc
 
 ## OpsChain properties
 
-This example takes advantage of the [OpsChain properties](reference/properties.md) feature of OpsChain to provide the configuration for the various Confluent servers. The `.opschain/properties.json` file in the Git repository provides the bulk of the configuration information. In addition, an example environment properties file is provided to highlight overriding the project repository defaults with specific values.
+This example takes advantage of the [OpsChain properties](../reference/properties.md) feature of OpsChain to provide the configuration for the various Confluent servers. The `.opschain/properties.json` file in the Git repository provides the bulk of the configuration information. In addition, an example environment properties file is provided to highlight overriding the project repository defaults with specific values.
 
 ### Import the environment properties
 
@@ -193,13 +193,13 @@ More detailed information about the specific versions of environment and project
 
 The repository includes two Dockerfiles
 
-1. The `Dockerfile` in `.opschain` builds a custom OpsChain step runner image that includes the
+1. The [`Dockerfile`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/.opschain/Dockerfile) in `.opschain` builds a custom OpsChain step runner image that includes the
 
     - Terraform binary required for the `terraform_config` resource type
     - JRE Installer required for the Confluent containers
     - Confluent Installer required for the Confluent containers
 
-2. The `Dockerfile` in the repository root is based off a Centos image and defines the image that is used as the basis for the Confluent containers. This image is built as part of the `provision` action, copying the installers from the custom step runner and installing the dynamically generated SSH keys.
+2. The [`Dockerfile`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/Dockerfile) in the repository root is based off a Centos image and defines the image that is used as the basis for the Confluent containers. This image is built as part of the `provision` action, copying the installers from the custom step runner and installing the dynamically generated SSH keys.
 
 ### OpsChain runner network
 

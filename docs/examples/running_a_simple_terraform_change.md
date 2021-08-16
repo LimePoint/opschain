@@ -41,7 +41,7 @@ opschain environment list --project-code terraform
 
 ## Add the Terraform example as a remote to the project Git repository
 
-Follow [adding a project Git repository as a remote](reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the OpsChain Terraform example repository remote URL `https://username:password@github.com/LimePoint/opschain-examples-terraform.git`.
+Follow [adding a project Git repository as a remote](../reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the [OpsChain Terraform example repository](https://github.com/LimePoint/opschain-examples-terraform) remote URL `https://username:password@github.com/LimePoint/opschain-examples-terraform.git`.
 
 ## Create a change
 
@@ -69,7 +69,7 @@ docker ps -f name=tutorial
 
 ### View nginx welcome page
 
-Navigate to your [locally running nginx container](http://localhost:8000) to see the welcome page.
+Navigate to your [locally running nginx container](http://localhost:8080) to see the welcome page.
 
 ### Destroy the container
 
@@ -85,7 +85,7 @@ _Note: the [verify change deployment](#verify_change_deployment) steps above can
 
 ### Repository Dockerfile
 
-The `Dockerfile` in `.opschain` builds a custom OpsChain step runner image that includes the Terraform binary required for the `terraform_config` resource type.
+The [`Dockerfile`](https://github.com/LimePoint/opschain-examples-terraform/blob/master/.opschain/Dockerfile) in `.opschain` builds a custom OpsChain step runner image that includes the Terraform binary required for the `terraform_config` resource type.
 
 ### External packages
 

@@ -48,24 +48,7 @@ docker-compose down
 
 ### OpsChain LDAP configuration
 
-The `.env` file created by the `configure` command includes default values (from `.env.example`) for the following LDAP configuration parameters:
-
-Configuration Parameter       | Description
-:---------------------------- | :-------------------------------------------------
-OPSCHAIN_LDAP_HOST            | LDAP/AD host name (or IP address).
-OPSCHAIN_LDAP_PORT            | LDAP/AD host port to connect to.
-OPSCHAIN_LDAP_DOMAIN          | LDAP/AD domain.
-OPSCHAIN_LDAP_BASE_DN         | LDAP/AD base DN value.
-OPSCHAIN_LDAP_USER_BASE       | LDAP/AD base DN to search for users.
-OPSCHAIN_LDAP_USER_ATTRIBUTE  | LDAP/AD user attribute used as the OpsChain user name.
-OPSCHAIN_LDAP_GROUP_BASE      | LDAP/AD base DN to search for groups.
-OPSCHAIN_LDAP_GROUP_ATTRIBUTE | LDAP/AD group attribute containing OpsChain user DNs.
-OPSCHAIN_LDAP_ADMIN           | LDAP/AD administrator DN to connect to.<br/> _Note: As OpsChain does not write to the LDAP database, this need only be a DN with permission to search all users and groups._
-OPSCHAIN_LDAP_PASSWORD        | OPSCHAIN_LDAP_ADMIN password.
-OPSCHAIN_LDAP_HC_USER         | To verify the LDAP server is available, OpsChain performs a regular query of the LDAP database for the username supplied here. <br/>_Note: If you do not wish to perform this check, leave this blank._
-OPSCHAIN_LDAP_ENABLE_SSL      | To connect to the LDAP host using the `ldaps://` protocol, set this to true.<br/> _Note: To use a custom Certificate Authority (CA) see [custom SSL certificates](#custom-ssl-certificates)._
-
-These can be adjusted as required to enable the use of an external LDAP server. An example Active Directory configuration appears at the end of this document.
+See the [Configuring OpsChain](configuring_opschain.md#ldap-configuration) guide for details of the LDAP configuration variables that can be adjusted to enable the use of an external LDAP server. An example Active Directory configuration appears at the end of this document.
 
 ### Disable the supplied OpsChain LDAP server
 
@@ -109,7 +92,7 @@ Create a `cert_dir` folder within `<OPSCHAIN_DATA>/certs` and place the addition
 
 ### Example Active Directory configuration
 
-The following example values allow OpsChain to utilise an Active Directory for user authentication:
+The following example `.env` values allow OpsChain to utilise an Active Directory for user authentication:
 
 ```dotenv
 OPSCHAIN_LDAP_HOST=ad-server

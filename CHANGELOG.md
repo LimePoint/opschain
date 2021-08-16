@@ -1,5 +1,28 @@
 # Changelog
 
+## [2021-08-16]
+
+### Added
+
+- OpsChain now supports events. The `/events` endpoint can be used for reporting and auditing, see the [events](docs/events.md) guide for more details.
+- The list of configuration in the `.env` file is now documented in the [configuration options](docs/operations/configuring_opschain.md) guide.
+- Changes can now take metadata (JSON structured data) to help identify and track changes.
+  - The `opschain change create/retry` commands now takes an optional argument to allow providing the metadata for a change.
+    - If provided, the metadata file must contain a JSON object, e.g. `{ "cr": "CR73", "description": "Change request 73 - apply patchset abc to xyz." }`.
+  - The `opschain change show/list` commands now include the change metadata.
+  - The `/changes` API can now be filtered using the same filtering syntax as events.
+    - For example, `?filter[metadata_cr_eq]=CR73` would match all changes with the metadata `{ "cr": "CR73" }`.
+    - See the [events filtering](docs/events.md#filtering-events) documentation for more details.
+
+### Changed
+
+- Simplified the `.env` file by moving default values to `.env.internal`
+- The OpsChain log aggregator no longer requires that port 24224 is available - it now uses a Docker managed random port
+
+### Fixed
+
+- A number of broken links in the documentation have been fixed
+
 ## [2021-08-04]
 
 ### Added

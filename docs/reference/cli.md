@@ -21,6 +21,7 @@ chmod +x opschain*
 
 Please note that:
 
+- the `.opschainrc` configuration will need to be modified to update the `apiBaseUrl` (likely to `http://localhost:3000/`, assuming a local OpsChain install and the default 3000 port)
 - the native binaries are currently a release preview and offer support for the latest version of the respective OS on a best effort basis (older versions of the respective OS may work)
 - unlike the OpsChain CLI container, you will need to manually update the native binary whenever you upgrade your OpsChain installation
 

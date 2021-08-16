@@ -319,7 +319,7 @@ If the dynamic nature of [OpsChain properties](properties.md) is not required, y
 
 ```ruby
 city :melbourne do
-  properties { name: 'Melbourne', weather: 'cold' }
+  properties({ name: 'Melbourne', weather: 'cold' })
 end
 ```
 
