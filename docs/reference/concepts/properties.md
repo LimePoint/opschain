@@ -17,7 +17,7 @@ After following this guide you should understand:
 
 ## OpsChain properties
 
-Within each action, OpsChain properties are available via `OpsChain.properties` (which will behave like a [Hashie Mash](https://github.com/hashie/hashie#mash)[^1])). The values available are the result of a deep merge of the [change's](concepts.md#change) [project's Git repository](project_git_repositories.md) properties with the [project](concepts.md#project) and [environment](concepts.md#environment) level properties. If a property exists at multiple levels, project values will override repository values and environment values will override project and repository values.
+Within each action, OpsChain properties are available via `OpsChain.properties` (which will behave like a [Hashie Mash](https://github.com/hashie/hashie#mash)[^1])). The values available are the result of a deep merge of the [change's](concepts.md#change) [project's Git repository](../project_git_repositories.md) properties with the [project](concepts.md#project) and [environment](concepts.md#environment) level properties. If a property exists at multiple levels, project values will override repository values and environment values will override project and repository values.
 
 Properties can be accessed using dot or square bracket notation with string or symbol keys. These examples are equivalent:
 
@@ -50,7 +50,7 @@ If more than one of these files exist in the repository, they will be merged tog
 #### Notes
 
 1. The repository properties are read only within each action (as OpsChain cannot modify the underling Git repository to store any changes).
-2. Running `opschain-action -AT` from within your Git repository will cause the properties files to be validated. If the schema or structure of the files is invalid, explanatory exceptions will be raised. See the [Docker development environment](../docker_development_environment.md) guide for more information.
+2. Running `opschain-action -AT` from within your Git repository will cause the properties files to be validated. If the schema or structure of the files is invalid, explanatory exceptions will be raised. See the [Docker development environment](../../docker_development_environment.md) guide for more information.
 
 ### Database
 
@@ -294,4 +294,4 @@ An example of setting environment variables can be seen in the [Confluent exampl
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](../../../LICENCE)

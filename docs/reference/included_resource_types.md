@@ -58,7 +58,7 @@ The `terraform_config` resource type will automatically execute `terraform init`
 
 The `terraform_config` resource type will automatically store the `terraform.tfstate` file in the environment properties after running any Terraform action. This ensures it is available to subsequent steps in your change.
 
-_Note: If the `state_out` property of Terraform is used, the resource type does not automatically store the file. Please use the [`store_file!` feature](properties.md#storing--removing-files) (after moving the file to the desired location) to store the file._
+_Note: If the `state_out` property of Terraform is used, the resource type does not automatically store the file. Please use the [`store_file!` feature](concepts/properties.md#storing--removing-files) (after moving the file to the desired location) to store the file._
 
 ### Command argument defaults
 

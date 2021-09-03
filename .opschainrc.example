@@ -1,5 +1,8 @@
-{
-  "apiBaseUrl": "http://opschain-api:3000/",
-  "username": "opschain",
-  "password": "password"
-}
+; this file can be ini formatted, or a json object.
+
+apiBaseUrl = http://opschain-api:3000/
+username = opschain
+password = password
+
+; use plain text for step status rather than emoji - suggested for terminals that don't support emoji, eg on Windows
+; stepEmoji = false

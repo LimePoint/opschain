@@ -23,15 +23,19 @@ The OpsChain CLI provides commands for interacting with automated change rules v
 
 ## Creating an automated change rule for new commits
 
-Automated change rules can be used to create changes automatically in response to new commits to the project Git repository.
+A new automated change rule can be created by using the `opschain automated-change create` subcommand in the CLI. The `--cron-schedule` allows you to control how often the rule will run. The `--new-commits-only` and `--git-rev` values determine whether the rule will create an OpsChain change when it runs. The following table outlines the various combinations:
 
-A new automated change rule can be created by using the `opschain automated-change create` subcommand in the CLI.
+`--new-commits-only`  | Git revision has new commits | OpsChain change created
+:-------------------- | :----------------------------| :----------------------
+true                  | true                         | true
+true                  | false                        | false
+false                 | n/a                          | true
+
+The following command will create an automated change rule that will create an OpsChain change to run the `hello_world` action whenever the `demo` project's Git repository's `master` branch changes.
 
 ```bash
 opschain automated-change create --project-code demo --environment-code dev --git-rev master --new-commits-only --action hello_world --cron-schedule '* * * * *' --repeat --confirm
 ```
-
-This creates a new automated change rule that will create an OpsChain change to run the `hello_world` action whenever the `demo` project's Git repository's `master` branch changes.
 
 _If the current commit that `master` points to hasn't been used in a change for the `hello_world` action in the `dev` environment then a new change will be created straight away as part of this automated change rule._
 
@@ -40,7 +44,7 @@ Follow the steps from the [adding a new action](getting_started.md#adding-a-new-
 Run the OpsChain change list command to list changes in this environment. _Note: it can take a minute for the OpsChain worker to detect the Git updates and create the new change_.
 
 ```bash
-opschain automated-change list --project-code demo --environment-code dev
+opschain change list --project-code demo --environment-code dev
 ```
 
 The output will now include a new change that has been created in response to our new Git commit.

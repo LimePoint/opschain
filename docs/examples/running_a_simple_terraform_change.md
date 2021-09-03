@@ -51,7 +51,7 @@ Create a new change for the current `origin/master` branch of your project and r
 opschain change create --project-code terraform --environment-code tform --git-rev origin/master --action default --confirm
 ```
 
-The [steps](../reference/concepts.md#step) that comprise the change will be shown as well as their status.
+The [steps](../reference/concepts/concepts.md#step) that comprise the change will be shown as well as their status.
 
 _Note: the first step in this change may take a long time as it downloads an nginx Docker image._
 
@@ -79,7 +79,7 @@ The container can be stopped and removed by running:
 opschain change create --project-code terraform --environment-code tform --git-rev origin/master --action destroy --confirm
 ```
 
-_Note: the [verify change deployment](#verify_change_deployment) steps above can be re-run to verify that the container has been stopped._
+_Note: the [verify change deployment](#verify-change-deployment) steps above can be re-run to verify that the container has been stopped._
 
 ## Notes on the Terraform example
 
@@ -101,7 +101,7 @@ The example makes use of the [Terraform Docker provider](https://www.terraform.i
 
 ### Create your own project
 
-Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/index.md) and [developing your own resources](../developing_resources.md) guide for more information.
+Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/README.md) and [developing your own resources](../developing_resources.md) guide for more information.
 
 ## Licence & authors
 

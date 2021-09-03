@@ -61,7 +61,7 @@ _Note: The confluent path above assumes the default `opschain_data` path was acc
 
 ## OpsChain properties
 
-This example takes advantage of the [OpsChain properties](../reference/properties.md) feature of OpsChain to provide the configuration for the various Confluent servers. The `.opschain/properties.json` file in the Git repository provides the bulk of the configuration information. In addition, an example environment properties file is provided to highlight overriding the project repository defaults with specific values.
+This example takes advantage of the [OpsChain properties](../reference/concepts/properties.md) feature of OpsChain to provide the configuration for the various Confluent servers. The `.opschain/properties.json` file in the Git repository provides the bulk of the configuration information. In addition, an example environment properties file is provided to highlight overriding the project repository defaults with specific values.
 
 ### Import the environment properties
 
@@ -77,21 +77,21 @@ To load the file, perform the following steps:
 
     _Note: The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
 
-2. Set the environment specific [properties](../reference/properties.md) using the following command:
+2. Set the environment specific [properties](../reference/concepts/properties.md) using the following command:
 
     ```bash
     opschain environment set-properties --project-code confluent --environment-code local --file-path cli-files/environment_properties.json --confirm
     ```
 
-    These environment [properties](../reference/properties.md) will:
+    These environment [properties](../reference/concepts/properties.md) will:
 
-    - override values from the project [properties](../reference/properties.md)
+    - override values from the project [properties](../reference/concepts/properties.md)
       - `auto.create.topics.enable` - set to false
       - `log.retention.check.interval.ms` - set to 301
 
 ### Setting properties dynamically
 
-The `actions.rb` provided in the Confluent repository includes logic to set environment specific [properties](../reference/properties.md) as part of the provision action:
+The `actions.rb` provided in the Confluent repository includes logic to set environment specific [properties](../reference/concepts/properties.md) as part of the provision action:
 
 ```ruby
 action provision: ['build_confluent_docker_base', 'terraform:apply'] do
@@ -115,7 +115,7 @@ This set of properties will:
 - override the project level property:
   - `log.retention.check.interval.ms` - set to 1234876
 
-Note: project or environment [properties](../reference/properties.md) set dynamically in the [action](../reference/concepts.md#action) will only be updated against the project or environment if the [action](../reference/concepts.md#action) completes successfully (i.e. if a [step](../reference/concepts.md#step) has an error, the [properties](../reference/properties.md) are not updated).
+Note: project or environment [properties](../reference/concepts/properties.md) set dynamically in the [action](../reference/concepts/concepts.md#action) will only be updated against the project or environment if the [action](../reference/concepts/concepts.md#action) completes successfully (i.e. if a [step](../reference/concepts/concepts.md#step) has an error, the [properties](../reference/concepts/properties.md) are not updated).
 
 ## Create a change
 
@@ -125,7 +125,7 @@ Create a new change for the current `origin/master` branch of your project and r
 opschain change create --project-code confluent --environment-code local --git-rev origin/master --action default --confirm
 ```
 
-The [steps](../reference/concepts.md#step) that comprise the change will be shown as well as their status.
+The [steps](../reference/concepts/concepts.md#step) that comprise the change will be shown as well as their status.
 
 _Note: the first step in this change may take a long time as it downloads a Centos Docker image as well as installation executables for Java and Confluent. Subsequent runs will use Docker's  layer caching feature and should not require these to be re-downloaded._
 
@@ -179,13 +179,13 @@ hello there
 
 ## Viewing properties used by the change
 
-It can be useful for troubleshooting to know which [properties](../reference/properties.md) were used by a change when it ran (whether the change was successful or had an error). You can view the merged set of [properties](../reference/properties.md) that the change started with:
+It can be useful for troubleshooting to know which [properties](../reference/concepts/properties.md) were used by a change when it ran (whether the change was successful or had an error). You can view the merged set of [properties](../reference/concepts/properties.md) that the change started with:
 
 ```bash
 opschain change show-properties --change-id $change_id
 ```
 
-More detailed information about the specific versions of environment and project [properties](../reference/properties.md) supplied to each [step](../reference/concepts.md#step) of the change is available directly from the API server. Using your browser, navigate to `http://localhost:3000/changes/CHANGE_ID` _(where CHANGE_ID is the ID of the change)_. In the API response, each [step](../reference/concepts.md#step) has a reference to the project and environment [properties](../reference/properties.md) versions supplied to the [step](../reference/concepts.md#step).
+More detailed information about the specific versions of environment and project [properties](../reference/concepts/properties.md) supplied to each [step](../reference/concepts/concepts.md#step) of the change is available directly from the API server. Using your browser, navigate to `http://localhost:3000/changes/CHANGE_ID` _(where CHANGE_ID is the ID of the change)_. In the API response, each [step](../reference/concepts/concepts.md#step) has a reference to the project and environment [properties](../reference/concepts/properties.md) versions supplied to the [step](../reference/concepts/concepts.md#step).
 
 ## Notes on the Confluent example
 
@@ -216,7 +216,7 @@ The example makes use of the following packages
 
 ### Create your own project
 
-Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/index.md) and [developing your own resources](../developing_resources.md) guide for more information.
+Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/README.md) and [developing your own resources](../developing_resources.md) guide for more information.
 
 ## Licence & authors
 

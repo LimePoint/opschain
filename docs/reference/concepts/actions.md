@@ -286,6 +286,7 @@ namespace :australia do
   city :melbourne do
     name 'Melbourne'
     rival sydney
+    # use `rival ref('sydney')` when the resource name includes special characters, e.g. `.`
   end
 end
 ```
@@ -574,7 +575,7 @@ OpsChain runs all steps using Docker containers. By default these containers use
 
 If your resources or actions rely on external software the image used for these containers can be modified to add extra packages or executables. The image may also be modified to optimise the performance of build steps by performing tasks as part of the step image build rather than as part of the step execution.
 
-_Please Note: The `opschain-action`/`opschain-dev` scripts do not currently support using a custom Dockerfile. A [workaround](../troubleshooting.md#customising-the-opschain-development-environment) may assist with developing / testing resources that require additional packages._
+_Please Note: The [Docker development environment](../../docker_development_environment.md#using-custom-runner-images) guide provides instructions on using a custom step runner image with `opschain-action`/`opschain-dev`._
 
 ### Dockerfile location
 
@@ -648,11 +649,11 @@ OpsChain relies on configuration done as part of the `limepoint/opschain-runner`
 
 ## What to do next
 
-Learn about the [Docker development environment](../docker_development_environment.md).
-Try [developing your own resources](../developing_resources.md).
+Learn about the [Docker development environment](../../docker_development_environment.md).
+Try [developing your own resources](../../developing_resources.md).
 
 ## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](../../../LICENCE)

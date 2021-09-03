@@ -10,28 +10,28 @@ _Note: Iterating on resource type, resource and action definitions is made easie
 
 ## Develop a resource controller
 
-The bulk of the logic for your resource should be enclosed within a [controller](reference/concepts.md#controller) class. This simplifies unit testing and reduces complexity in `resource_types.rb`.
+The bulk of the logic for your resource should be enclosed within a [controller](reference/concepts/concepts.md#controller) class. This simplifies unit testing and reduces complexity in `resource_types.rb`.
 
 Notes:
 
 - The class constructor must accept a single [Ruby hash](https://ruby-doc.org/core-2.7.0/Hash.html) parameter, which will include each of the resource properties defined on the resource.
 - The action methods must not require parameters.
 
-Example controllers can be seen in the [actions reference guide](reference/actions.md#controller) and within the [Confluent OpsChain example project](https://github.com/LimePoint/opschain-examples-confluent).
+Example controllers can be seen in the [actions reference guide](reference/concepts/actions.md#controller) and within the [Confluent OpsChain example project](https://github.com/LimePoint/opschain-examples-confluent).
 
 ## Define a resource type
 
-Once the controller class has been written and tested, define your [resource type](reference/concepts.md#resource-type), referencing your custom controller class. Use the `action_methods` keyword to create actions for those controller methods that do not require pre or post requisite actions (see [defining standalone actions](reference/actions.md#defining-standalone-actions) for more details)
+Once the controller class has been written and tested, define your [resource type](reference/concepts/concepts.md#resource-type), referencing your custom controller class. Use the `action_methods` keyword to create actions for those controller methods that do not require pre or post requisite actions (see [defining standalone actions](reference/concepts/actions.md#defining-standalone-actions) for more details)
 
 _Note: Resource types are commonly stored in `resource_types.rb` but can be included in any file that is required by your `actions.rb`._
 
 ### Define resource properties
 
-Ensure you define a resource property for each hash key your controller class is expecting in its constructor. (See the [controller](reference/concepts.md#controller) example in the Reference Guide)
+Ensure you define a resource property for each hash key your controller class is expecting in its constructor. (See the [controller](reference/concepts/concepts.md#controller) example in the Reference Guide)
 
 ### Define additional resource actions
 
-If your action(s) have pre or post requisite actions, define the actions within the resource type itself (see the [actions reference guide](reference/actions.md) for information on creating actions).
+If your action(s) have pre or post requisite actions, define the actions within the resource type itself (see the [actions reference guide](reference/concepts/actions.md) for information on creating actions).
 
 For example the following code creates a `database` resource type with four actions: `copy_installer`, `install_and_startup`, `startup` and `shutdown`.
 
@@ -57,7 +57,7 @@ The `install_and_startup` action will:
 
 ## Define a resource
 
-Once the resource type has been defined, use this in your `actions.rb` file to create a [resource](reference/concepts.md#resource). For example the following `actions.rb` file will create a `my_database` resource, with the four actions defined in the type:
+Once the resource type has been defined, use this in your `actions.rb` file to create a [resource](reference/concepts/concepts.md#resource). For example the following `actions.rb` file will create a `my_database` resource, with the four actions defined in the type:
 
 ```ruby
 require 'resource_types'
@@ -99,7 +99,7 @@ OpsChain.logger.debug "Debug message"
 
 ## Custom step runner Dockerfiles
 
-If your resource requires external packages, you will need to include a [custom step runner Dockerfile](reference/actions.md#custom-step-runner-dockerfiles) in your project Git repository. This will allow you to include the required software on the OpsChain step runner container running your change.
+If your resource requires external packages, you will need to include a [custom step runner Dockerfile](reference/concepts/actions.md#custom-step-runner-dockerfiles) in your project Git repository. This will allow you to include the required software on the OpsChain step runner container running your change.
 
 ### Creating a custom step runner Dockerfile
 
@@ -127,7 +127,7 @@ Run the following steps from the `opschain-trial` directory to add the Dockerfil
     opschain-utils dockerfile_template > .opschain/Dockerfile
     ```
 
-4. You can now make any modifications to the Dockerfile you desire (See the [supported customisations](reference/actions.md#supported-customisations) section of the Reference Guide for more information).
+4. You can now make any modifications to the Dockerfile you desire (See the [supported customisations](reference/concepts/actions.md#supported-customisations) section of the Reference Guide for more information).
 
 5. Add and commit the Dockerfile:
 

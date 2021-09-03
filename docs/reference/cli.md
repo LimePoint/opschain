@@ -31,6 +31,8 @@ The OpsChain CLI uses an `.opschainrc` configuration file. If `.opschainrc` is p
 
 An [example .opschainrc](../../.opschainrc.example) is provided in this repository.
 
+The configuration file supports INI or JSON (with comments) formats.
+
 ### Native CLI binary configuration
 
 With native builds the OpsChain configuration is loaded by the `rc` package. The [`rc` documentation](https://www.npmjs.com/package/rc#standards) specifies the locations where the configuration file can be placed - the `appname` is `opschain`.
@@ -46,6 +48,7 @@ Configuration Key | Optional | Description
 `apiBaseUrl`      | no       | OpsChain API server URL
 `username`        | no       | OpsChain API username
 `password`        | no       | OpsChain API password
+`stepEmoji`       | yes      | show emoji for the step status, default `true` - set to `false` to display status as text
 `projectCode`     | yes      | default OpsChain project code used for commands
 `environmentCode` | yes      | default OpsChain environment code used for commands
 

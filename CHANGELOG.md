@@ -1,5 +1,45 @@
 # Changelog
 
+## [2021-09-03]
+
+### Added
+
+- The OpsChain CLI can now:
+  - be configured to output the step statuses as text rather than emoji. See the [CLI configuration guide](docs/reference/cli.md#opschain-cli-configuration-settings) for more details.
+  - archive projects and environments. See the [archiving projects & environments guide](docs/reference/concepts/archiving.md) for more details.
+- The OpsChain DSL now supports the `ref` method for referencing other resources. This is useful for cases where a resource name includes special characters, e.g.:
+
+  ```ruby
+  infrastructure_host 'test.opschain.io'
+
+  some_resource 'something' do
+    host ref('test.opschain.io') # `host test.opschain.io` would fail here
+  end
+  ```
+
+- The OpsChain API `projects` and `environments` endpoints now
+  - return a boolean `archived` attribute.
+  - accept `DELETE` requests. _Note: Only projects and environments with no associated changes can be deleted._
+- The OpsChain API `automated_change_rules` endpoint now includes a `next_run_at` attribute containing the time when the rule will next run. See the [automated changes guide](docs/automated_changes.md#creating-an-automated-change-rule-for-new-commits) for more information on what happens when an automated change rule runs.
+- The `opschain automated-change list` output no longer include the `Project` and `Environment` columns (as these are parameter values to the command) and includes a `Next Run At` column.
+- The `opschain-action` command now supports a _best-effort_ mode for running the child steps of an action. See the [child steps](docs/docker_development_environment.md#child-steps) section of the Docker development environment guide for more details.
+- OpsChain now provides an `opschain-lint` command for detecting issues with the OpsChain DSL. Learn more in the [Docker development environment](docs/docker_development_environment.md#using-opschain-lint) guide.
+  - `opschain-lint` is run as part of the default Dockerfile for steps to detect errors sooner - this can be added to custom Dockerfiles, or a custom Dockerfile could be used to remove the linter if it is not desired.
+
+### Fixed
+
+- A rare logging error reported by the OpsChain worker - `(JSON::ParserError) (Excon::Error::Socket)`/`socat[323] E write(., ..., ...): Broken pipe` - has been fixed.
+- A rare Terraform error where the temporary var file was removed prior to Terraform completing has been fixed.
+
+### Changed
+
+- Upgraded Bundler to 2.2.26.
+- Upgraded Postgres to 13.4.
+- Upgraded Terraform to 1.0.5 in the OpsChain examples.
+- Upgraded Terraform 'hashicorp/aws' plugin to 3.56.0 in the OpsChain Ansible example.
+- Upgraded Terraform 'kreuzwerker/docker' plugin to 2.15.0 in the OpsChain Confluent, Terraform & Weblogic examples.
+- Upgraded HashiCorp Vault to 1.8.2 in the OpsChain Vault example.
+
 ## [2021-08-16]
 
 ### Added
@@ -31,7 +71,7 @@
 
 ### Changed
 
-- The OpsChain change log retention guide has moved and been renamed to [OpsChain data retention](docs/operations/data_retention.md).
+- The OpsChain change log retention guide has moved and been renamed to [OpsChain data retention](docs/operations/maintenance/data_retention.md).
 - **Breaking change** - the `OPSCHAIN_ARCHIVE_LOG_LINES_JOB_CRON` config variable has been renamed to `OPSCHAIN_CLEAN_OLD_DATA_JOB_CRON`.
 - **Breaking change** - Upgraded Ruby to 2.7.4 on the OpsChain Step Runner.
   - If required, please update the `.ruby_version` in your project Git repositories.
@@ -79,7 +119,7 @@
 - The OpsChain CLI now helps you track the progress of a change by showing the expected step tree.
 - The `opchain-action` and `opschain-dev` commands now inherit environment variables starting with `opschain_` (case insensitive).
 - The `opschain-action` command now supports the `OPSCHAIN_DRY_RUN` environment variable to see the full expected step tree without running the action.
-- OpsChain file properties now supports storing binary files with the new base64 format. See [file formats](docs/reference/properties.md#file-formats) for more details.
+- OpsChain file properties now supports storing binary files with the new base64 format. See [file formats](docs/reference/concepts/properties.md#file-formats) for more details.
 
 ### Changed
 
@@ -93,7 +133,7 @@
 
 ### Added
 
-- `OpsChain.context` is now available to actions and controllers. See the [OpsChain context guide](docs/reference/context.md) for more information.
+- `OpsChain.context` is now available to actions and controllers. See the [OpsChain context guide](docs/reference/concepts/context.md) for more information.
 
 ### Fixed
 
@@ -158,7 +198,7 @@
 - The OpsChain CLI now inherits environment variables. This allows using environment variables to override CLI config or to configure http(s) proxies. Find out more in our [CLI reference](docs/reference/cli.md).
 - [OpsChain operations guides](docs/operations).
   - [OpsChain rootless Docker install](docs/operations/rootless_install.md) documentation.
-  - [OpsChain backups](docs/operations/backups.md) documentation.
+  - [OpsChain backups](docs/operations/maintenance/backups.md) documentation.
 
 ## [2021-05-26]
 
@@ -201,12 +241,12 @@
 
 ### Added
 
-- OpsChain now supports [automated deployments](docs/reference/concepts.md#automated-deployment) - a way to automatically create OpsChain changes in response to Git changes. See [setting up an automated deployment](docs/automated_deployment.md) for more information.
-- OpsChain now supports [scheduled deployments](docs/reference/concepts.md#scheduled-deployment) - a way to automatically create OpsChain changes at a scheduled time.
+- OpsChain now supports [automated deployments](docs/reference/concepts/concepts.md#automated-deployment) - a way to automatically create OpsChain changes in response to Git changes. See [setting up an automated deployment](docs/automated_deployment.md) for more information.
+- OpsChain now supports [scheduled deployments](docs/reference/concepts/concepts.md#scheduled-deployment) - a way to automatically create OpsChain changes at a scheduled time.
 
 ### Changed
 
-- OpsChain now allows properties to be sourced from a project's Git repository. See the updated [OpsChain properties guide](docs/reference/properties.md) for more information.
+- OpsChain now allows properties to be sourced from a project's Git repository. See the updated [OpsChain properties guide](docs/reference/concepts/properties.md) for more information.
 - OpsChain now does a Git [forced fetch](https://git-scm.com/docs/git-fetch#Documentation/git-fetch.txt---force) when fetching a project's Git repository. This means tags can be updated in the remote and reflected in the project Git repository.
 
 ## [2021-04-27]
@@ -214,7 +254,7 @@
 ### Added
 
 - An example project for [running an AWS Ansible change](docs/examples/running_an_aws_ansible_change.md).
-- Helper methods available from within actions to store and remove files from project and environment properties. See [storing & removing files](docs/reference/properties.md#storing--removing-files) for more details.
+- Helper methods available from within actions to store and remove files from project and environment properties. See [storing & removing files](docs/reference/concepts/properties.md#storing--removing-files) for more details.
 
 ### Changed
 
@@ -230,7 +270,7 @@
 - The OpsChain Runner now uses
     - Ruby v2.7.3. Please make any necessary adjustments to your project's Git repositories to reflect this change.
     - v3.11.1 of the MintPress Controllers.
-- **Breaking change** - the OpsChain [files properties](docs/reference/properties.md#file-properties) format has changed. Any files stored in your properties will need to be altered to reflect the new format.
+- **Breaking change** - the OpsChain [files properties](docs/reference/concepts/properties.md#file-properties) format has changed. Any files stored in your properties will need to be altered to reflect the new format.
 
   _Note: The `properties-show` and `properties-set` features can be used to download, upload your properties (allowing you to edit your properties locally)._
 
@@ -286,7 +326,7 @@
 
 ### Added
 
-- Automatically expose [controller actions and properties](docs/reference/actions.md#controller-actions-and-properties) in resource types and resources.
+- Automatically expose [controller actions and properties](docs/reference/concepts/actions.md#controller-actions-and-properties) in resource types and resources.
 - [upgrading.md](docs/operations/upgrading.md) documentation.
 
 ### Changed

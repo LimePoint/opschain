@@ -6,9 +6,13 @@ Copyright 2021 © LimePoint Pty Ltd. All rights reserved.
 
 New features, bug fixes and changes in OpsChain - please read this before performing any upgrades.
 
-## [General documentation](../)
+## [General documentation](../README.md)
 
 The main OpsChain documentation page.
+
+## [Maintenance guides](maintenance/README.md)
+
+Information about backing up OpsChain and configuration options to manage data retention, archiving and overall disk usage.
 
 ## [Configuration options](configuring_opschain.md)
 
@@ -25,18 +29,6 @@ Configure OpsChain to send change logs to external log storage.
 ## [Restricting user access](restricting_user_access.md)
 
 Enable the OpsChain Authorisation Server and restrict user's access to OpsChain.
-
-## [OpsChain backups](backups.md)
-
-How to perform backups of OpsChain.
-
-## [OpsChain maintenance: Docker image cleanup](docker_image_cleanup.md)
-
-Information about regular maintenance tasks to run (or schedule) on your OpsChain host to cleanup Docker images.
-
-## [OpsChain maintenance: data retention](data_retention.md)
-
-Information about configuration in OpsChain to remove old change logs and events.
 
 ## [OpsChain rootless Docker install](rootless_install.md)
 

@@ -30,14 +30,17 @@ As part of configuring the environment, the [OpenSSL](https://www.openssl.org/) 
 
 You must have [Docker Compose](https://docs.docker.com/compose/install/) installed.
 
+The Docker service/daemon must be running.
+
 ##### Docker version
 
 OpsChain supports the following Docker versions:
 
 - macOS - Docker Desktop Community 3.1.0 and above
 - Linux - the latest Docker release
-- Windows Subsystem for Linux (WSL) - the latest Docker release (installed in the WSL environment)
-  - _Note: Prior to running the OpsChain Docker containers in WSL, we recommend adjusting the "memory" setting in your [WSL 2 Settings](https://docs.microsoft.com/en-us/windows/wsl/wsl-config#wsl-2-settings). The default setting can cause WSL to consume most of the machine's memory when running Docker containers in WSL._
+- Windows Subsystem for Linux (WSL) - the latest Docker release (installed in the WSL environment). Note:
+  - _Prior to running the OpsChain Docker containers in WSL, we recommend adjusting the "memory" setting in your [WSL 2 Settings](https://docs.microsoft.com/en-us/windows/wsl/wsl-config#wsl-2-settings). The default setting can cause WSL to consume most of the machine's memory when running Docker containers in WSL._
+  - _For a better CLI experience we suggest using a modern terminal (like the [Windows Terminal from the Microsoft Store](https://aka.ms/terminal) or a WSL terminal)._
 
 ### Clone the OpsChain trial repository
 
@@ -153,6 +156,8 @@ cat ~/.opschainrc
 
 If you changed the username or password in the create_user command above, please edit the `.opschainrc` file to reflect your changes.
 
+Learn more about the `opschainrc` configuration in the [CLI configuration guide](reference/cli.md#opschain-cli-configuration).
+
 _Note: If you create a `.opschainrc` file in your current directory, this will be used in precedence to the version in your home directory._
 
 #### Download the native CLI (optional)
@@ -165,13 +170,13 @@ Once downloaded, the native CLI will need to be added to the path or used direct
 
 ### Create sample data
 
-Create a sample [project](reference/concepts.md#project) and [environment](reference/concepts.md#environment) in the OpsChain database:
+Create a sample [project](reference/concepts/concepts.md#project) and [environment](reference/concepts/concepts.md#environment) in the OpsChain database:
 
 ```bash
 opschain-utils create_sample_data
 ```
 
-This command will also create a sample commit in the project's [Git repository](reference/concepts.md#project-git-repository) - `./opschain_project_git_repos/demo` located in the folder you nominated earlier using `./configure`. This folder contains the OpsChain [action](reference/concepts.md#action) that will be run below (the action implements a simple "hello world" example).
+This command will also create a sample commit in the project's [Git repository](reference/concepts/concepts.md#project-git-repository) - `./opschain_project_git_repos/demo` located in the folder you nominated earlier using `./configure`. This folder contains the OpsChain [action](reference/concepts/concepts.md#action) that will be run below (the action implements a simple "hello world" example).
 
 #### Listing available projects
 
@@ -200,7 +205,7 @@ _Note: The path above assumes the default `opschain_data` path was accepted when
 You can now list the actions available in this project by running the following command:
 
 ```bash
-opschain-action -T # this will list all actions with a description (or use -AT to show all configured actions)
+opschain-action -AT # this will list all actions - use `-T` to show only actions with a description
 ```
 
 Running the `create_sample_data` command earlier created an actions.rb file in this project that contains a single action, `hello_world`.
@@ -254,7 +259,17 @@ git add actions.rb
 git commit -m "Add a Goodbye action and run hello_world and goodbye_world by default."
 ```
 
-See the [actions reference guide](reference/actions.md) and the [developing your own resources](developing_resources.md) guide for further information about the `actions.rb` file structure and contents.
+See the [actions reference guide](reference/concepts/actions.md) and the [developing your own resources](developing_resources.md) guide for further information about the `actions.rb` file structure and contents.
+
+#### Setup `opschain-lint` as a pre-commit hook (optional)
+
+OpsChain provides a linting command for detecting issues in project Git repositories. This command can be setup as a pre-commit hook in Git to reduce the likelihood of committing mistakes
+
+```bash
+opschain-lint --setup
+```
+
+See the [Docker development environment (`opschain-lint`)](docker_development_environment.md#using-opschain-lint) guide to learn more.
 
 ### Return to the OpsChain trial directory
 
@@ -266,7 +281,7 @@ cd ../../..
 
 ## Creating an OpsChain change
 
-You can use the OpsChain CLI to create a new [change](reference/concepts.md#change). A change runs an action (which may have dependent actions or steps) on the OpsChain server.
+You can use the OpsChain CLI to create a new [change](reference/concepts/concepts.md#change). A change runs an action (which may have dependent actions or steps) on the OpsChain server.
 
 The OpsChain CLI (`opschain`) can be used to interact with an OpsChain server instance. In these examples the server is running on your local machine but in most installations will be installed in a central location and shared.
 
@@ -300,11 +315,11 @@ opschain change show --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx # replace 
 
 ### Learn more about OpsChain actions
 
-Follow the [actions reference guide](reference/actions.md) and add more advanced actions to the sample [project](reference/concepts.md#project).
+Follow the [actions reference guide](reference/concepts/actions.md) and add more advanced actions to the sample [project](reference/concepts/concepts.md#project).
 
 ### Learn more about OpsChain properties
 
-Follow the [loading properties](reference/properties.md#loading-properties) guide to try editing some [project](reference/concepts.md#project) or [environment](reference/concepts.md#environment) properties.
+Follow the [loading properties](reference/concepts/properties.md#loading-properties) guide to try editing some [project](reference/concepts/concepts.md#project) or [environment](reference/concepts/concepts.md#environment) properties.
 
 ### Try a more advanced example
 
@@ -320,7 +335,7 @@ The [developing your own resources](developing_resources.md) guide explains the 
 
 ### Review the reference documentation
 
-The [reference documentation](reference/index.md) provides in-depth descriptions of many of the features available in OpsChain.
+The [reference documentation](reference/README.md) provides in-depth descriptions of many of the features available in OpsChain.
 
 ## Licence & authors
 

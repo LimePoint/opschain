@@ -227,7 +227,7 @@ To support this usecase OpsChain provides a Docker container that has full permi
 [container] exit
 ```
 
-Refer to the [OpsChain backups](backups.md) guide for details on using this container to backup and restore OpsChain.
+Refer to the [OpsChain backups](maintenance/backups.md) guide for details on using this container to backup and restore OpsChain.
 
 ## Licence & authors
 

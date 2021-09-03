@@ -38,7 +38,7 @@ docker-compose run --rm opschain-ops tar -cvJf /opschain/opschain-backup.tar.xz 
 
 This will create the `opschain-backup.tar.xz` in the `opschain-trial` directory.
 
-The [file ownership](rootless_install.md#file-ownership) section of the OpsChain Rootless install documentation provides more details.
+The [file ownership](../rootless_install.md#file-ownership) section of the OpsChain Rootless install documentation provides more details.
 
 ## Restoring a backup
 
@@ -65,4 +65,4 @@ docker-compose up
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](../../../LICENCE)

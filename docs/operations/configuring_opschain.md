@@ -43,7 +43,15 @@ OPSCHAIN_AUTH_SERVICE | Policy agent type on the authorisation host. The followi
 Variable                          | Description                                          | Default Value
 :-------------------------------- | :--------------------------------------------------- | :--------
 OPSCHAIN_LOG_AGGREGATOR_HOST      | Host name (or IP address) of the log aggregator.     | localhost
-OPSCHAIN_LOG_AGGREGATOR_PORT      | Log aggregator host port to connect to.              | 24224
+
+### Development environment
+
+The following variables can be manually set inside the OpsChain development environment or configured in your `.env` file.
+
+Variable                          | Description                                                               | Default Value
+:-------------------------------- | :------------------------------------------------------------------------ | :--------
+OPSCHAIN_ACTION_RUN_CHILDREN      | Automatically run child steps in the local Docker development environment. See the [Docker development environment guide (child steps)](../docker_development_environment.md#child-steps) for more details. | false
+OPSCHAIN_TRACE                    | If set to true, additional logging will be generated when actions are run | false
 
 ## Licence & authors
 

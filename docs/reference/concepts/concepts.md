@@ -26,7 +26,7 @@ An action is a task that can be performed (for example provisioning or restartin
 
 The logic for an action can be provided directly within the action definition, or if the action forms part of a Resource, it can call logic within its associated controller.
 
-See the [actions reference guide](actions.md#defining-standalone-actions) and [developing your own resources](../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-standalone-actions) and [developing your own resources](../../developing_resources.md) guide for more information.
 
 ## Resource
 
@@ -36,25 +36,25 @@ A resource represents something that OpsChain can perform actions on (e.g. SOA I
 - Any number of resource properties. These are key value pairs that can be referenced in the action code and are supplied as a hash to the controller's constructor
 - Any number of action definitions, allowing you to define actions that can be performed on the resource
 
-See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](../../developing_resources.md) guide for more information.
 
 ## Resource type
 
 A resource type is a template for creating resources. Rather than duplicating the definition for each instance of a resource, the controller, resource properties and action definitions can be defined in the resource type and automatically configured when the resource is created.
 
-See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](../../developing_resources.md) guide for more information.
 
 ## Composite resource
 
-A composite resource is a resource that encapsulates child resources. An example of this is the confluent broker composite defined in the [resource types](https://github.com/LimePoint/opschain-examples-confluent/blob/master/lib/confluent/resource_types.rb) used in the [Confluent example](../examples/running_a_complex_change.md). The confluent broker composite provides the definition of the resources required to create one or more child brokers. Each broker will have a host, java installation, confluent installation and broker definition.
+A composite resource is a resource that encapsulates child resources. An example of this is the confluent broker composite defined in the [resource types](https://github.com/LimePoint/opschain-examples-confluent/blob/master/lib/confluent/resource_types.rb) used in the [Confluent example](../../examples/running_a_complex_change.md). The confluent broker composite provides the definition of the resources required to create one or more child brokers. Each broker will have a host, java installation, confluent installation and broker definition.
 
 Composite resources also allow you to define actions that will apply to all the composite's children. The confluent broker composite in the example defines three actions (configure, start and install). Executing any of these actions on the composite will execute the equivalent action on each of the child brokers.
 
-See the [actions reference guide](actions.md#defining-composite-resources--resource-types) and [developing your own resources](../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-composite-resources--resource-types) and [developing your own resources](../../developing_resources.md) guide for more information.
 
 ## Project Git repository
 
-See the [OpsChain project Git repositories](project_git_repositories.md) guide for more information.
+See the [OpsChain project Git repositories](../project_git_repositories.md) guide for more information.
 
 ## Properties
 
@@ -103,7 +103,7 @@ Automated change rules can be configured to automatically create and deploy chan
 - at a particular time
 - in response to project Git repository updates
 
-See [setting up automated changes](../automated_changes.md) for a guide on how to create an automated change rule.
+See [setting up automated changes](../../automated_changes.md) for a guide on how to create an automated change rule.
 
 ## Controller
 
@@ -118,4 +118,4 @@ An example controller is shown in the [actions reference guide](actions.md#contr
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](../../../LICENCE)

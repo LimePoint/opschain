@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -eo pipefail
+
+export EXTRA_ARGS=--entrypoint=/usr/bin/container_start.sh
+
+bin_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")"; pwd)"
+
+exec bash "${bin_dir}"/_opschain-dev.sh "opschain-lint $@"

@@ -78,7 +78,7 @@ _Note: The ansible path above assumes the default `opschain_data` path was accep
 
 ### Configure the AWS credentials
 
-To enable the OpsChain Runner to access your AWS account, configure the [AWS environment variables](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) in the runner. To do this, create the [environment variables](https://github.com/LimePoint/opschain-trial/blob/master/docs/reference/properties.md#environment-variables) as [properties](../reference/properties.md) linked to the `Ansible Environment`.
+To enable the OpsChain Runner to access your AWS account, configure the [AWS environment variables](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) in the runner. To do this, create the [environment variables](../reference/concepts/properties.md#environment-variables) as [properties](../reference/concepts/properties.md) linked to the `Ansible Environment`.
 
 1. Copy the sample project properties file into the opschain-trial `cli-files` directory.
 
@@ -108,7 +108,7 @@ opschain change create --project-code ansible --environment-code ansbl --git-rev
 
 _Note: the first time you run a change from this project it may take a long time as it constructs the Runner image (with Terraform, Ansible and the AWS CLI)._
 
-The [steps](../reference/concepts.md#step) that comprise the change will be shown as well as their status.
+The [steps](../reference/concepts/concepts.md#step) that comprise the change will be shown as well as their status.
 
 ### Verify change deployment
 
@@ -166,7 +166,7 @@ The [Confluent example](running_a_complex_change.md) demonstrates how to use Ops
 
 ### Create your own project
 
-Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/index.md) and [developing your own resources](../developing_resources.md) guide for more information.
+Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/README.md) and [developing your own resources](../developing_resources.md) guide for more information.
 
 ## Licence & authors
 

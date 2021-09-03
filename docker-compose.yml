@@ -45,7 +45,7 @@ services:
     networks:
       - opschain-network
     ports:
-      - '0.0.0.0::24224'
+      - '127.0.0.1::24224'
     volumes:
       - ${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/plugin:/etc/fluent/plugin
       - ${OPSCHAIN_DATA_DIR}/opschain_log_aggregator:/opschain

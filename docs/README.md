@@ -21,7 +21,7 @@ Install your OpsChain environment and run a simple change.
 - [Oracle Weblogic example](https://github.com/LimePoint/opschain-examples-weblogic) - Use LimePoint's Controllers to provision an Oracle WebLogic server in a Docker container
 - [HashiCorp Vault](https://github.com/LimePoint/opschain-examples-vault) - Use HashiCorp Vault's [key/value](https://learn.hashicorp.com/tutorials/vault/static-secrets?in=vault/secrets-management) storage and [one time SSH password](https://learn.hashicorp.com/tutorials/vault/ssh-otp?in=vault/secrets-management) features with OpsChain to deploy an SSL bundle to an example host.
 
-## [Operations guides](operations/)
+## [Operations guides](operations/README.md)
 
 Operations guides for OpsChain, including security, installation and upgrade guides.
 
@@ -37,7 +37,7 @@ Learn the basics of developing your own resources.
 
 Learn about the events OpsChain tracks for auditing and reporting purposes.
 
-## [Reference documentation](reference/index.md)
+## [Reference documentation](reference/README.md)
 
 OpsChain concepts, system architecture, actions and properties.
 

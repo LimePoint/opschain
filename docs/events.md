@@ -100,6 +100,7 @@ The following is the list of API events that are currently supported, these valu
 - `api:changes:index`
 - `api:changes:show`
 - `api:environments:create`
+- `api:environments:update`
 - `api:environments:destroy`
 - `api:environments:index`
 - `api:environments:show`
@@ -108,6 +109,8 @@ The following is the list of API events that are currently supported, these valu
 - `api:git_remotes:update`
 - `api:log_lines:index`
 - `api:projects:create`
+- `api:projects:update`
+- `api:projects:destroy`
 - `api:projects:index`
 - `api:projects:show`
 - `api:properties:show`
@@ -181,7 +184,7 @@ Events created internally by OpsChain can be identified by the `system` property
 
 ## Removing events
 
-Older OpsChain events can be removed, see the [OpsChain data retention](operations/data_retention.md) guide for more details.
+Older OpsChain events can be removed, see the [OpsChain data retention](operations/maintenance/data_retention.md) guide for more details.
 
 ## Licence & authors
 

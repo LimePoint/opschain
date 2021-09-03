@@ -33,4 +33,4 @@ docker image prune --filter 'label=opschain.change_id=abc123'
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](../../../LICENCE)
