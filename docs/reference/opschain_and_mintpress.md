@@ -10,7 +10,9 @@ This document covers the relationship between OpsChain and MintPress.
 
 OpsChain bundles the MintPress SDK for use by customers with an existing MintPress licence.
 
-All the MintPress controller gems included in the MintPress SDK are available in the OpsChain runner and can be used by adding them to your project Gemfile and then requiring them in your `actions.rb`.
+The MintPress SDK gems, excluding the enterprise Oracle gems, are available in the OpsChain runner and can be used by adding them to your project Gemfile and then requiring them in your `actions.rb`.
+
+The enterprise Oracle controller gems are available in the [OpsChain enterprise runner](#enterprise-controllers-for-oracle).
 
 ### Example: using the `Mint::Secret` class in OpsChain
 
@@ -41,6 +43,20 @@ Running this example with OpsChain (for example using the `opschain-action` comm
 $ opschain-action default
 ********
 ```
+
+### Enterprise controllers for Oracle
+
+The MintPress enterprise controllers for Oracle are available for licenced customers via the OpsChain enterprise runner.
+
+You must be logged in to the [Docker Hub](https://hub.docker.com/) as the `opschainenterprise` user to use the OpsChain enterprise runner - contact [LimePoint](mailto:opschain@limepoint.com) to obtain these user credentials.
+
+```bash
+docker login --username opschainenterprise
+```
+
+Add `OPSCHAIN_RUNNER_NAME='runner-enterprise'` and set `OPSCHAIN_RUNNER_IMAGE='limepoint/opschain-runner-enterprise:latest'` in your `.env` file to use the OpsChain enterprise runner.
+
+After updating the `.env` file, follow the steps from the [upgrading guide](../operations/upgrading.md) to apply this configuration and fetch the enterprise runner.
 
 ## Licence & authors
 

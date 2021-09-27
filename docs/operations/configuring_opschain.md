@@ -42,7 +42,7 @@ OPSCHAIN_AUTH_SERVICE | Policy agent type on the authorisation host. The followi
 
 Variable                          | Description                                          | Default Value
 :-------------------------------- | :--------------------------------------------------- | :--------
-OPSCHAIN_LOG_AGGREGATOR_HOST      | Host name (or IP address) of the log aggregator.     | localhost
+OPSCHAIN_LOG_AGGREGATOR_HOST      | Host name (or IP address) of the log aggregator.     | `127.0.0.1` on Linux. `host.docker.internal` on Windows and macOS.
 
 ### Development environment
 

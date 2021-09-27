@@ -109,6 +109,8 @@ docker-compose up
 
 This will start the OpsChain server and its dependent services in separate Docker containers. For more information on these containers see the [architecture overview](reference/architecture.md).
 
+When the OpsChain banner message has been displayed, the server is ready and you can proceed to the next steps of this guide.
+
 _Note: Use a new terminal to run any CLI commands below._
 
 ### Add the OpsChain commands to the path
@@ -205,7 +207,7 @@ _Note: The path above assumes the default `opschain_data` path was accepted when
 You can now list the actions available in this project by running the following command:
 
 ```bash
-opschain-action -AT # this will list all actions - use `-T` to show only actions with a description
+opschain-action -AT # this will list all actions - use `opschain-action -T` to show only actions with a description
 ```
 
 Running the `create_sample_data` command earlier created an actions.rb file in this project that contains a single action, `hello_world`.
@@ -261,13 +263,11 @@ git commit -m "Add a Goodbye action and run hello_world and goodbye_world by def
 
 See the [actions reference guide](reference/concepts/actions.md) and the [developing your own resources](developing_resources.md) guide for further information about the `actions.rb` file structure and contents.
 
-#### Setup `opschain-lint` as a pre-commit hook (optional)
+#### `opschain-lint`
 
-OpsChain provides a linting command for detecting issues in project Git repositories. This command can be setup as a pre-commit hook in Git to reduce the likelihood of committing mistakes
+OpsChain provides a linting command for detecting issues in project Git repositories. This command is automatically setup as a Git pre-commit hook to reduce the likelihood of committing mistakes
 
-```bash
-opschain-lint --setup
-```
+If you would like to commit code that fails linting (e.g. incomplete code) the Git `--no-verify` argument can be used when committing, e.g. `git commit --no-verify`.
 
 See the [Docker development environment (`opschain-lint`)](docker_development_environment.md#using-opschain-lint) guide to learn more.
 
@@ -336,6 +336,10 @@ The [developing your own resources](developing_resources.md) guide explains the 
 ### Review the reference documentation
 
 The [reference documentation](reference/README.md) provides in-depth descriptions of many of the features available in OpsChain.
+
+### Review the REST API documentation
+
+With your OpsChain server running, navigate to the [OpsChain REST API Documentation](http://localhost:3000/docs) to learn more about OpsChain's REST endpoints. Interacting directly with the OpsChain API server opens up more features and integration options than using the CLI alone.
 
 ## Licence & authors
 

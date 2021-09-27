@@ -13,6 +13,19 @@ set -eo pipefail
 # to stderr.
 exec 7>&1 8>&2
 
+source "$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")"; pwd)/bin/_realpath.sh"
+
+trap on_exit EXIT
+
+on_exit() {
+  if [[ $? != 0 ]]; then
+    exec >&2
+    echo
+    echo 'The configure script failed.'
+    echo 'Your configuration may not be updated.'
+  fi
+}
+
 quote() {
   printf %s\\n "$1" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/'/"
 }
@@ -66,6 +79,7 @@ validate_settings() {
   approve_socket
   confirm_data_path
   confirm_port
+  confirm_log_host
   confirm_workers
 }
 
@@ -128,7 +142,7 @@ confirm_data_path() {
 
   print_msg -n "Where would you like OpsChain to store its data files? [${OPSCHAIN_DATA_DIR}]: "
   read -r l_data_path
-  l_data_path="${l_data_path:-${OPSCHAIN_DATA_DIR}}"
+  l_data_path="$(realpath "${l_data_path:-${OPSCHAIN_DATA_DIR}}")"
 
   export OPSCHAIN_DATA_DIR="${l_data_path}"
 
@@ -138,7 +152,15 @@ confirm_data_path() {
   create_directory "${OPSCHAIN_DATA_DIR}/opschain_auth"
   create_directory "${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/plugin"
   create_directory "${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/bundler"
-  cp -n opschain_auth.tmpl/* "${OPSCHAIN_DATA_DIR}/opschain_auth"
+  (
+    dest="${OPSCHAIN_DATA_DIR}/opschain_auth"
+    cd opschain_auth.tmpl
+    for file in *; do
+      if ! [[ -e "${dest}/${file}" ]]; then
+        cp "${file}" "${dest}"
+      fi
+    done
+  )
 }
 
 ensure_path_exists() {
@@ -229,6 +251,15 @@ approve_socket() {
     exit 2
   fi
   echo
+}
+
+confirm_log_host() {
+  print_msg
+  if [ "$(yn 'Are you running OpsChain on Windows (WSL) or macOS (yn) ? ')" = "yes" ]; then
+    export OPSCHAIN_LOG_AGGREGATOR_HOST=host.docker.internal
+  else
+    export OPSCHAIN_LOG_AGGREGATOR_HOST=127.0.0.1
+  fi
 }
 
 load_mintpress_licence() {

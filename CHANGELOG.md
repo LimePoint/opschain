@@ -1,5 +1,27 @@
 # Changelog
 
+## [2021-09-28]
+
+You **must** run `configure` after upgrading to update the `.env` file with the log configuration update.
+
+### Added
+
+- `opschain-lint` is automatically added as a Git pre-commit hook for new project Git repositories.
+- The `configure` script now shows an error when it fails.
+- An OpsChain banner message is displayed once the API is ready.
+- OpsChain API documentation is now available from the API server [http://localhost:3000/docs](http://localhost:3000/docs).
+
+### Changed
+
+- The `configure` script now resolves the absolute path for the OPSCHAIN_DATA_DIR.
+- **Breaking change** - The OpsChain runner image has been split meaning the MintPress Oracle controllers are not available by default.
+  - See the [enterprise controllers for Oracle](docs/reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle) guide for more details.
+
+### Fixed
+
+- Repeated invocations of the `configure` script on macOS have been fixed - they used to fail silently.
+- OpsChain runners on Windows and macOS were failing as the log configuration was wrong.
+
 ## [2021-09-03]
 
 ### Added

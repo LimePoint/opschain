@@ -5,6 +5,7 @@ networks:
     name: opschain-network
   opschain-runner-network:
     name: opschain-runner-network
+
 services:
   opschain-db:
     image: limepoint/opschain-db:${OPSCHAIN_IMAGE_TAG}
