@@ -192,7 +192,7 @@ docker run --rm hello-world
 
 ## OpsChain install
 
-OpsChain can now be installed as described in the [getting started](../getting_started.md#prerequisites) guide.
+OpsChain can now be installed as described in the getting started [installation guide](../getting_started/installation.md) guide.
 
 ### Configure OpsChain as a service
 
@@ -233,4 +233,4 @@ Refer to the [OpsChain backups](maintenance/backups.md) guide for details on usi
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

@@ -50,4 +50,4 @@ _Using SSH keys for authentication is not supported however some users have repo
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

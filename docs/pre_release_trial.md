@@ -85,4 +85,4 @@ This pre-release trial version of OpsChain is an early preview of OpsChain’s c
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../LICENCE)
+See [LICENCE](/LICENCE.md)

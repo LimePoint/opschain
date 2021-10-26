@@ -88,4 +88,4 @@ opschain change ls # or any other command
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

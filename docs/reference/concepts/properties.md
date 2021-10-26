@@ -136,6 +136,16 @@ OpsChain.environment.properties
 
 These are exposed to allow you to add, remove and update properties, with any modifications saved on [step](concepts.md#step) completion. The modified project and environment properties are then available to any subsequent [steps](concepts.md#step) or [changes](concepts.md#change).
 
+The object returned by `OpsChain.properties` is the merged set of properties and is regenerated every time the method is called. This means that if the result of `OpsChain.properties` is assigned to a variable - or passed to a resource - it won't reflect updates.
+
+```ruby
+puts OpsChain.properties.example # ''
+props = OpsChain.properties
+OpsChain.project.properties.example = 'hello'
+puts OpsChain.properties.example # 'hello'
+puts props.example # '' - this value was not updated
+```
+
 ##### Creating / updating properties within actions
 
 The following code will set the project `server_name` property, creating or updating it as applicable:
@@ -294,4 +304,4 @@ An example of setting environment variables can be seen in the [Confluent exampl
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../../LICENCE)
+See [LICENCE](/LICENCE.md)

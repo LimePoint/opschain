@@ -79,4 +79,4 @@ The OpsChain log aggregator can be configured to forward change logs to external
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../../LICENCE)
+See [LICENCE](/LICENCE.md)

@@ -190,4 +190,4 @@ Older OpsChain events can be removed, see the [OpsChain data retention](operatio
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../LICENCE)
+See [LICENCE](/LICENCE.md)

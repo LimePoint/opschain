@@ -21,4 +21,4 @@ Each part of this environment is deployed using [Docker Compose](https://docs.do
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

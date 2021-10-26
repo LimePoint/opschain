@@ -24,4 +24,4 @@ OpsChain bundles the MintPress SDK and this guide is intended for existing MintP
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

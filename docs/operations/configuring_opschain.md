@@ -57,4 +57,4 @@ OPSCHAIN_TRACE                    | If set to true, additional logging will be g
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

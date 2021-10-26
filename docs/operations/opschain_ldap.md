@@ -113,4 +113,4 @@ OPSCHAIN_LDAP_ENABLE_SSL=false
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

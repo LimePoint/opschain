@@ -114,4 +114,4 @@ journalctl --user-unit opschain
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

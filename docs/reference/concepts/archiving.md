@@ -84,4 +84,4 @@ Note: You will need to edit the example to replace:
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../../LICENCE)
+See [LICENCE](/LICENCE.md)

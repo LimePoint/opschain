@@ -68,7 +68,7 @@ If your actions rely on [OpsChain context](reference/concepts/context.md) values
 
 ## Using the OpsChain development environment
 
-The `opschain-action` command can be used to run OpsChain actions the same way they are run by the step runner. See the [running OpsChain actions](getting_started.md#running-opschain-actions) section of the Getting Started guide for instructions on how to list and run individual actions.
+The `opschain-action` command can be used to run OpsChain actions the same way they are run by the step runner. See the [running OpsChain actions](getting_started/developer.md#running-opschain-actions) section of the Getting Started guide for instructions on how to list and run individual actions.
 
 Unlike when actions are run as part of an OpsChain change, the OpsChain development environment does not persist changes to the project and environment properties to the OpsChain database. Instead, the properties changes are output into the `.opschain/step_result.json` file. For more information about the `step_result.json` file, see the [actions reference guide](reference/concepts/actions.md#step-result-json).
 
@@ -173,7 +173,7 @@ If the OpsChain workers are on a remote host or you are yet to run a change with
 
 #### 1. Obtain the standard runner image
 
-The custom Dockerfile must be based on the standard OpsChain runner image (`limepoint/opschain-runner:latest`). Ensure you have the image locally or have run the [configure Docker Hub access](getting_started.md#configure-docker-hub-access) steps from the getting started guide.
+The custom Dockerfile must be based on an OpsChain runner image (`limepoint/opschain-runner:latest` or `limepoint/opschain-runner-enterprise:latest`). Ensure you have the image locally or have run the [configure Docker Hub access](getting_started/installation.md#configure-docker-hub-access) steps from the getting started guide.
 
 #### 2. Create a repository tarball
 
@@ -232,4 +232,4 @@ Try [developing your own resources](developing_resources.md)
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../LICENCE)
+See [LICENCE](/LICENCE.md)

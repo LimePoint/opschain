@@ -18,4 +18,4 @@ How to perform backups of OpsChain.
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../../LICENCE)
+See [LICENCE](/LICENCE.md)

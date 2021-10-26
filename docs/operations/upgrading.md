@@ -30,4 +30,4 @@ If you are using the OpsChain CLI native binaries then these should be [download
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

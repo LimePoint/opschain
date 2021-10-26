@@ -1,5 +1,38 @@
 # Changelog
 
+## [2021-10-26]
+
+### Added
+
+- Change specific logs are now available from the `/changes/<change_id>/log_lines` API. The results can be filtered using the same filtering syntax as events.
+- The OpsChain DSL now supports
+  - referencing resource properties by name within `action` blocks - see [defining resource types & resources](docs/reference/concepts/actions.md#defining-resource-types--resources).
+  - referencing composite resource properties by name within child resources - see [defining composite resources](docs/reference/concepts/actions.md#defining-composite-resources--resource-types).
+  - referencing resources by name from within actions and when setting properties - see [referencing resources](docs/reference/concepts/actions.md#referencing-resources)
+
+### Changed
+
+- On startup, OpsChain now displays the publicly mapped port it is listening on.
+- Upgraded Bundler to 2.2.28.
+- Upgraded OPA to 0.33.0.
+- Upgraded Fluentd to 1.14.1-1.0.
+- Upgraded Terraform to 1.0.8 in the OpsChain examples.
+- Upgraded Terraform 'hashicorp/aws' plugin to 3.62.0 in the OpsChain Ansible example.
+- Upgraded HashiCorp Vault to 1.8.4 in the OpsChain Vault example.
+- Upgraded Confluent to 6.2.1 in the OpsChain Confluent example.
+- Parallel child steps are now run in serial when run in the `opschain-dev` development environment.
+- **Breaking changes**
+  - the `/log_lines` endpoint
+    - returns at most 10,000 log lines.
+    - requires a filter using the same filtering syntax as events.
+  - upgraded PostgreSQL to 14.0 (your database must be re-created, or manually upgraded).
+  - the `resource_properties` resource method in the OpsChain DSL has been replaced with `properties`.
+  - the OpsChain DSL `Scope` class has been restructured and is for internal use only.
+
+### Removed
+
+- **Breaking change** - the `/log_lines` endpoint no longer accepts the `change_id` URL parameter
+
 ## [2021-09-28]
 
 You **must** run `configure` after upgrading to update the `.env` file with the log configuration update.

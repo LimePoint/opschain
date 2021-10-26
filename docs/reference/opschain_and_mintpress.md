@@ -48,18 +48,10 @@ $ opschain-action default
 
 The MintPress enterprise controllers for Oracle are available for licenced customers via the OpsChain enterprise runner.
 
-You must be logged in to the [Docker Hub](https://hub.docker.com/) as the `opschainenterprise` user to use the OpsChain enterprise runner - contact [LimePoint](mailto:opschain@limepoint.com) to obtain these user credentials.
-
-```bash
-docker login --username opschainenterprise
-```
-
-Add `OPSCHAIN_RUNNER_NAME='runner-enterprise'` and set `OPSCHAIN_RUNNER_IMAGE='limepoint/opschain-runner-enterprise:latest'` in your `.env` file to use the OpsChain enterprise runner.
-
-After updating the `.env` file, follow the steps from the [upgrading guide](../operations/upgrading.md) to apply this configuration and fetch the enterprise runner.
+See the [OpsChain enterprise runner](concepts/step_runner.md#opschain-enterprise-runner) section of the step runner reference guide to learn how to use to the OpsChain enterprise runner.
 
 ## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

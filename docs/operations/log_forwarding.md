@@ -85,4 +85,4 @@ The example configuration provided above includes a reference to the Splunk serv
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

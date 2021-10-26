@@ -147,4 +147,4 @@ The SSH key and known_hosts are used by the `opschain` user in the containers - 
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../LICENCE)
+See [LICENCE](/LICENCE.md)

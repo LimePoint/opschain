@@ -88,4 +88,4 @@ The [OpsChain Confluent example project](https://github.com/LimePoint/opschain-e
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)

@@ -26,4 +26,4 @@ Details of OpsChain's archive feature and related CLI behaviour.
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../../LICENCE)
+See [LICENCE](/LICENCE.md)

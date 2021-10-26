@@ -172,4 +172,4 @@ Try creating a new project using the steps above and instead of adding a remote,
 
 - Author:: LimePoint (support@limepoint.com)
 
-See [LICENCE](../../LICENCE)
+See [LICENCE](/LICENCE.md)
