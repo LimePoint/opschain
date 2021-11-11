@@ -1,5 +1,32 @@
 # Changelog
 
+## [2021-11-11]
+
+### Added
+
+- Reference for all third party software licences used in our applications.
+- Document our [support policy](docs/support.md). This includes the type of support we provide when using OpsChain, as well as details on how and when to contact our support team.
+- In addition to lightweight tags, OpsChain now supports creating changes that reference annotated tags. See [creating tags](https://git-scm.com/book/en/v2/Git-Basics-Tagging) for more information on Git tag types.
+- When run in a dirty Git repository, the OpsChain CLI now prints a warning when creating a change to alert the user that their updates may not be committed yet.
+- **Breaking changes**
+  - OpsChain now requires an `opschain.lic` licence file to operate. Please use the [`#opschain-trial` Slack channel](https://limepoint.slack.com/messages/opschain-trial) to request a licence.
+  - Custom runner base images now require ONBUILD steps to ensure the OpsChain licence is available to the runner. For further details see [image performance - base images](docs/reference/concepts/step_runner.md#image-performance---base-images).
+- Documentation on how to [uninstall](docs/operations/uninstall.md) OpsChain.
+
+### Changed
+
+- The `configure` script won't re-ask questions that can't change.
+- Upgraded Bundler to 2.2.30.
+- Upgraded OPA to 0.34.0.
+- Upgraded Fluentd to 1.14.2-1.0.
+- Upgraded Terraform to 1.0.10 in the OpsChain examples.
+- Upgraded Terraform 'hashicorp/aws' plugin to 3.63.0 in the OpsChain Ansible example.
+- The OpsChain step runner Docker image is now built with Docker BuildKit.
+
+### Removed
+
+- The LimePoint MintPress licence is no longer required to use OpsChain.
+
 ## [2021-10-26]
 
 ### Added

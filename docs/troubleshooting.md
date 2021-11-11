@@ -7,6 +7,32 @@ After following this guide you should understand:
 
 ## Known issues
 
+### Container "xxxxxxxxxxxx" is unhealthy
+
+The most likely cause of this issue is an invalid or expired licence file, although other scenarios can cause a container to be flagged as unhealthy. To view the container log files execute:
+
+```bash
+docker-compose logs
+```
+
+_Note: if you would like to view the logs of a single service, append the service name to the command e.g. `docker-compose logs opschain-api`. A complete list of the OpsChain services is available via `docker-compose ps --services`._
+
+#### Expired / Invalid licence
+
+If your licence file is invalid or has expired when you attempt to start the OpsChain containers, the `opschain-api` will be _unhealthy_ and the service logs will include a message reflecting the licence state:
+
+```text
+OpsChain licence file (opschain.lic) has expired.
+
+To obtain a valid licence, please contact LimePoint via:
+  - Slack: https://limepoint.slack.com/messages/opschain-support
+  - E-mail: opschain-support@limepoint.com
+```
+
+#### Other errors
+
+If the logs reflect a different error, please use the [`#opschain-support` Slack channel](https://limepoint.slack.com/messages/opschain-support) or [email](mailto:opschain-support@limepoint.com) for further assistance.
+
 ### OpsChain CLI changes not showing step status (showing � instead)
 
 The OpsChain CLI uses emoji characters to show the step status.
@@ -57,7 +83,7 @@ The `Gemfile.lock` in the OpsChain project Git repository specifies a particular
 
 #### Solution - proper version of OpsChain-Core
 
-The simplest solution is to remove the `Gemfile.lock`, eg:
+The simplest solution is to remove the `Gemfile.lock`, e.g.:
 
 ```bash
 rm -f Gemfile.lock
@@ -72,6 +98,30 @@ Alternatively, the `Gemfile.lock` can be updated by running:
 ```
 
 You can then continue with your original command.
+
+### `opschain` - `Error: getaddrinfo EAI_AGAIN opschain-api`
+
+When using the OpsChain CLI on Windows some users have reported encountering the following error while running different commands:
+
+```text
+Error: Couldn't create Change: Error: getaddrinfo EAI_AGAIN opschain-api
+```
+
+_If this issue is encountered on other platforms please [let us know](mailto:opschain@limepoint.com) - the solutions suggested here may work on your platform too._
+
+### Suggested solution - use the native OpsChain CLI binary
+
+Installing and using the OpsChain native CLI is the suggested solution for this issue. Learn more about the native CLI and how to install it [here](https://github.com/LimePoint/opschain-trial/blob/master/docs/reference/cli.md#opschain-native-cli).
+
+_If you encounter this issue with the native CLI please [let us know](mailto:opschain@limepoint.com)._
+
+### Alternative solution - restart OpsChain
+
+In some cases restarting OpsChain has been reported to resolve this issue.
+
+### Alternative solution - modify the Windows Docker DNS configuration
+
+Updating the Docker daemon's DNS configuration as suggested in [fix Docker's networking DNS config](https://web.archive.org/web/20210920032745/https://robinwinslow.uk/fix-docker-networking-dns) has been reported to resolve this issue.
 
 ## Known errors/limitations
 

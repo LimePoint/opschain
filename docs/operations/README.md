@@ -38,6 +38,10 @@ Installing and configuring OpsChain on rootless Docker.
 
 Upgrading OpsChain to the latest release.
 
+## [Uninstalling OpsChain](uninstall.md)
+
+Steps on how to permanently remove OpsChain.
+
 ## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)

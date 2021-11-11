@@ -8,6 +8,7 @@ To upgrade OpsChain go to the location on your OpsChain host where you cloned th
 cd opschain-trial
 docker-compose down # or systemctl --user stop opschain.service if running OpsChain as a systemd service
 git pull
+./configure # if the changelog states that the configure script needs to be rerun
 docker-compose pull
 ```
 

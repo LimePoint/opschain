@@ -117,10 +117,15 @@ This is normally performant due to Docker's image build cache - however it is po
 
 A custom base image can be created as follows:
 
-1. Create a Dockerfile for the base image which uses `FROM limepoint/opschain-runner` (or `opschain-runner-enterprise` if using the enterprise runner image).
+1. Create a Dockerfile for the base image that uses `FROM limepoint/opschain-runner` (or `opschain-runner-enterprise` if using the enterprise runner image).
 
-    ```
+    ```dockerfile
     FROM limepoint/opschain-runner
+
+    # the custom Dockerfile must include the following lines to ensure the OpsChain licence is available to the runner
+    ONBUILD ARG OPSCHAIN_LICENCE_BASE64
+    ONBUILD ENV OPSCHAIN_LICENCE_BASE64=${OPSCHAIN_LICENCE_BASE64}
+    ONBUILD RUN /usr/bin/create_opschain_licence.sh
 
     # run your custom Docker build commands like any Dockerfile
     # Note: the OpsChain Docker build context files will not be available here
@@ -134,7 +139,7 @@ A custom base image can be created as follows:
 
 3. Use the custom base image in the project custom Dockerfile.
 
-    ```
+    ```dockerfile
     FROM my-base-image # supply the tag used above
 
     ... # the rest of the OpsChain custom Dockerfile

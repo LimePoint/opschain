@@ -10,4 +10,6 @@ disclosed, copied or used except as expressly permitted in LimePoint’s End
 User Licence Agreement.
 
 LimePoint® and OpsChain® are Registered Trademarks of LimePoint
-For more information contact LimePoint at http://www.limepoint.com
+For more information contact LimePoint at http://www.limepoint.com.
+
+Usage of this software is subject to LimePoint’s standard [End User Licence Agreement](https://opschain.io/files/LimePoint-OpsChain-EULA.pdf) (or, if applicable, other terms agreed with LimePoint).

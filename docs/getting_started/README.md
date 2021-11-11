@@ -2,6 +2,8 @@
 
 [OpsChain](https://opschain.io) was developed to address the problem of managing change in a consistent and uniform way across on-premise, cloud, modern, and legacy platforms. Our objective is to unify people, process, and technology in order to simplify and reduce the operational complexities and costs of running and operating modern enterprise applications and systems in today's world.
 
+[Learn more about how OpsChain can help your organisation.](https://opschain.io/why)
+
 The following example will allow you to explore some of the features of OpsChain and how you can use it to simplify, track and manage change in your organisation.
 
 ## Install OpsChain

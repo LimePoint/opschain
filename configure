@@ -74,6 +74,23 @@ load_saved_settings() {
   set +o allexport
 }
 
+confirm_eula() {
+  if [[ "${OPSCHAIN_LICENCE_ACCEPTED}" = yes ]]; then
+    return
+  fi
+  local l_accept
+  print_msg
+  print_msg "Usage of this software is subject to LimePoint’s standard [End User Licence Agreement](https://opschain.io/files/LimePoint-OpsChain-EULA.pdf) (or, if applicable, other terms agreed with LimePoint)."
+  print_msg
+  l_accept="$(yn "Do you accept LimePoint’s standard End User Licence Agreement (or, if applicable, other terms agreed with LimePoint)? ")"
+
+  if [[ ${l_accept} != yes ]]; then
+    print_msg "This software can't be used if the LimePoint EULA (or other agreed terms) is not accepted." ERR
+    exit 2
+  fi
+  export OPSCHAIN_LICENCE_ACCEPTED=yes
+}
+
 validate_settings() {
   confirm_socket_path
   approve_socket
@@ -81,6 +98,7 @@ validate_settings() {
   confirm_port
   confirm_log_host
   confirm_workers
+  confirm_eula
 }
 
 read_configuration_keys() {
@@ -242,6 +260,9 @@ confirm_workers() {
 }
 
 approve_socket() {
+  if [[ "$OPSCHAIN_DOCKER_SOCKET_APPROVED" = yes ]]; then
+    return
+  fi
   print_msg
   print_msg "OpsChain requires access to your host Docker daemon to function."
   print_msg "This is achieved by volume mapping ${OPSCHAIN_DOCKER_SOCKET_PATH} from the host into the running container."
@@ -250,10 +271,14 @@ approve_socket() {
     print_msg "You must approve this in order to use OpsChain." ERR
     exit 2
   fi
+  export OPSCHAIN_DOCKER_SOCKET_APPROVED=yes
   echo
 }
 
 confirm_log_host() {
+  if [[ -n ${OPSCHAIN_LOG_AGGREGATOR_HOST} ]]; then
+    return
+  fi
   print_msg
   if [ "$(yn 'Are you running OpsChain on Windows (WSL) or macOS (yn) ? ')" = "yes" ]; then
     export OPSCHAIN_LOG_AGGREGATOR_HOST=host.docker.internal
@@ -262,16 +287,16 @@ confirm_log_host() {
   fi
 }
 
-load_mintpress_licence() {
-  licence_file="$(shopt -s nullglob; set -- mintpress.licen[cs]e; echo -n "${1:-mintpress.licence}")"
+load_opschain_licence() {
+  licence_file="opschain.lic"
   if [ -e "${licence_file}" ]; then
-    MINTPRESS_SDK_LICENCE_BASE64="$(base64 < "${licence_file}")"
+    OPSCHAIN_LICENCE_BASE64="$(base64 < "${licence_file}")"
     # remove whitespace to avoid breaking encoded licence
-    MINTPRESS_SDK_LICENCE_BASE64="${MINTPRESS_SDK_LICENCE_BASE64//[$'\t\r\n ']}"
-    print_msg "Loaded MintPress licence from ${licence_file}"
-    export MINTPRESS_SDK_LICENCE_BASE64
+    OPSCHAIN_LICENCE_BASE64="${OPSCHAIN_LICENCE_BASE64//[$'\t\r\n ']}"
+    print_msg "Loaded OpsChain licence from ${licence_file}"
+    export OPSCHAIN_LICENCE_BASE64
   else
-    print_msg "Unable to load the MintPress licence from ${licence_file}" ERR
+    print_msg "Unable to load the OpsChain licence from ${licence_file}" ERR
     exit 2
   fi
 }
@@ -293,7 +318,7 @@ example_env_file=".env.example"
 
 load_saved_settings "${example_env_file}"
 load_saved_settings ".env"
-load_mintpress_licence
+load_opschain_licence
 generate_secrets
 set_permissions_ids
 
