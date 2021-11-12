@@ -49,6 +49,10 @@ git clone git@github.com:LimePoint/opschain-trial.git
 cd opschain-trial
 ```
 
+### Install the OpsChain licence
+
+Copy the `opschain.lic` licence file into the current folder (`opschain-trial`).
+
 ### Configure Docker Hub access
 
 You must be logged in to [Docker Hub](https://hub.docker.com/) as the `opschaintrial` user (or, if you have an [enterprise licence for OpsChain](../reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle), the `opschainenterprise` user). _Contact [LimePoint](mailto:opschain@limepoint.com) to obtain the user credentials._
@@ -70,10 +74,7 @@ A variety of OpsChain Git repositories have been created to provide sample code 
 
 ## Configure the OpsChain environment
 
-The environment utilises a [Docker Compose .env file](https://docs.docker.com/compose/compose-file/#env_file) to configure the running services.
-You will need to generate this file before starting OpsChain (and when upgrading OpsChain).
-
-To generate the `.env` file:
+OpsChain needs to be configured before first run (and when upgrading) by executing the configuration script:
 
 ```bash
 ./configure

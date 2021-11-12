@@ -280,7 +280,7 @@ confirm_log_host() {
     return
   fi
   print_msg
-  if [ "$(yn 'Are you running OpsChain on Windows (WSL) or macOS (yn) ? ')" = "yes" ]; then
+  if [ "$(yn 'Are you running OpsChain on Windows (WSL) (yn) ? ')" = "yes" ] || [ "$(yn 'Are you running OpsChain on macOS (yn) ? ')" = "yes" ]; then
     export OPSCHAIN_LOG_AGGREGATOR_HOST=host.docker.internal
   else
     export OPSCHAIN_LOG_AGGREGATOR_HOST=127.0.0.1
