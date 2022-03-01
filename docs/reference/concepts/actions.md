@@ -92,7 +92,9 @@ In the above example actions would run in this order:
 1. `do_something`
 2. `do_something_after` and `do_something_else_after`
 
-Defining an action bodies:
+_Note: Running steps in parallel comes with its own risks and limitations. See the [changing properties in parallel steps](properties.md#changing-properties-in-parallel-steps) section of the [OpsChain properties guide](properties.md#opschain-properties-guide) for more information._
+
+Defining action bodies:
 
 ```ruby
 require 'opschain'

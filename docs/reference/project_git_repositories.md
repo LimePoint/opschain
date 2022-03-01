@@ -12,10 +12,10 @@ Each project Git repository must include a `Gemfile` and an `actions.rb` in the 
   gem 'opschain-core'
   ```
 
-- The `actions.rb` must include a `require` for the `opschain-core` gem.
+- The `actions.rb` must include a `require` for the `opschain` library.
 
   ```ruby
-  require 'opschain-core'
+  require 'opschain'
   ```
 
 ## Adding a project Git repository as a remote

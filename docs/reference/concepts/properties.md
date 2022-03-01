@@ -184,6 +184,96 @@ OpsChain.project.properties.delete(:parent)
 
 An example of setting properties can be seen in the [Confluent example](https://github.com/LimePoint/opschain-examples-confluent). The `provision` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) modifies the environment properties to change settings for broker1.
 
+#### Changing properties in parallel steps
+
+When a step starts, the current state of the project and environment properties (in the OpsChain database) is supplied to the step's action. This means steps that run in parallel will start with the same set of properties. At the completion of each step, a [JSONPatch](http://jsonpatch.com/) is generated describing the changes made to the project and environment properties by the action. It is up to the action developer to ensure any changes made to properties by parallel steps are compatible with each other.
+
+_OpsChain recommends that you do not modify properties from within parallel steps. However, if this is a requirement of your change, ensuring the modifications apply to unrelated sections of the OpsChain properties will mitigate the risk. The following sections describe various types of properties changes and the possible errors you may encounter._
+
+##### Modifying different properties
+
+Using a JSONPatch to apply changes made by actions to the OpsChain properties ensures parallel steps can modify independent properties successfully. For example:
+
+```ruby
+# Sets up an initial set of values for the OpsChain project properties, then calls the foo and bar child actions in parallel
+action :default, steps: [:foo, :bar], run_as: :parallel do
+  OpsChain.project.properties = { foo: 'old_foo', bar: 'old_bar' }
+end
+
+action :foo do
+  OpsChain.project.properties.foo = 'new_foo'
+end
+
+action :bar do
+  OpsChain.project.properties.bar = 'new_bar'
+end
+```
+
+At the completion of the child steps, the OpsChain project properties will be:
+
+```ruby
+{ foo: 'new_foo', bar: 'new_bar' }
+```
+
+##### Race conditions
+
+Modifying the same property in parallel steps will produce unexpected results. In the example below, at the completion of the child steps, the final value of the `race` property will be the value assigned by the child step that completes last.
+
+```ruby
+# Sets up an initial set of values for the OpsChain project properties, then calls the foo and bar child actions in parallel
+action :default, steps: [:foo, :bar], run_as: :parallel do
+  OpsChain.project.properties = { race: 'initial value' }
+end
+
+action :foo do
+  OpsChain.project.properties.race = 'possible value 1'
+end
+
+action :bar do
+  OpsChain.project.properties.race = 'possible value 2'
+end
+```
+
+##### Conflicting changes
+
+In addition to the [race conditions](#race-conditions) example above, changes to OpsChain properties made by parallel steps can create JSONPatch conflicts that will result in a change failing. The following scenarios are example of parallel steps that will generate conflicting JSONPatches.
+
+_Scenario 1:_ Deleting a property in one child, while modifying that property's elements in the other.
+
+```ruby
+action :default, steps: [:foo, :bar], run_as: :parallel do
+  OpsChain.project.properties.parent = { child: 'value' }
+end
+
+action :foo do
+  OpsChain.project.properties.delete(:parent)
+end
+
+action :bar do
+  OpsChain.project.properties.parent.child = 'new value'
+  sleep(10)
+end
+```
+
+_Scenario 2:_ Modifying the data type of a property in one child, while generating a patch based on the original data type in the other.
+
+```ruby
+action :default, steps: [:foo, :bar], run_as: :parallel do
+  OpsChain.project.properties.parent = { child: 'value' }
+end
+
+action :foo do
+  OpsChain.project.properties.parent = 'I am now a string'
+end
+
+action :bar do
+  OpsChain.project.properties.parent.child = 'new value'
+  sleep(10)
+end
+```
+
+In both scenarios, the `default` action will fail running child step `bar`. As the child steps start with the properties defined by the `default` action, the logic within each child will complete successfully. However, as `bar` (with its included sleep) will finish last, the JSONPatch it produces will fail when OpsChain attempts to apply it as `foo` has changed the `parent` property to be incompatible with the patch made by `bar`. In both cases, the `child` element no longer exists and cannot be modified.
+
 ### File properties
 
 OpsChain file properties are written to the working directory prior to the step action being initiated. Any property under `opschain.files` is interpreted as a file property and will be written to disk.
@@ -298,7 +388,7 @@ Each [step](concepts.md#step) [action](concepts.md#action) is executed using the
 
 #### Setting environment variables example
 
-An example of setting environment variables can be seen in the [Confluent example](https://github.com/LimePoint/opschain-examples-confluent). The [`environment_properties.json`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/environment_properties.json) includes the `TF_IN_AUTOMATION` environment variable to instruct Terraform that it is running in non-human interactive mode.
+An example of setting environment variables can be seen in the [Ansible example](https://github.com/LimePoint/opschain-examples-ansible). The [`project_properties.json`](https://github.com/LimePoint/opschain-examples-ansible/blob/master/project_properties.json) contains the credentials to be able to successfully login to your AWS account.
 
 ## Licence & authors
 

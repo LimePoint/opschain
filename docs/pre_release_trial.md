@@ -40,7 +40,7 @@ Keen to get started? We have a [getting started guide](https://github.com/LimePo
 
 ### Trial licence
 
-We aim to complete the prerelease trial phase by the end of 2021 so we will provide you with a 3-month licence. This licence will allow you to use all of the OpsChain features without limitation. If you are interested in using OpsChain beyond the trial, please get in touch with us at [opschain@limepoint.com](mailto:opschain@limepoint.com).
+We aim to complete the prerelease trial phase by the end of 2021 so we will provide you with a 3-month licence. This licence will allow you to use all of the OpsChain features without limitation. If you are interested in using OpsChain beyond the trial, please get in touch with us at [opschain-support@limepoint.com](mailto:opschain-support@limepoint.com).
 
 ### Frequency of OpsChain releases
 
@@ -60,7 +60,7 @@ As an added bonus, the first 25 participants to provide feedback will also recei
 
 We want to know your impressions and thoughts throughout the trial. So don’t wait until the end of the trial.
 
-You can reach us via Slack on the #opschain-trial channel or send us an email at [opschain@limepoint.com](mailto:opschain@limepoint.com).
+You can reach us via Slack on the #opschain-trial channel or send us an email at [opschain-support@limepoint.com](mailto:opschain-support@limepoint.com).
 
 ### Surveys
 
@@ -70,7 +70,7 @@ You can also expect a survey or two along the way; don’t worry, we won’t spa
 
 We are based in Melbourne, Australia so typically, responses would be local business hours.
 
-If you encounter issues or have questions, send us an email at [opschain@limepoint.com](mailto:opschain@limepoint.com). Please include a description of what you are trying to do and what issues/errors you are encountering. Also, attach any relevant screenshots and OpsChain logfiles.
+If you encounter issues or have questions, send us an email at [opschain-support@limepoint.com](mailto:opschain-support@limepoint.com). Please include a description of what you are trying to do and what issues/errors you are encountering. Also, attach any relevant screenshots and OpsChain logfiles.
 
 Any defects raised will be triaged, and where possible, we will provide a workaround to bypass the issue. If it is a showstopper, we may also provide a bug fix or release that addresses the issue.
 

@@ -126,7 +126,7 @@ services:
   # an operations tool in rootless installs
   opschain-ops:
     scale: 0
-    image: centos:centos8
+    image: almalinux:8
     command: /bin/bash
     volumes:
       - ${OPSCHAIN_DATA_DIR}:/opschain_data

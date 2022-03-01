@@ -133,7 +133,7 @@ OpsChain provides a linting tool for detecting issues in project Git repositorie
 
 The linter can be invoked manually (`opschain-lint`) to test the files in a Git repository - when run like this the linter tests all not-ignored files in the Git repository. The linter can be invoked as `OPSCHAIN_LINT_GIT_KNOWN_ONLY=true opschain-lint` to only lint files tracked by Git.
 
-To reduce the likelihood of committing mistakes into your project repository, the linter can be setup as a pre-commit hook in Git. To create the hook, run the following setup command from the root directory of your project Git repository:
+To reduce the likelihood of committing mistakes into your project repository, the linter can be setup as a pre-commit hook in Git. To create the hook, run the following setup command from the root directory of your Git repository:
 
 ```bash
 opschain-lint --setup
@@ -143,7 +143,13 @@ _Note: The pre-commit hook will automatically ignore untracked files._
 
 If you would like to commit code that fails linting (e.g. incomplete code) the Git `--no-verify` argument can be used when committing, e.g. `git commit --no-verify`.
 
-If you would like to suggest a feature for `opschain-lint` please [contact us](mailto:opschain@limepoint.com).
+The hook can be removed permanently by removing the pre-commit hook script:
+
+```bash
+rm -f .git/hooks/pre-commit
+```
+
+If you would like to suggest a feature for `opschain-lint` please [contact us](mailto:opschain-support@limepoint.com).
 
 ## Using custom runner images
 

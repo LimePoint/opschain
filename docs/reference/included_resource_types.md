@@ -12,7 +12,7 @@ The table below outlines the file to `require` in your resource definition and t
 |                           | `transport_factory`   | Exposes the [`MintPress::Infrastructure::TransportFactory` controller](https://docs.limepoint.com/reference/ruby/MintPress/Infrastructure/TransportFactory.html) |
 | `opschain-terraform`      | `terraform_config`    | Exposes the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/tree/v1.2.0) gem |
 
-_Note: Contact [LimePoint](mailto:opschain@limepoint.com) to obtain the password required to access the MintPress Reference Documentation._
+_Note: Contact [LimePoint](mailto:opschain-support@limepoint.com) to obtain the password required to access the MintPress Reference Documentation._
 
 ### Usage
 

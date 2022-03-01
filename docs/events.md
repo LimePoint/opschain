@@ -12,7 +12,7 @@ _Note: All the examples in this guide assume the OpsChain API server is running 
 
 ## Overview
 
-OpsChain tracks all interactions with the OpsChain API for auditing and reporting purposes. In future versions OpsChain will track more events, please [let us know](mailto:opschain@limepoint.com) if there are particular events you would like tracked.
+OpsChain tracks all interactions with the OpsChain API for auditing and reporting purposes. In future versions OpsChain will track more events, please [let us know](mailto:opschain-support@limepoint.com) if there are particular events you would like tracked.
 
 _Note: OpsChain does not track API requests to the `/events` API itself._
 

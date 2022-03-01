@@ -10,6 +10,12 @@ After following this guide you should know how to:
 - view the properties used during a change
 - understand how to provide a custom Dockerfile
 
+## Prerequisites
+
+This example requires at least 4GB of ram and 50GB of disk space available on the Docker platform used to run OpsChain and the example.
+
+If using Docker for Windows or Docker for Mac see our [installation guide](getting_started/installation.md#hardwarevm-requirements) for more details.
+
 ## Create a project
 
 Create a new project:
@@ -127,7 +133,7 @@ opschain change create --project-code confluent --environment-code local --git-r
 
 The [steps](../reference/concepts/concepts.md#step) that comprise the change will be shown as well as their status.
 
-_Note: the first step in this change may take a long time as it downloads a Centos Docker image as well as installation executables for Java and Confluent. Subsequent runs will use Docker's  layer caching feature and should not require these to be re-downloaded._
+_Note: the first step in this change may take a long time as it downloads a Centos Docker image as well as installation executables for Java and Confluent. Subsequent runs will use Docker's layer caching feature and should not require these to be re-downloaded._
 
 Manually copy and set the change ID as a variable, you'll need it for the next steps:
 
@@ -135,7 +141,7 @@ Manually copy and set the change ID as a variable, you'll need it for the next s
 change_id=XXXXX
 ```
 
-**Use the `opschain change show-logs` command to see the log output from the change (including any failures).**
+**Use the `opschain change show-logs` command to see the log output from the change (including any failures). Use the `--follow` argument to watch the logs as the change progresses.**
 
 ## Verify change deployment
 

@@ -36,7 +36,7 @@ OPSCHAIN_LDAP_USER_ATTRIBUTE  | LDAP/AD user attribute used as the OpsChain user
 
 Variable              | Description                                                                                                                                                                                          | Default Value
 :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--------
-OPSCHAIN_AUTH_SERVICE | Policy agent type on the authorisation host. The following policy agent is currently available: OPA. _Please contact [LimePoint](mailto:opschain@limepoint.com) if you require other policy agents._ |
+OPSCHAIN_AUTH_SERVICE | Policy agent type on the authorisation host. The following policy agent is currently available: OPA. _Please contact [LimePoint](mailto:opschain-support@limepoint.com) if you require other policy agents._ |
 
 ### Log aggregator configuration
 

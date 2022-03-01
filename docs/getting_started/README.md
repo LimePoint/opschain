@@ -205,10 +205,12 @@ Looking at the list, our project team can now easily see who deployed a WAR to p
 Lets look at the logs from the production deployment and see how the production specific properties changed the deployment.
 
 ```bash
-opschain change show-logs --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+opschain change show-logs --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --follow
 ```
 
 As you can see, the WAR file to deploy remained the same, but the target instance reflects the value from the `prod_properties.json`.
+
+The `--follow` argument added here means that the OpsChain CLI will continue showing the logs from the change until it completes. If the change has already finished, the command works identically as if that argument was omitted.
 
 #### Change the WAR file to deploy
 

@@ -37,8 +37,19 @@ OpsChain supports the following Docker versions:
 - macOS - Docker Desktop Community 3.1.0 and above
 - Linux - the latest Docker release
 - Windows Subsystem for Linux (WSL) - the latest Docker release (installed in the WSL environment). Note:
-  - _Prior to running the OpsChain Docker containers in WSL, we recommend adjusting the "memory" setting in your [WSL 2 Settings](https://docs.microsoft.com/en-us/windows/wsl/wsl-config#wsl-2-settings). The default setting can cause WSL to consume most of the machine's memory when running Docker containers in WSL._
   - _For a better CLI experience we suggest using a modern terminal (like the [Windows Terminal from the Microsoft Store](https://aka.ms/terminal) or a WSL terminal)._
+
+### Hardware/VM requirements
+
+OpsChain requires a minimum of 2GB of ram to function. We recommend 4GB if you intend to run our more advanced examples.
+
+OpsChain requires a minimum of 20GB of disk to function. We recommend 50GB if you intend to run our examples without having to perform [manual cleanup activities](../operations/maintenance/docker_image_cleanup.md#opschain-docker-image-cleanup) very frequently.
+
+If using Docker for Mac the [configuration UI](https://docs.docker.com/desktop/mac/#advanced) allows you to adjust the ram and disk allocation for Docker. After changing the configuration you will need to restart the Docker service.
+
+If using Docker for Windows the [WSL configuration](https://docs.microsoft.com/en-us/windows/wsl/wsl-config#global-configuration-options-with-wslconfig) (or the per [distribution configuration](https://docs.microsoft.com/en-us/windows/wsl/wsl-config#per-distribution-configuration-options-with-wslconf)) allows you to modify the ram allocation. There is no need to adjust the disk allocation. If WSL is already running it will need to be restarted.
+
+_Note: When using macOS or Windows we suggest ensuring that your Docker installation is not allocated too much of your system ram - or the rest of your system may struggle. As a rough guide, we suggest not allocating more than 50% of your system ram._
 
 ### Clone the OpsChain trial repository
 
@@ -55,7 +66,7 @@ Copy the `opschain.lic` licence file into the current folder (`opschain-trial`).
 
 ### Configure Docker Hub access
 
-You must be logged in to [Docker Hub](https://hub.docker.com/) as the `opschaintrial` user (or, if you have an [enterprise licence for OpsChain](../reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle), the `opschainenterprise` user). _Contact [LimePoint](mailto:opschain@limepoint.com) to obtain the user credentials._
+You must be logged in to [Docker Hub](https://hub.docker.com/) as the `opschaintrial` user (or, if you have an [enterprise licence for OpsChain](../reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle), the `opschainenterprise` user). _Contact [LimePoint](mailto:opschain-support@limepoint.com) to obtain the user credentials._
 
 ```bash
 docker login --username opschaintrial

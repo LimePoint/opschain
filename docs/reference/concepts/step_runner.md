@@ -21,7 +21,7 @@ The image used by the step container is built as part of every step's execution 
 
 ### OpsChain standard runner
 
-The standard OpsChain runner base image is a Centos-based image that provides a subset of the MintPress controller Gems with an associated Ruby installation and the standard Centos base development tooling.
+The standard OpsChain runner base image is an AlmaLinux-based image that provides a subset of the MintPress controller Gems with an associated Ruby installation and the standard RHEL-packaged base development tooling.
 
 The standard runner image is called `limepoint/opschain-runner` and is configured by default for use in OpsChain.
 
@@ -29,7 +29,7 @@ The standard runner image is called `limepoint/opschain-runner` and is configure
 
 The OpsChain enterprise runner is an alternative base runner image that includes the MintPress Oracle controllers, in addition to everything in the standard runner. It is available for use by licenced MintPress customers.
 
-You must be logged in to the [Docker Hub](https://hub.docker.com/) as the `opschainenterprise` user to use the OpsChain enterprise runner - contact [LimePoint](mailto:opschain@limepoint.com) to obtain these user credentials.
+You must be logged in to the [Docker Hub](https://hub.docker.com/) as the `opschainenterprise` user to use the OpsChain enterprise runner - contact [LimePoint](mailto:opschain-support@limepoint.com) to obtain these user credentials.
 
 ```bash
 docker login --username opschainenterprise
@@ -151,7 +151,7 @@ OpsChain relies on configuration done as part of the base runner image to work. 
 
 Ensure that you rebuild your custom image after upgrading OpsChain.
 
-[Contact us](mailto:opschain@limepoint.com) if you would like to express your interest in this feature.
+[Contact us](mailto:opschain-support@limepoint.com) if you would like to express your interest in this feature.
 
 ## API - step runner integration
 

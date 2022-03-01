@@ -137,13 +137,11 @@ Hello world
 Goodbye world
 ```
 
-#### Setup `opschain-lint` as a pre-commit hook (optional)
+#### The `opschain-lint` pre-commit hook
 
-OpsChain provides a linting command for detecting issues in project Git repositories. This command can be setup as a pre-commit hook in Git to reduce the likelihood of committing mistakes:
+OpsChain provides a linting command for detecting issues in project Git repositories.
 
-```bash
-opschain-lint --setup
-```
+This command is automatically setup as a pre-commit hook for project Git repositories created by OpsChain.
 
 If you would like to commit code that fails linting (e.g. incomplete code) the Git `--no-verify` argument can be used when committing, e.g. `git commit --no-verify`.
 
@@ -402,7 +400,7 @@ $ docker-compose exec target cat /tmp/testing
 Hello :-)
 ```
 
-This example leverages the MintPress `InfrastructureHost` and `Transport` classes which can transparently execute code on remote or local hosts. View the [MintPress documentation](https://docs.limepoint.com/mintpress/examples/interacting-with-transport/) for these classes to learn more about the powerful functions they provide - if you need credentials to access this documentation contact [OpsChain support](mailto:opschain@limepoint.com).
+This example leverages the MintPress `InfrastructureHost` and `Transport` classes which can transparently execute code on remote or local hosts. View the [MintPress documentation](https://docs.limepoint.com/mintpress/examples/interacting-with-transport/) for these classes to learn more about the powerful functions they provide - if you need credentials to access this documentation contact [OpsChain support](mailto:opschain-support@limepoint.com).
 
 To complete the new `file` resource example, update the contents of your `actions.rb` as follows:
 

@@ -1,5 +1,36 @@
 # Changelog
 
+## [2022-03-01]
+
+### Added
+
+- The OpsChain hardware requirements are now [documented](docs/getting_started/installation.md#hardwarevm-requirements).
+- The `opschain change show-logs` command now accepts a `--follow` argument to follow the logs until the change completes.
+- [Documentation](docs/reference/concepts/properties.md#changing-properties-in-parallel-steps) and [troubleshooting guide](docs/troubleshooting.md#updates-made-to-properties-could-not-be-applied) when changing properties within parallel steps.
+
+### Changed
+
+- Upgraded Ruby to 2.7.5.
+- Upgraded PostgreSQL to 14.1.
+- Upgraded Bundler to 2.3.6.
+- Upgraded OPA to 0.36.0.
+- Upgraded Fluentd to v1.14.4-1.0.
+- Upgraded Terraform to 1.1.4 in the OpsChain examples.
+- Upgraded Terraform 'hashicorp/aws' plugin to 3.73.0 in the OpsChain Ansible example.
+- Upgraded HashiCorp Vault to 1.9.2 in the OpsChain Vault example.
+- Upgraded Confluent to 6.2.2 in the OpsChain Confluent example.
+- Update example on [setting environment variables](docs/reference/concepts/properties.md#setting-environment-variables-example) in the [OpsChain properties guide](docs/reference/concepts/properties.md#opschain-properties-guide).
+- Update documentation on the [minimum requirements](docs/reference/project_git_repositories.md#minimum-requirements) in the [OpsChain project Git repositories guide](docs/reference/project_git_repositories.md#opschain-project-git-repositories-guide).
+- **Breaking change** - Upgraded OpsChain to Rails 7.
+  - Please reconfigure your environment again by running the `./configure` script as part of the upgrade.
+  - You will need to re-create your database as the new version of OpsChain is incompatible with the existing table data.
+- The OpsChain base runner image is now based on AlmaLinux 8.
+
+### Fixed
+
+- Properties raising `ActiveRecord::StaleObjectError` exception when parallel steps modify properties.
+- API worker now logs the full stack trace for `Failed processing step <step_name> (ProcessStepResultCommand::Error)` exception when patching properties fails.
+
 ## [2021-11-12]
 
 ### Added

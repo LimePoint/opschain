@@ -5,6 +5,22 @@ After following this guide you should understand:
 - how to resolve known OpsChain issues
 - workarounds for known OpsChain limitations
 
+## General advice
+
+When errors are encountered with OpsChain, the following high-level checklist may be useful:
+
+- check the log output from any relevant changes using `opschain change show-logs`
+- check the log output from the `docker-compose` process
+  - this can be viewed in the terminal running OpsChain
+  - alternatively, the log output can be viewed by running `docker-compose logs`
+    - to see the logs for a specific OpsChain service, run `docker-compose logs {{service}}` (use `docker-compose ps --services` to see the list of OpsChain services)
+- ensure the OpsChain [hardware/VM prerequisites](getting_started/installation.md#hardwarevm-requirements) are met
+  - ensure that adequate disk space is still available
+- ensure the system time is accurate
+- check [known issues](#known-issues) below
+- restart OpsChain and try again
+- [contact us](support.md#how-to-contact-us) for support
+
 ## Known issues
 
 ### Container "xxxxxxxxxxxx" is unhealthy
@@ -107,13 +123,13 @@ When using the OpsChain CLI on Windows some users have reported encountering the
 Error: Couldn't create Change: Error: getaddrinfo EAI_AGAIN opschain-api
 ```
 
-_If this issue is encountered on other platforms please [let us know](mailto:opschain@limepoint.com) - the solutions suggested here may work on your platform too._
+_If this issue is encountered on other platforms please [let us know](mailto:opschain-support@limepoint.com) - the solutions suggested here may work on your platform too._
 
 ### Suggested solution - use the native OpsChain CLI binary
 
 Installing and using the OpsChain native CLI is the suggested solution for this issue. Learn more about the native CLI and how to install it [here](https://github.com/LimePoint/opschain-trial/blob/master/docs/reference/cli.md#opschain-native-cli).
 
-_If you encounter this issue with the native CLI please [let us know](mailto:opschain@limepoint.com)._
+_If you encounter this issue with the native CLI please [let us know](mailto:opschain-support@limepoint.com)._
 
 ### Alternative solution - restart OpsChain
 
@@ -160,6 +176,49 @@ end
 ```
 
 The `ref` (short for reference) method looks up the resource in the same way as [referencing previous resources](reference/concepts/actions.md#referencing-previous-resources).
+
+### `opschain-lint` - Command not found
+
+OpsChain automatically sets up the [`opschain-lint` tool](docker_development_environment.md#using-opschain-lint) to detect issues in the project Git repositories.
+
+If the command is not available on the path when committing the following error will be shown:
+
+```text
+.git/hooks/pre-commit: line 2: exec: opschain-lint: not found
+```
+
+#### Solution - `opschain-lint: not found`
+
+To enable the `opschain-lint` command as part of the Git pre-commit hook, it needs to be [added to the path](getting_started/installation.md#add-the-opschain-commands-to-the-path), or the pre-commit hook could be modified to include the full path to `opschain-lint`.
+
+Alternatively, the pre-commit hook can be removed from the project Git repository:
+
+```bash
+cd {{project git repository}}
+rm -f .git/hooks/pre-commit
+```
+
+Or, if you would like to skip the hook just once, the `--no-verify` argument can be used when committing.
+
+### Updates made to properties could not be applied
+
+The following error highlights that you are running parallel steps and OpsChain is unable to successfully apply the JSONPatch with your property updates.
+
+```ruby
+Failed processing step: /opt/opschain/app/commands/process_step_result_command.rb:17:in `rescue in call': Failed processing step "bar" (ProcessStepResultCommand::Error)
+# ...
+rescue in apply_properties_diff!': Updates made to properties in step "bar" could not be applied - parallel steps must not modify the same property. (ProcessStepResultCommand::Error)
+# ...
+in `remove_operation': JSON::PatchObjectOperationOnArrayException (JSON::PatchObjectOperationOnArrayException)
+# ...
+```
+
+#### Solution - refactor your child steps
+
+To avoid getting this error message, you can use one of the following options:
+
+- ensure that your parallel steps aren't [modifying the same property](reference/concepts/properties.md#conflicting-changes)
+- convert those child steps to serial
 
 ## Workarounds (YMMV)
 
