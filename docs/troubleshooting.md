@@ -10,10 +10,8 @@ After following this guide you should understand:
 When errors are encountered with OpsChain, the following high-level checklist may be useful:
 
 - check the log output from any relevant changes using `opschain change show-logs`
-- check the log output from the `docker-compose` process
-  - this can be viewed in the terminal running OpsChain
-  - alternatively, the log output can be viewed by running `docker-compose logs`
-    - to see the logs for a specific OpsChain service, run `docker-compose logs {{service}}` (use `docker-compose ps --services` to see the list of OpsChain services)
+- check the log output from Kubernetes, e.g. via [`kubetail -n opschain-trial --since 0`](https://github.com/johanhaleby/kubetail)
+  - to see the logs for a specific OpsChain service using `kubetail`, run `kubetail {{service}} -n opschain-trial` (use `kubectl get deployments -n opschain-trial` to see the list of OpsChain services)
 - ensure the OpsChain [hardware/VM prerequisites](getting_started/installation.md#hardwarevm-requirements) are met
   - ensure that adequate disk space is still available
 - ensure the system time is accurate
@@ -28,12 +26,12 @@ When errors are encountered with OpsChain, the following high-level checklist ma
 The most likely cause of this issue is an invalid or expired licence file, although other scenarios can cause a container to be flagged as unhealthy. To view the container log files execute:
 
 ```bash
-docker-compose logs
+kubetail -n opschain-trial --since 0
 ```
 
-_Note: if you would like to view the logs of a single service, append the service name to the command e.g. `docker-compose logs opschain-api`. A complete list of the OpsChain services is available via `docker-compose ps --services`._
+_Note: if you would like to view the logs of a single service, include the service name in the command e.g. `kubetail opschain-api -n opschain-trial --since 0`. A complete list of the OpsChain services is available via `kubectl get deployments -n opschain-trial`._
 
-#### Expired / Invalid licence
+#### Expired / invalid licence
 
 If your licence file is invalid or has expired when you attempt to start the OpsChain containers, the `opschain-api` will be _unhealthy_ and the service logs will include a message reflecting the licence state:
 
@@ -93,7 +91,7 @@ Could not find proper version of opschain-core (0.1.0.82) in any of the sources
 Run `bundle install` to install missing gems.
 ```
 
-This can happen when you've pulled the latest OpsChain Docker images.
+This can happen when you've pulled the latest OpsChain images.
 
 The `Gemfile.lock` in the OpsChain project Git repository specifies a particular version of the `opschain-core` Gem. This version changes when pulling the newer OpsChain images.
 
@@ -125,19 +123,42 @@ Error: Couldn't create Change: Error: getaddrinfo EAI_AGAIN opschain-api
 
 _If this issue is encountered on other platforms please [let us know](mailto:opschain-support@limepoint.com) - the solutions suggested here may work on your platform too._
 
-### Suggested solution - use the native OpsChain CLI binary
+#### Suggested solution - use the native OpsChain CLI binary
 
-Installing and using the OpsChain native CLI is the suggested solution for this issue. Learn more about the native CLI and how to install it [here](https://github.com/LimePoint/opschain-trial/blob/master/docs/reference/cli.md#opschain-native-cli).
+Installing and using the OpsChain native CLI is the suggested solution for this issue. Learn more about the native CLI and how to install it [here](reference/cli.md#opschain-cli-download).
 
 _If you encounter this issue with the native CLI please [let us know](mailto:opschain-support@limepoint.com)._
 
-### Alternative solution - restart OpsChain
+#### Alternative solution - restart OpsChain
 
 In some cases restarting OpsChain has been reported to resolve this issue.
 
-### Alternative solution - modify the Windows Docker DNS configuration
+#### Alternative solution - modify the Windows Docker DNS configuration
 
 Updating the Docker daemon's DNS configuration as suggested in [fix Docker's networking DNS config](https://web.archive.org/web/20210920032745/https://robinwinslow.uk/fix-docker-networking-dns) has been reported to resolve this issue.
+
+### Poor image build performance
+
+The OpsChain image build service relies on the snapshotting features of the overlayfs or fuse-overlayfs file systems to provide fast layer caching. If the overlayfs and fuse-overlayfs filesystems are unavailable, the build service will fall back to a native snapshotter, causing image build times to be considerably slower. Use the following command to search the build service logs to see if the native snapshotter is in use:
+
+```bash
+kubectl logs service/opschain-build-service -n opschain | grep 'native'
+```
+
+If the results include output similar to the example below, the build service is using the non-performant snapshotter. E.g.
+
+```text
+fuse-overlayfs is not available for /home/user/.local/share/buildkit, falling back to native: fuse-overlayfs not functional, make sure running with kernel >= 4.18: failed to mount
+auto snapshotter: using native
+```
+
+#### Solution - enable privileged build-service
+
+To configure the build-service to run in a privileged container (that will be able to use overlayfs), edit your `.env`, setting:
+
+```dotenv
+OPSCHAIN_IMAGE_BUILD_ROOTLESS=false
+```
 
 ## Known errors/limitations
 
@@ -219,38 +240,6 @@ To avoid getting this error message, you can use one of the following options:
 
 - ensure that your parallel steps aren't [modifying the same property](reference/concepts/properties.md#conflicting-changes)
 - convert those child steps to serial
-
-## Workarounds (YMMV)
-
-_Workarounds or tips mentioned in this section are unsupported and may stop working in the future._
-
-### Git remotes with SSH authentication
-
-A workaround to allow adding a Git remote that requires SSH authentication is to bind mount an authorized SSH private key into the OpsChain API container and the OpsChain Worker container.
-
-In the `opschain-trial` directory create a `docker-compose.override.yml` that bind mounts an SSH private key and a known_hosts file into the containers, for example:
-
-```yaml
-version: '2.4'
-
-services:
-  opschain-api:
-    volumes:
-      - /path/to/id_ed25519:/opt/opschain/.ssh/id_ed25519
-      - /path/to/.ssh/known_hosts:/opt/opschain/.ssh/known_hosts
-  opschain-api-worker:
-    volumes:
-      - /path/to/id_ed25519:/opt/opschain/.ssh/id_ed25519
-      - /path/to/.ssh/known_hosts:/opt/opschain/.ssh/known_hosts
-```
-
-_If using an OPSCHAIN_UID of `0` the `/opt/opschain/.ssh` paths needs to be replaced with `/root/.ssh`._
-
-After doing this the OpsChain Docker containers need to be restarted.
-
-(If required, the `known_hosts` file can be created by running `ssh-keyscan {git_remote_host} > known_hosts` - for example `ssh-keyscan github.com > known_hosts`.)
-
-The SSH key and known_hosts are used by the `opschain` user in the containers - which is a user account with the UID from `OPSCHAIN_UID` in `.env`, and the equivalent GID based on `OPSCHAIN_GID`. Hence, the file permissions of the SSH key and known_hosts file must be correct for this user account.
 
 ## Licence & authors
 

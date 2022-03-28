@@ -1,65 +1,32 @@
 # OpsChain backup & restore
 
-After following this guide you should know how to:
+OpsChain by itself does not perform backup and disaster recovery procedures. This guide assumes that you will be using a backup tool to backup and restore your Kubernetes cluster resources.
 
-- Create and restore a backup of your OpsChain data
+## Prerequisites
 
-## Creating a backup
+This guide assumes you have a Kubernetes backup tool to perform your backup and recovery procedures. Scroll down this page for [some options](#see-also).
 
-OpsChain needs to be stopped to make a backup.
+## Creating a snapshot of your OpsChain resources
 
-```bash
-docker-compose down
-```
-
-Once OpsChain is down a backup can be made of the `opschain_data` directory.
+Prior to backing up your resources, we recommend stopping OpsChain:
 
 ```bash
-tar -cvJf opschain_data.tar.xz opschain_data
+opschain-stop
 ```
 
-Once the backup has been created OpsChain can be started again.
+It is recommended that you backup the entire `opschain-trial` namespace so that in an unlikely event of a failure, you can get OpsChain up an running after the recovery and restore process. Using the backup tool of your choice, make a snapshot of the `opschain-trial` resources. In addition to the resources in the `opschain-trial` namespace, the OpsChain persistent volumes that fulfill the persistent volume claims (in the `opschain-trial` namespace) need to be backed up as well (e.g. database, git repos, ldap, step data). Once the snapshot has been created, you can restart OpsChain:
 
 ```bash
-docker-compose up
+opschain-start
 ```
-
-### OpsChain rootless Docker installs
-
-OpsChain Rootless Docker installs may encounter permissions issues running these steps.
-
-The `opschain-ops` container can be used to handle this situation.
-
-This container also has the `opschain-trial` directory bind mounted at `/opschain`. This make it possible to make backups using this container.
-
-```bash
-docker-compose run --rm opschain-ops tar -cvJf /opschain/opschain-backup.tar.xz /opschain_data
-```
-
-This will create the `opschain-backup.tar.xz` in the `opschain-trial` directory.
-
-The [file ownership](../rootless_install.md#file-ownership) section of the OpsChain Rootless install documentation provides more details.
 
 ## Restoring a backup
 
-OpsChain needs to be stopped when restoring a backup.
+Follow your backup tool's restore procedures if you need to restore a snapshot of your OpsChain Kubernetes resources.
 
-```bash
-docker-compose down
-```
+## See also
 
-Once OpsChain is down remove/move any existing data and then restore your backup tarball.
-
-```bash
-mv opschain_data opschain_data.old
-tar -xvJf opschain_data.tar.xz
-```
-
-Once the backup has been restored OpsChain can be started again.
-
-```bash
-docker-compose up
-```
+Kubernetes backup options include [Velero](https://velero.io/), [Kasten K10](https://www.kasten.io/) and [Portworx](https://portworx.com/products/px-backup/). OpsChain does not make any recommendations on which backup tool you should use as it is outside the scope of our application.
 
 ## Licence & authors
 

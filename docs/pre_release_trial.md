@@ -36,7 +36,7 @@ Easy to troubleshoot changes:
 
 ## Getting started
 
-Keen to get started? We have a [getting started guide](https://github.com/LimePoint/opschain-trial/blob/master/docs/getting_started.md) which lists technical requirements and helps you to get going. You will also find several examples of using OpsChain with [Terraform](https://github.com/LimePoint/opschain-examples-terraform), [Ansible](https://github.com/LimePoint/opschain-examples-ansible), [Confluent](https://github.com/LimePoint/opschain-examples-confluent) and [HashiCorp Vault](https://github.com/LimePoint/opschain-examples-vault) to try out.
+Keen to get started? We have a [getting started guide](/docs/getting_started/README.md) which lists technical requirements and helps you to get going. You will also find several examples of using OpsChain with [Terraform](https://github.com/LimePoint/opschain-examples-terraform), [Ansible](https://github.com/LimePoint/opschain-examples-ansible), [Confluent](https://github.com/LimePoint/opschain-examples-confluent) and [HashiCorp Vault](https://github.com/LimePoint/opschain-examples-vault) to try out.
 
 ### Trial licence
 

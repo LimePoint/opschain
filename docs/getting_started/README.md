@@ -129,7 +129,7 @@ Action (optional): deploy_war
 Create this change? Yes
 ```
 
-An informational table and step tree will be displayed. Each step in an OpsChain change is executed within its Docker container, ensuring its isolation from the host system and other running changes.
+An informational table and step tree will be displayed. Each step in an OpsChain change is executed within its own container, ensuring its isolation from the host system and other running changes.
 
 #### View change logs
 
@@ -140,7 +140,7 @@ test_change_id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 opschain change show-logs --change-id $test_change_id
 ```
 
-The beginning of the log shows the output from Docker as it builds the OpsChain runner image for the `deploy_war` action. After the build output you will see the action output. Note the output includes:
+The beginning of the log shows the output from the image builder as it builds the OpsChain runner image for the `deploy_war` action. After the build output you will see the action output. Note the output includes:
 
 - contextual references to the project (`Website`) and environment name (`Test`) the change is running in
 - a war file to deploy (more on this later)

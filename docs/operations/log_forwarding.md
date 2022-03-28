@@ -9,77 +9,86 @@ If required, OpsChain's log aggregator can be configured to also forward change 
 
 OpsChain uses [Fluentd](https://www.fluentd.org/) as its log aggregator. Fluentd provides an extensive framework that allows for custom developed and [pre-built plugins](https://www.fluentd.org/dataoutputs) to be used to forward logs to external log storage solutions. This guide provides the steps to configure OpsChain to forward change logs to a [Splunk HTTPS Event Collector](https://docs.splunk.com/Documentation/Splunk/8.2.1/Data/UsetheHTTPEventCollector).
 
-Note: The example commands below make reference to the OPSCHAIN_DATA_DIR environment variable. Please manually set this to the location of your OpsChain data directory, or `source .env` to make use of the existing configuration.
-
 ## Data output plugins
 
-OpsChain allows for two methods to include plugins into the OpsChain log aggregator.
+To add additional output plugins to the OpsChain log aggregator, you should build a new container image that is based on the existing `limepoint/opschain-log-aggregator` image.
 
-### `.rb` file plugins
+Most Fluentd output plugins can be installed by using the `fluent-gem install` command. For example, to install the Splunk output plugin your Dockerfile might look like this:
 
-If the plugin is a `.rb` file, copy the file into the `$OPSCHAIN_DATA_DIR/opschain_log_aggregator/plugin` folder. The OpsChain log aggregator will automatically load any files in this directory on container startup.
+```Dockerfile
+ARG OPSCHAIN_IMAGE_TAG
+FROM limepoint/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}
 
-### `.gem` plugins
-
-If the plugin is a gem, like the [Splunk Enterprise plugin](https://github.com/fluent/fluent-plugin-splunk) you will need to modify your `docker-compose.override.yml` to instruct the Fluentd to call `bundler` to install the gem.
-
-#### Create a `Gemfile`
-
-The following `Gemfile` will cause Fluentd to install the Splunk Enterprise plugin on container start:
-
-```bash
-cat << EOF > "${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/bundler/Gemfile"
-source 'https://rubygems.org'
-
-gem 'fluent-plugin-splunk-enterprise'
-EOF
+RUN fluent-gem install fluent-plugin-splunk-enterprise
 ```
 
-Modify as required to reflect the gem(s) you require.
+You may also use the custom Dockerfile to include your company's private CA certificate if the output plugin you are using requires it to verify the TLS connection to your logging infrastructure.
 
-Note: All files in the `${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/bundler` folder are mounted into `/opschain/bundler` in the container. If required, you can include the `.gem` files in this folder with the Gemfile specifying their location as:
+```Dockerfile
+ARG OPSCHAIN_IMAGE_TAG
+FROM limepoint/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}
 
-```ruby
-gem 'my_custom_plugin', path: '/opschain/bundler/my_custom_plugin'
+RUN fluent-gem install fluent-plugin-splunk-enterprise
+
+# add your company's private CA certificate
+COPY myco-cacert.pem /etc/ssl/myco-cacert.pem
 ```
 
-#### Add the Gemfile to Fluentd
+Once you have added the required customisations to the Dockerfile, build and push the image to your private image registry.
 
-Edit your `docker-compose.override.yml` file, adding the `Gemfile` to the Fluentd commandline:
+_Note: The example below uses the `RELEASE-VERSION` file in the opschain-release repo to provide a build argument to the build and to tag the built image with the same base version as your OpsChain release. For the purposes of illustration, we'll assume that the OpsChain `RELEASE-VERSION` file contains the version **1.0.9**._
 
-```text
-  opschain-log-aggregator:
-    command: --gemfile /opschain/bundler/Gemfile
+```shell
+export OPSCHAIN_IMAGE_TAG="$(< /path/to/opschain-release/RELEASE-VERSION)"
+docker build --build-arg OPSCHAIN_IMAGE_TAG --tag "image-registry.myco.com/myco/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}-1" .
+docker push "image-registry.myco.com/myco/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}-1"
+# builds and pushes an image tagged as image-registry.myco.com/myco/opschain-log-aggregator:1.0.9-1
 ```
 
-## Configure change logs to be sent to external log storage
+## Configure OpsChain to use your custom log aggregator
 
-OpsChain takes advantage of the  [`copy` output plugin](https://docs.fluentd.org/output/copy) to send the OpsChain logs to multiple outputs.
+Once you have built and pushed your custom log aggregator image to your private registry, you can tell OpsChain to use it by overriding the `logAggregator.image` value in the OpsChain Helm chart.
 
-### Create a `<store>` entry
-
-Each `<store>` directive instructs Fluentd to send the log entry to an additional target. To enable sending the logs to Splunk create the configuration file as follows:
-
-```bash
-cat << EOF > "${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/store.conf"
-  <store>
-    @type splunk_hec
-
-    host <your Splunk hostname / ip>
-    port <your Splunk HTTP event collector port>
-    token <the Splunk token for the Event Collector>
-    use_ssl true
-    ssl_verify false
-    ca_file /opschain/cacert.pem
-  </store>
-EOF
+```yaml
+logAggregator:
+  image: image-registry.myco.com/myco/opschain-log-aggregator:1.0.9-1
 ```
 
-_Note: The specific configuration to include in `store.conf` will depend on the plugin `@type` used. Please see Fluentd's [Config File Syntax](https://docs.fluentd.org/configuration/config-file) guide, and the relevant plugin manual for further information._
+If your internal registry requires credentials to pull this image, update the OpsChain [imagePullSecret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/) config to allow this image to be pulled:
 
-### Splunk CA certificate
+```shell
+kubectl edit -n opschain-trial secret opschain-image-secret
+# modify the base64 encoded `.dockerconfigjson` value to add the additional credentials (don't remove the existing ones)
+```
 
-The example configuration provided above includes a reference to the Splunk server CA certificate. Copy the certificate into `${OPSCHAIN_DATA_DIR}/opschain_log_aggregator` to enable Fluentd to reference it when connecting to Splunk via HTTPS.
+### Configuring your output plugins
+
+The OpsChain Helm chart allows you to specify additional config that will be stored in a Kubernetes ConfigMap and mounted into the log-aggregator pod at runtime.
+
+The configuration you add under the `logAggregator.additionalOutputConfig` will be read by Fluentd in the context of the [`copy` output plugin](https://docs.fluentd.org/output/copy) which OpsChain takes advantage of to send the OpsChain logs to multiple outputs.
+
+Under the `copy` configuration, each `<store>` directive added instructs Fluentd to send the log entry to an additional target.
+
+To enable sending the logs to Splunk, add configuration similar to the example below:
+
+```yaml
+logAggregator:
+  image: image-registry.myco.com/myco/opschain-log-aggregator:1.0.9-1
+  additionalOutputConfig: |-
+    <store>
+      @type splunk_hec
+
+      host splunk.myco.com
+      port 8088
+      token <Splunk HEC token>
+      use_ssl true
+      ssl_verify false
+      ca_file /etc/ssl/myco-cacert.pem
+    </store>
+
+```
+
+_Note: The specific configuration to include in `additionalOutputConfig` will depend on the plugin `@type` used. Please see Fluentd's [config file syntax](https://docs.fluentd.org/configuration/config-file) guide, and the relevant plugin manual for further information._
 
 ## Licence & authors
 

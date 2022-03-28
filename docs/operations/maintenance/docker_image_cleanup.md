@@ -29,6 +29,10 @@ The change ID is shown during change creation. The following command will remove
 docker image prune --filter 'label=opschain.change_id=abc123'
 ```
 
+### Internal registry garbage collection
+
+Step runner images are built whenever a change runs a step. OpsChain runs a garbage collection process to remove these images after 24 hours. If you need more control of this process please [contact us](/docs/support.md#how-to-contact-us).
+
 ## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)

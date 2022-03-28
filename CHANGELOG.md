@@ -1,5 +1,34 @@
 # Changelog
 
+## [2022-03-28]
+
+### Added
+
+- Documentation on the [change and step behaviour](docs/reference/concepts/concepts.md#behaviour-when-a-child-step-fails) when a failure occurs in one of the child steps.
+- OpsChain action method validation can now be [disabled](docs/reference/concepts/actions.md#controller-action-method-validation).
+
+### Changed
+
+- **Breaking changes**
+  - OpsChain has moved from Docker Compose to Kubernetes. Only single node Kubernetes deployments are supported currently.
+    - There is no migration path for data from previous versions of OpsChain to the current version.
+    - This release of OpsChain must be installed from scratch.
+    - Most of the OpsChain processes documented in the [OpsChain operations guides](docs/operations/README.md) have changed.
+  - The OpsChain runner Dockerfile now utilises the OPSCHAIN_BASE_RUNNER build argument to determine the FROM image. Use the `opschain-utils dockerfile_template` command to see the new format and ensure any custom project Dockerfiles are updated to reflect this change.
+- When running changes that include parallel child steps, if one of those children fails, the `opschain change create` command will continue running until all its siblings have finished.
+- Upgraded Fluentd to v1.14.5-1.1.
+- Upgraded OPA to 0.38.1.
+- Upgraded PostgreSQL to 14.2.
+- Upgraded Terraform to 1.1.7 in the OpsChain examples.
+- Upgraded Terraform 'hashicorp/aws' plugin to 4.5.0 in the OpsChain Ansible example.
+- Upgraded the OpsChain base runner image to AlmaLinux 8.5.
+- All base images used by the OpsChain examples upgraded to AlmaLinux 8.5
+- When running changes that include parallel child steps, if one of those children fails, the `opschain change create` command will continue running until all its siblings have finished.
+
+### Fixed
+
+- When following the change logs, OpsChain will display all the logs until the change completes - previously the final log messages may not have been shown.
+
 ## [2022-03-01]
 
 ### Added
@@ -7,9 +36,12 @@
 - The OpsChain hardware requirements are now [documented](docs/getting_started/installation.md#hardwarevm-requirements).
 - The `opschain change show-logs` command now accepts a `--follow` argument to follow the logs until the change completes.
 - [Documentation](docs/reference/concepts/properties.md#changing-properties-in-parallel-steps) and [troubleshooting guide](docs/troubleshooting.md#updates-made-to-properties-could-not-be-applied) when changing properties within parallel steps.
+- Added [Kubernetes resource types](docs/reference/included_resource_types.md#opschain-kubernetes).
+- Added an [SSH key pair](docs/reference/included_resource_types.md#opschain-ssh-key-pair) resource type.
 
 ### Changed
 
+- Upgraded Rails to 7.
 - Upgraded Ruby to 2.7.5.
 - Upgraded PostgreSQL to 14.1.
 - Upgraded Bundler to 2.3.6.
@@ -21,9 +53,6 @@
 - Upgraded Confluent to 6.2.2 in the OpsChain Confluent example.
 - Update example on [setting environment variables](docs/reference/concepts/properties.md#setting-environment-variables-example) in the [OpsChain properties guide](docs/reference/concepts/properties.md#opschain-properties-guide).
 - Update documentation on the [minimum requirements](docs/reference/project_git_repositories.md#minimum-requirements) in the [OpsChain project Git repositories guide](docs/reference/project_git_repositories.md#opschain-project-git-repositories-guide).
-- **Breaking change** - Upgraded OpsChain to Rails 7.
-  - Please reconfigure your environment again by running the `./configure` script as part of the upgrade.
-  - You will need to re-create your database as the new version of OpsChain is incompatible with the existing table data.
 - The OpsChain base runner image is now based on AlmaLinux 8.
 
 ### Fixed

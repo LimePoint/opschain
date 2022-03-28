@@ -4,12 +4,12 @@ This guide covers how the OpsChain server executes actions within the OpsChain s
 
 After reading this guide you should understand:
 
-- how to create and use a custom step runner Docker image
+- how to create and use a custom step runner image
 - how the API server and step runner exchange critical information
 
 ## OpsChain runner images
 
-Each step in an OpsChain change is executed inside a Docker container that is based on an OpsChain runner image.
+Each step in an OpsChain change is executed inside a container that is based on an OpsChain runner image.
 
 Each container only runs a single step before it is discarded. This ensures that:
 
@@ -17,7 +17,7 @@ Each container only runs a single step before it is discarded. This ensures that
 - modifications made by previously completed steps do not affect future steps
 - the step execution environment contains only the current project's configuration and files
 
-The image used by the step container is built as part of every step's execution and relies on Docker build caching functionality to keep this performant.
+The image used by the step container is built as part of every step's execution and relies on build caching functionality to keep this performant.
 
 ### OpsChain standard runner
 
@@ -90,7 +90,7 @@ If you no longer wish to use a custom Dockerfile, `.opschain/Dockerfile` can be 
 
 This Dockerfile can be modified and committed like any other file in the project Git repository.
 
-The image is built in a Docker build context with access to the following files:
+The image is built in a build context with access to the following files:
 
 - `repo.tar` - The complete project Git repository including the .git directory with all commit info. This file will change (and invalidate the build context) when a different commit is used for a change or when there are changes to the project's Git repository
 - `step_context_env.json` - The environment variables for the project and environment for use by `opschain-exec`. This file will change if the environment variables in the project or environment [properties](properties.md) change
@@ -107,13 +107,13 @@ For maximum compatibility with OpsChain we suggest only using the Dockerfile `RU
 
 More advanced modifications (like modifying the `ENTRYPOINT`) are not supported and may break OpsChain.
 
-Custom Dockerfiles must use the `limepoint/opschain-runner` or `limepoint/opschain-enterprise-runner` image as a base (ie `FROM limepoint/opschain-runner` or `FROM limepoint/opschain-runner-enterprise`).
+Custom Dockerfiles must use the `limepoint/opschain-runner` or `limepoint/opschain-enterprise-runner` image as a base (i.e. `FROM limepoint/opschain-runner` or `FROM limepoint/opschain-runner-enterprise`).
 
 #### Image performance - base images
 
-OpsChain runs a Docker build for every step within a change.
+OpsChain runs the image build for every step within a change.
 
-This is normally performant due to Docker's image build cache - however it is possible to prebuild a custom base image if desired. This may make the image build faster when run for each step.
+This is normally performant due to the image build cache - however it is possible to prebuild a custom base image if desired. This may make the image build faster when run for each step.
 
 A custom base image can be created as follows:
 
@@ -127,8 +127,8 @@ A custom base image can be created as follows:
     ONBUILD ENV OPSCHAIN_LICENCE_BASE64=${OPSCHAIN_LICENCE_BASE64}
     ONBUILD RUN /usr/bin/create_opschain_licence.sh
 
-    # run your custom Docker build commands like any Dockerfile
-    # Note: the OpsChain Docker build context files will not be available here
+    # run your custom build commands like any Dockerfile
+    # Note: the OpsChain build context files will not be available here
     ```
 
 2. Build and distribute the base image, assigning it a unique tag (the `my-base-image` used below is for example purposes only).

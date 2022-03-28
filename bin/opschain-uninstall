@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -eo pipefail -o nounset
+
+CDPATH='' cd "$(dirname "${BASH_SOURCE[0]}")"
+cd ..
+
+eval "$(grep -E 'OPSCHAIN_KUBERNETES_NAMESPACE' .env)"
+
+echo -n "WARNING: This command will remove OpsChain and all of its data. Type 'CONFIRM' and press enter to proceed, or anything else to cancel: "
+
+read -r response
+
+if [[ "${response}" != CONFIRM ]]; then
+  echo Not proceeding.
+  exit 1
+fi
+
+helm uninstall opschain -n "${OPSCHAIN_KUBERNETES_NAMESPACE}"
+exec kubectl delete namespace "${OPSCHAIN_KUBERNETES_NAMESPACE}"

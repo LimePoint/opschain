@@ -13,7 +13,10 @@ set -eo pipefail
 # to stderr.
 exec 7>&1 8>&2
 
-source "$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")"; pwd)/bin/_realpath.sh"
+source "$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")"; pwd)/_realpath.sh"
+
+CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")"
+cd ..
 
 trap on_exit EXIT
 
@@ -69,9 +72,9 @@ load_saved_settings() {
   local lp_env_file
   lp_env_file="$1"
 
-  set -o allexport
-  [[ -f "$lp_env_file" ]] && source "$lp_env_file"
-  set +o allexport
+  if [[ -f "$lp_env_file" ]]; then
+    source "$lp_env_file"
+  fi
 }
 
 confirm_eula() {
@@ -92,16 +95,18 @@ confirm_eula() {
 }
 
 validate_settings() {
-  confirm_socket_path
-  approve_socket
-  confirm_data_path
-  confirm_port
-  confirm_log_host
+  confirm_docker_credentials
+  confirm_github_credentials
+  confirm_ports
   confirm_workers
+  confirm_node_platform
   confirm_eula
 }
 
 read_configuration_keys() {
+  blank_line="^[[:blank:]]*$"
+  comment_line="^#"
+
   for file in "$@"; do
     if [ -e "$file" ]; then
       while IFS='=' read -r var _; do
@@ -118,9 +123,6 @@ save_settings() {
   lp_env_file="$1"
   example_env_file="$2"
 
-  blank_line="^[[:blank:]]*$"
-  comment_line="^#"
-
   env_file_contents="# Note: See docs/operations/configuring_opschain.md for the complete list of configurable options\n\n"
 
   # use example env file as a template, accumulate key=value pairs
@@ -132,85 +134,6 @@ save_settings() {
   chmod 600 "${lp_env_file}"
 
   echo "Configuration saved to ${lp_env_file}"
-}
-
-confirm_socket_path() {
-  local l_socket_path l_environment_socket_path
-
-  if [[ -z "$OPSCHAIN_DOCKER_SOCKET_PATH" ]]; then
-    l_environment_socket_path="${DOCKER_HOST#unix://}"
-    OPSCHAIN_DOCKER_SOCKET_PATH="${l_environment_socket_path:-/var/run/docker.sock}"
-  fi
-
-  print_msg -n "Where is your Docker socket file located? [${OPSCHAIN_DOCKER_SOCKET_PATH}]: "
-  read -r l_socket_path
-  l_socket_path="${l_socket_path:-${OPSCHAIN_DOCKER_SOCKET_PATH}}"
-
-  export OPSCHAIN_DOCKER_SOCKET_PATH="${l_socket_path}"
-
-  if ! [ -e "${OPSCHAIN_DOCKER_SOCKET_PATH}" ]; then
-    print_msg "${OPSCHAIN_DOCKER_SOCKET_PATH} does not appear to exist." ERR
-    print_msg "Please ensure that your Docker daemon is running." ERR
-    exit 2
-  fi
-}
-
-confirm_data_path() {
-  local l_data_path
-
-  print_msg -n "Where would you like OpsChain to store its data files? [${OPSCHAIN_DATA_DIR}]: "
-  read -r l_data_path
-  l_data_path="$(realpath "${l_data_path:-${OPSCHAIN_DATA_DIR}}")"
-
-  export OPSCHAIN_DATA_DIR="${l_data_path}"
-
-  ensure_path_exists "$OPSCHAIN_DATA_DIR"
-  create_directory "${OPSCHAIN_DATA_DIR}/opschain_ldap/ldap"
-  create_directory "${OPSCHAIN_DATA_DIR}/opschain_ldap/slapd.d"
-  create_directory "${OPSCHAIN_DATA_DIR}/opschain_auth"
-  create_directory "${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/plugin"
-  create_directory "${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/bundler"
-  (
-    dest="${OPSCHAIN_DATA_DIR}/opschain_auth"
-    cd opschain_auth.tmpl
-    for file in *; do
-      if ! [[ -e "${dest}/${file}" ]]; then
-        cp "${file}" "${dest}"
-      fi
-    done
-  )
-}
-
-ensure_path_exists() {
-  local check_path
-  check_path="${1}"
-
-  local l_proceed
-
-  if [ ! -d "${check_path}" ]; then
-    l_proceed="$(yn "The path ${check_path} doesn't exist - would you like to create it? ")"
-    if [ "${l_proceed}" == "yes" ]; then
-      echo "Creating ${check_path}..."
-      create_directory "${check_path}"
-      echo "${check_path} created successfully."
-    else
-      print_msg "Path must exist in order for OpsChain to work." ERR
-      exit 2
-    fi
-  fi
-  echo
-}
-
-create_directory() {
-  local path
-  path="${1}"
-
-  if [ ! -d "${path}" ]; then
-    if ! mkdir -p "${path}"; then
-      echo "Failed to create ${path} - aborting configuration."
-      exit 2
-    fi
-  fi
 }
 
 function to_int() {
@@ -231,7 +154,6 @@ get_integer() {
   l_valid_value='N'
 
   while [ "${l_valid_value}" == 'N' ]; do
-    print_msg
     print_msg -n "${lp_prompt} (${lp_min}-${lp_max})? [${lp_default}]: "
     read -r l_value
     l_value="${l_value:-${lp_default}}"
@@ -249,53 +171,74 @@ get_integer() {
 
 }
 
-confirm_port() {
-  api_port=${OPSCHAIN_API_PORT_MAPPING%:*}
-  api_port=$(get_integer "Which available port would you like the OpsChain server to listen on" 1 65535 "${api_port:-3000}")
-  export OPSCHAIN_API_PORT_MAPPING="${api_port}:3000"
+confirm_ports() {
+  OPSCHAIN_API_PORT=$(get_integer "Which available port would you like the OpsChain server to listen on" 1 65535 "${OPSCHAIN_API_PORT:-3000}")
+  OPSCHAIN_TLS_EXTERNAL_PORT=$(get_integer "Which available port would you like the OpsChain server to listen on for HTTPS requests" 1 65535 "${OPSCHAIN_TLS_EXTERNAL_PORT:-3443}")
+  export OPSCHAIN_API_PORT OPSCHAIN_TLS_EXTERNAL_PORT
+}
+
+confirm_github_credentials() {
+  if [[ -n "${OPSCHAIN_GITHUB_TOKEN}" ]]; then
+    return
+  fi
+
+  while [ "${OPSCHAIN_GITHUB_USER}" == '' ]; do
+    print_msg -n "Please enter your GitHub username with OpsChain access: "
+    read -r OPSCHAIN_GITHUB_USER
+  done
+
+  while [ "${OPSCHAIN_GITHUB_TOKEN}" == '' ]; do
+    print_msg -n "Please enter your GitHub personal access token: "
+    read -r OPSCHAIN_GITHUB_TOKEN
+  done
+
+  export OPSCHAIN_GITHUB_USER OPSCHAIN_GITHUB_TOKEN
+}
+
+confirm_docker_credentials() {
+  if [[ -n "${OPSCHAIN_DOCKER_PASSWORD}" ]]; then
+    return
+  fi
+
+  local l_docker_password l_enterprise
+  l_enterprise="$(yn "Are you using OpsChain with the enterprise MintPress controllers? (If unsure, answer \`n\`) ")"
+  if [[ "$l_enterprise" == yes ]]; then
+    OPSCHAIN_DOCKER_USER=opschainenterprise
+    OPSCHAIN_RUNNER_NAME=runner-enterprise
+  else
+    OPSCHAIN_DOCKER_USER=opschaintrial
+    OPSCHAIN_RUNNER_NAME=runner
+  fi
+  print_msg -n "Please enter your OpsChain Docker Hub access token (contact opschain-support@limepoint.com to obtain if you don't have one): "
+  read -r l_docker_password
+
+  export OPSCHAIN_DOCKER_USER OPSCHAIN_DOCKER_PASSWORD="${l_docker_password}"
 }
 
 confirm_workers() {
-  export OPSCHAIN_API_WORKER_SCALE=$(get_integer "How many OpsChain worker nodes would you like to run (will limit how many actions can run in parallel)" 1 50 "${OPSCHAIN_API_WORKER_SCALE:-2}")
+  OPSCHAIN_API_WORKER_SCALE=$(get_integer "How many OpsChain worker nodes would you like to run (this will limit how many actions can run in parallel)" 1 50 "${OPSCHAIN_API_WORKER_SCALE:-2}")
+  export OPSCHAIN_API_WORKER_SCALE
 }
 
-approve_socket() {
-  if [[ "$OPSCHAIN_DOCKER_SOCKET_APPROVED" = yes ]]; then
+confirm_node_platform() {
+  if [[ -n "${OPSCHAIN_IMAGE_REGISTRY_HOST}" ]]; then
     return
   fi
-  print_msg
-  print_msg "OpsChain requires access to your host Docker daemon to function."
-  print_msg "This is achieved by volume mapping ${OPSCHAIN_DOCKER_SOCKET_PATH} from the host into the running container."
-  print_msg
-  if [ "$(yn "Do you approve of this mapping being added? ")" != "yes" ]; then
-    print_msg "You must approve this in order to use OpsChain." ERR
-    exit 2
-  fi
-  export OPSCHAIN_DOCKER_SOCKET_APPROVED=yes
-  echo
-}
 
-confirm_log_host() {
-  if [[ -n ${OPSCHAIN_LOG_AGGREGATOR_HOST} ]]; then
-    return
-  fi
-  print_msg
   if [ "$(yn 'Are you running OpsChain on Windows (WSL) (yn) ? ')" = "yes" ] || [ "$(yn 'Are you running OpsChain on macOS (yn) ? ')" = "yes" ]; then
-    export OPSCHAIN_LOG_AGGREGATOR_HOST=host.docker.internal
+    OPSCHAIN_IMAGE_BUILD_ROOTLESS=false
+    OPSCHAIN_IMAGE_REGISTRY_HOST=host.docker.internal
   else
-    export OPSCHAIN_LOG_AGGREGATOR_HOST=127.0.0.1
+    OPSCHAIN_IMAGE_BUILD_ROOTLESS=true
+    OPSCHAIN_IMAGE_REGISTRY_HOST=opschain-image-registry.local.gd
   fi
+
+  export OPSCHAIN_IMAGE_REGISTRY_HOST OPSCHAIN_IMAGE_BUILD_ROOTLESS
 }
 
-load_opschain_licence() {
+check_opschain_licence() {
   licence_file="opschain.lic"
-  if [ -e "${licence_file}" ]; then
-    OPSCHAIN_LICENCE_BASE64="$(base64 < "${licence_file}")"
-    # remove whitespace to avoid breaking encoded licence
-    OPSCHAIN_LICENCE_BASE64="${OPSCHAIN_LICENCE_BASE64//[$'\t\r\n ']}"
-    print_msg "Loaded OpsChain licence from ${licence_file}"
-    export OPSCHAIN_LICENCE_BASE64
-  else
+  if ! [ -e "${licence_file}" ]; then
     print_msg "Unable to load the OpsChain licence from ${licence_file}" ERR
     exit 2
   fi
@@ -308,6 +251,7 @@ generate_secrets() {
   OPSCHAIN_DETERMINISTIC_KEY=${OPSCHAIN_DETERMINISTIC_KEY:-$(openssl rand -hex 32)}
   OPSCHAIN_LDAP_PASSWORD=${OPSCHAIN_LDAP_PASSWORD:-$(openssl rand -hex 8)}
   OPSCHAIN_CREATE_LOGS_API_PASSWORD=${OPSCHAIN_CREATE_LOGS_API_PASSWORD:-$(openssl rand -hex 8)}
+  OPSCHAIN_IMAGE_REGISTRY_PASSWORD=${OPSCHAIN_IMAGE_REGISTRY_PASSWORD:-$(openssl rand -hex 8)}
 }
 
 set_permissions_ids() {
@@ -316,13 +260,41 @@ set_permissions_ids() {
   echo "OpsChain will run as $OPSCHAIN_UID:$OPSCHAIN_GID (your current user:group)"
 }
 
+load_opschain_version() {
+  OPSCHAIN_IMAGE_TAG="$(< RELEASE-VERSION)"
+  export OPSCHAIN_IMAGE_TAG OPSCHAIN_RUNNER_IMAGE=limepoint/opschain-${OPSCHAIN_RUNNER_NAME}:${OPSCHAIN_IMAGE_TAG}
+}
+
+create_values_yaml() {
+  if [ -e values.yaml ]; then
+    backup=values.yaml.$(date +%Y-%m-%dT%H:%M:%S.%N)
+    echo Creating a backup of values.yaml as "${backup}". >&2
+    cp values.yaml "${backup}"
+  fi
+  eval "cat <<EOF
+$(<values.template.yaml)
+EOF
+  " 2>/dev/null > values.yaml
+  echo Helm values.yaml created.
+}
+
+setup_auth() {
+  if ! [[ -e opschain_auth/security_configuration.json ]]; then
+    cp -af opschain_auth.tmpl/. opschain_auth
+  fi
+}
+
 example_env_file=".env.example"
 
 load_saved_settings "${example_env_file}"
 load_saved_settings ".env"
-load_opschain_licence
+load_saved_settings ".env.internal"
+check_opschain_licence
 generate_secrets
 set_permissions_ids
 
 validate_settings
+load_opschain_version
 save_settings ".env" "${example_env_file}"
+create_values_yaml
+setup_auth

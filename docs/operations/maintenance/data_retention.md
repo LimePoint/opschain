@@ -22,13 +22,11 @@ Setting the change log storage retention configuration means that any logs older
 
 The global retention setting is used if a project or environment configuration is not present. It can be set by setting the `OPSCHAIN_CHANGE_LOG_RETENTION_DAYS` and/or `OPSCHAIN_EVENT_RETENTION_DAYS` environment variables in the `.env` file.
 
-_Note: after modifying the `.env` file OpsChain needs to be restarted._
-
 ```bash
-docker-compose down
 # update OPSCHAIN_CHANGE_LOG_RETENTION_DAYS or OPSCHAIN_EVENT_RETENTION_DAYS to the desired value, add the key if it is not present
 vi .env
-docker-compose up
+opschain-configure
+opschain-deploy
 ```
 
 ### Project/environment
@@ -62,9 +60,9 @@ The `OPSCHAIN_CLEAN_OLD_DATA_JOB_CRON` environment variable can be set in `.env`
 For example, the removal job could be configured to only run on weekends as follows:
 
 ```bash
-docker-compose down
 echo "OPSCHAIN_CLEAN_OLD_DATA_JOB_CRON='0 23 * * 6-7'" >> .env
-docker-compose up
+opschain-configure
+opschain-deploy
 ```
 
 [crontab.guru](https://crontab.guru/) is a useful tool for creating cron rules.

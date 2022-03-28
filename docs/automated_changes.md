@@ -25,11 +25,11 @@ The OpsChain CLI provides commands for interacting with automated change rules v
 
 A new automated change rule can be created by using the `opschain automated-change create` subcommand in the CLI. The `--cron-schedule` allows you to control how often the rule will run. The `--new-commits-only` and `--git-rev` values determine whether the rule will create an OpsChain change when it runs. The following table outlines the various combinations:
 
-`--new-commits-only`  | Git revision has new commits | OpsChain change created
-:-------------------- | :----------------------------| :----------------------
-true                  | true                         | true
-true                  | false                        | false
-false                 | n/a                          | true
+| `--new-commits-only` | Git revision has new commits | OpsChain change created |
+| :------------------- | :--------------------------- | :---------------------- |
+| true                 | true                         | true                    |
+| true                 | false                        | false                   |
+| false                | n/a                          | true                    |
 
 The following command will create an automated change rule that will create an OpsChain change to run the `hello_world` action whenever the `demo` project's Git repository's `master` branch changes.
 

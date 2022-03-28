@@ -14,6 +14,7 @@ This guide assumes that:
 
 - you have installed OpsChain and that it is running. See the [getting started installation guide](installation.md) for more details
 - you have the [OpsChain commands available on your path](installation.md#add-the-opschain-commands-to-the-path)
+- you have performed the [Docker Hub login step](installation.md#configure-docker-hub-access-optional) from the getting started installation guide
 
 ### Create a Git repository
 
@@ -162,7 +163,7 @@ Now that you've developed and tested your actions, use the OpsChain server to ru
 
 If you created a fork of the OpsChain getting started repository, you can now push your updated code and run it from the OpsChain server as an OpsChain change.
 
-This step assumes you have completed the [running sample changes](https://github.com/LimePoint/opschain-trial/blob/master/docs/getting_started.md#setup-opschain-to-run-sample-changes) steps from the getting started guide - alternatively you could create a new [project](https://github.com/LimePoint/opschain-trial/blob/master/docs/getting_started.md#create-an-opschain-project) and [environment](https://github.com/LimePoint/opschain-trial/blob/master/docs/getting_started.md#create-opschain-environments) to run the change in.
+This step assumes you have completed the [running sample changes](README.md#setup-opschain-to-run-sample-changes) steps from the getting started guide - alternatively you could create a new [project](README.md#create-an-opschain-project) and [environment](README.md#create-opschain-environments) to run the change in.
 
 #### Push your commit to the remote
 
@@ -183,7 +184,7 @@ $ opschain project set-git-remote -p web -n getting-started -u "https://{usernam
 
 #### Run the change
 
-Use the OpsChain CLI to run the change using the OpsChain server. This will run the new steps in isolated Docker containers and will report on the status of each step as it progresses.
+Use the OpsChain CLI to run the change using the OpsChain server. This will run the new steps in isolated containers and will report on the status of each step as it progresses.
 
 ```bash
 opschain change create -p web -e test -g getting-started/hello-goodbye -a '' -y # -a '' is a synonym for -a 'default'
@@ -296,7 +297,7 @@ Hello :-)
 
 Creating files in a short-lived container isn't the most useful - lets make the host where the resource type will create the file configurable. OpsChain provides some tools to make this more convenient.
 
-Add the `opschain-resource-types` Gem to your Gemfile (see the [included resource types guide](../reference/included_resource_types,md) to learn more about this Gem):
+Add the `opschain-resource-types` Gem to your Gemfile (see the [included resource types guide](/docs/reference/included_resource_types.md) to learn more about this Gem):
 
 ```ruby
 # The following gems are pre-installed on the OpsChain runner image
@@ -364,12 +365,14 @@ Again, using the `temp_file:create` action will do this locally.
 To show this code working with a remote host, in a new terminal run `docker-compose up` to start a container we can treat like a remote host:
 
 ```bash
-[host] $ docker-compose up
+[host] $ docker-compose -p opschain-development-environment up
 ...
 ... | Server listening on 0.0.0.0 port 22.
 ```
 
-Once a listening message is shown you are ready to proceed.
+_Note: this command assumes you are using the default `COMPOSE_PROJECT_NAME` value in your .env file. This value ensures that the `opschain-dev` and `opschain-action` containers can talk to this container._
+
+Once a listening message is shown you are ready to proceed. Open a new terminal to perform the following steps.
 
 Update the `test_host` resource to use the sample container:
 
@@ -396,7 +399,7 @@ Now the file does not exist locally as it has been created on the remote host.
 In a new terminal verify that the new file exists:
 
 ```bash
-$ docker-compose exec target cat /tmp/testing
+$ docker-compose -p opschain-development-environment exec target cat /tmp/testing
 Hello :-)
 ```
 
@@ -582,12 +585,55 @@ opschain-action default  # Create sample files
 
 Doing this is considered a best practice - especially in a team environment where it tells other team members about the key actions in a project Git repository.
 
+### Making the target host configurable
+
+By defining the target host as an [OpsChain property](../reference/concepts/properties.md) we allow the host to be overridden independently of the Git repository.
+
+```ruby
+infrastructure_host :test_host do
+  properties OpsChain.properties.target_host
+end
+```
+
+Lets create an in-repository set of default properties (these will be used if the project or environment doesn't provide overrides) - this is not mandatory in all project repositories, but is for this example:
+
+```bash
+mkdir -p .opschain
+cat <<EOH > .opschain/properties.json
+{
+  "target_host": {
+    "protocol": "local"
+  }
+}
+EOH
+```
+
+Here we've used [JSON](https://www.json.org/json-en.html), but OpsChain also supports [TOML](https://github.com/toml-lang/toml) and [YAML](https://yaml.org/) as `properties.toml` and `properties.yaml` respectively.
+
+#### Setting a remote target (optional)
+
+To use the changes against a remote host, the project or environment properties would need to be updated to specify a remote host to target - by default it would just act locally due to the default `properties.json` in the repository.
+
+An example properties file could be:
+
+```json
+{
+  "target_host": {
+    "hostname": "my-server.example.com",
+    "connect_user": "opschain",
+    "password": "password"
+  }
+}
+```
+
+_Note: The values would need to be updated to match a server that the OpsChain API could access._
+
 #### Commit your updates
 
 Commit the changes to the `actions.rb` and `lib/controllers/file_controller.rb` files to allow them to be used via the OpsChain server:
 
 ```bash
-git add Gemfile actions.rb lib/controllers/file_controller.rb
+git add Gemfile actions.rb lib/controllers/file_controller.rb .opschain/properties.json
 git commit -m 'Example creating and removing files.'
 ```
 

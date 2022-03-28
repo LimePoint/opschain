@@ -30,9 +30,9 @@ Configure OpsChain to send change logs to external log storage.
 
 Enable the OpsChain Authorisation Server and restrict user's access to OpsChain.
 
-## [OpsChain rootless Docker install](rootless_install.md)
+## [Stopping and starting OpsChain](stopping_and_starting.md)
 
-Installing and configuring OpsChain on rootless Docker.
+How to stop the OpsChain pods when not in use, and then restart them.
 
 ## [Upgrading](upgrading.md)
 

@@ -50,7 +50,7 @@ An action can also have __steps__ that will run after the body of the action has
 ```ruby
 require 'opschain'
 
-action do_something: steps: [:do_something_after, :do_something_else_after] do
+action :do_something, steps: [:do_something_after, :do_something_else_after] do
   # this will run before steps
 end
 
@@ -74,7 +74,7 @@ By default the steps defined will run sequentially across the OpsChain workers. 
 ```ruby
 require 'opschain'
 
-action do_something: steps: [:do_something_after, :do_something_else_after], run_as: :parallel do
+action :do_something, steps: [:do_something_after, :do_something_else_after], run_as: :parallel do
   # this will run before steps
 end
 
@@ -144,7 +144,7 @@ OpsChain.logger.debug 'Debug message'
 
 ## Defining resource types & resources
 
-_If this is the first time you've looked at OpsChain resource types and resources, our [developer getting started guide](/docs/getting_started_developer.md) could be a good place to start._
+_If this is the first time you've looked at OpsChain resource types and resources, our [developer getting started guide](/docs/getting_started/developer.md) could be a good place to start._
 
 Resource types can be defined using the `resource_type` keyword:
 
@@ -249,6 +249,32 @@ end
 Once again, resources created from this `city` resource type would have the same actions (and same action output) as those created from the earlier type definitions.
 
 _Note: If you supply the `action_methods:` parameter when defining the resource type's controller, the controller's `resource_type_actions` will be ignored and only those methods passed to `action_methods:` will be exposed._
+
+##### Controller action method validation
+
+OpsChain validates that the controller defines all the methods that the resource type references (either via `action_methods` or `resource_type_actions`), and if the method does not exist it will report an error, e.g. `CityController does not define the action method magic`.
+
+If using `method_missing` with an OpsChain controller class then the corresponding `respond_to_missing?` method should be implemented.
+
+If the class defines methods dynamically (or shouldn't be validated for another reason) the `self.validate_action_methods` method can be defined on the controller class to modify this behaviour:
+
+```ruby
+class CityController
+  def self.validate_action_methods
+    false
+  end
+
+  def initialize(options)
+    define_singleton_method(:magic) do
+      puts "Who doesn't like magic?"
+    end
+  end
+end
+
+resource_type :city do
+  controller CityController, action_methods: [:magic]
+end
+```
 
 ### Defining resource type actions
 
@@ -614,9 +640,9 @@ The `install_and_startup` action will:
 
 You can define a composite resource that manages child resources.
 
-- `children` specifies the keys and values to be iterated over, it is supplied when creating a resource.
-- `each_child` defines a namespace for each child and defines a copy of any configured actions and resources in that namespace.
-- `child_actions` can be used to reference the actions of each child. This is useful for actions defined at the parent composite resource (or resource type) level that may want to reference these child actions as steps.
+- `children` specifies the keys and values to be iterated over, it is supplied when creating a resource
+- `each_child` defines a namespace for each child and defines a copy of any configured actions and resources in that namespace
+- `child_actions` can be used to reference the actions of each child. This is useful for actions defined at the parent composite resource (or resource type) level that may want to reference these child actions as steps
 
 These can be used in a resource definition to create child resources specific to that resource. More commonly, they can be used in a resource type definition to create child resources for each resource of this type.
 
@@ -670,7 +696,7 @@ Learn about the OpsChain [step runner](step_runner.md).
 
 Learn about the [Docker development environment](../../docker_development_environment.md).
 
-Try [developing your own resources](../../developing_resources.md).
+Try [developing your own resources](../../getting_started/developer.md#developing-resources).
 
 ## Licence & authors
 

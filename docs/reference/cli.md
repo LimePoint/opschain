@@ -1,17 +1,12 @@
 # OpsChain CLI reference
 
-## OpsChain native CLI
+This document provides information on obtaining, configuring and using the OpsChain CLI.
 
-The `opschain` command in the `opschain-trial` repository uses a Docker container to run the OpsChain CLI. As such this command requires the host have a working Docker installation. As an alternative, OpsChain offers native builds of the OpsChain CLI for Windows, macOS and Linux.
+When configuring the CLI, please note that some of the options described are optional and may not be required depending on your operating environment.
 
-The native binary offers several benefits over the Docker command:
+## OpsChain CLI download
 
-- the host does not need to have Docker installed
-- better startup performance
-- the binary can be distributed to users that do not have access to the `opschain-trial` repository
-- the `cli-files` directory does not need to be used - any files can be used directly
-
-The native binary can be downloaded from the `opschain-trial` repository on [GitHub](https://github.com/LimePoint/opschain-trial/releases). Ensure the native build matches the version of OpsChain that you are using.
+The OpsChain CLI binary can be downloaded from the `opschain-trial` repository on [GitHub](https://github.com/LimePoint/opschain-trial/releases). Ensure the native build matches the version of OpsChain that you are using.
 
 After downloading the binary you may need to make it executable (this is required on macOS or Linux):
 
@@ -24,6 +19,8 @@ Please note that:
 - the `.opschainrc` configuration will need to be modified to update the `apiBaseUrl` (likely to `http://localhost:3000/`, assuming a local OpsChain install and the default 3000 port)
 - the native binaries are currently a release preview and offer support for the latest version of the respective OS on a best effort basis (older versions of the respective OS may work)
 - unlike the OpsChain CLI container, you will need to manually update the native binary whenever you upgrade your OpsChain installation
+
+_Note: On macOS you may need to trust the OpsChain CLI binary as it is not currently signed. See [the Apple documentation](https://support.apple.com/en-au/guide/mac-help/mh40616/mac) for details._
 
 ## OpsChain CLI configuration
 
@@ -43,14 +40,14 @@ _On Windows the `USERPROFILE` directory is used as the home directory._
 
 The `.opschainrc` file must be valid JSON and supports the following configuration:
 
-Configuration Key | Optional | Description
-:---------------- | :------- | :--------------------------------------------------
-`apiBaseUrl`      | no       | OpsChain API server URL
-`username`        | no       | OpsChain API username
-`password`        | no       | OpsChain API password
-`stepEmoji`       | yes      | show emoji for the step status, default `true` - set to `false` to display status as text
-`projectCode`     | yes      | default OpsChain project code used for commands
-`environmentCode` | yes      | default OpsChain environment code used for commands
+| Configuration Key | Optional | Description                                                                               |
+| :---------------- | :------- | :---------------------------------------------------------------------------------------- |
+| `apiBaseUrl`      | no       | OpsChain API server URL                                                                   |
+| `username`        | no       | OpsChain API username                                                                     |
+| `password`        | no       | OpsChain API password                                                                     |
+| `stepEmoji`       | yes      | show emoji for the step status, default `true` - set to `false` to display status as text |
+| `projectCode`     | yes      | default OpsChain project code used for commands                                           |
+| `environmentCode` | yes      | default OpsChain environment code used for commands                                       |
 
 ### Environment variable configuration
 
@@ -65,6 +62,8 @@ opschain environment ls # this will list environments in the dev project without
 
 ## Using the OpsChain CLI with a proxy
 
+_Note: this is only required if you are using an OpsChain server that needs to be accessed via a proxy. It is not mandatory._
+
 The OpsChain CLI supports using a http(s) proxy by setting the relevant environment variables:
 
 ```bash
@@ -77,12 +76,43 @@ opschain change ls # or any other command
 
 ## Disabling TLS/SSL certificate verification
 
+_Note: this is only required if you are using an OpsChain server that uses a non-trusted certificate. It is not mandatory._
+
 The OpsChain CLI can be configured to ignore TLS/SSL certificate verification errors as follows:
 
 ```bash
 export NODE_TLS_REJECT_UNAUTHORIZED=0
 opschain change ls # or any other command
 ```
+
+## OpsChain CLI container image
+
+The OpsChain CLI is also distributed as a container image, `limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG}` - where OPSCHAIN_IMAGE_TAG is in the `.env` file in the `opschain-trial` directory.
+
+Some examples of how the CLI image can be used are shown below:
+
+```bash
+docker run -ti -v ~/.opschainrc:$(pwd)/.opschainrc limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG} environment ls
+# with files:
+docker run -ti -v $(pwd):$(pwd) -v ~/.opschainrc:$(pwd)/.opschainrc -w $(pwd) limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG} environment set-properties -f ./properties.json
+```
+
+### Using the OpsChain CLI in an OpsChain change
+
+The OpsChain CLI container image also makes it simple to access the OpsChain CLI within a [custom step runner Dockerfile](concepts/step_runner.md#custom-step-runner-dockerfiles):
+
+```dockerfile
+ARG OPSCHAIN_IMAGE_TAG
+ARG OPSCHAIN_BASE_RUNNER
+FROM limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG} as cli
+FROM ${OPSCHAIN_BASE_RUNNER}
+
+...
+
+COPY --from=cli /opschain /usr/bin/opschain
+```
+
+The CLI configuration can be included in the [environment variable properties](concepts/properties.md#environment-variables) using the [environment variable configuration](#environment-variable-configuration)
 
 ## Licence & authors
 

@@ -49,7 +49,7 @@ If more than one of these files exist in the repository, they will be merged tog
 
 #### Notes
 
-1. The repository properties are read only within each action (as OpsChain cannot modify the underling Git repository to store any changes).
+1. The repository properties are read only within each action (as OpsChain cannot modify the underlying Git repository to store any changes).
 2. Running `opschain-action -AT` from within your Git repository will cause the properties files to be validated. If the schema or structure of the files is invalid, explanatory exceptions will be raised. See the [Docker development environment](../../docker_development_environment.md) guide for more information.
 
 ### Database
@@ -300,11 +300,11 @@ OpsChain file properties are written to the working directory prior to the step 
 
 Each file property key is an absolute path (or will be [expanded](https://docs.ruby-lang.org/en/2.7.0/File.html#method-c-expand_path) to one) and represents the location the file will be written to. Each file property value can include the following attributes:
 
-Attribute | Description
-:-------- | :-------------------------------------------
-mode      | The file mode, specified in octal (optional)
-content   | The content of the file (optional)
-format    | The format of the file (optional)
+| Attribute | Description                                  |
+| :-------- | :------------------------------------------- |
+| mode      | The file mode, specified in octal (optional) |
+| content   | The content of the file (optional)           |
+| format    | The format of the file (optional)            |
 
 #### File formats
 
@@ -358,10 +358,9 @@ The `store_file!` method accepts an optional `format:` parameter, allowing you t
 
 #### Storing files examples
 
-Examples of storing files can be seen in the [Confluent example](https://github.com/LimePoint/opschain-examples-confluent).
+Examples of storing files can be seen in the [Ansible example](https://github.com/LimePoint/opschain-examples-ansible).
 
-- The `generate_keys` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store generated SSH keys in the environment properties (for use later when building the base image for the Confluent servers
-- The `provision` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) uses this feature to store the terraform.tfstate file in the environment properties (to ensure the terraform state is available to future runs)
+- The `save_known_hosts` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-ansible/blob/master/actions.rb) uses this feature to store the SSH `known_hosts` file in the environment properties - to ensure the host is [trusted](https://en.wikipedia.org/wiki/Trust_on_first_use) in future steps and actions
 
 ### Environment variables
 

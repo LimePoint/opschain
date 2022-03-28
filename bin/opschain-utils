@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -eo pipefail
+set -eo pipefail -o nounset
 
 CDPATH='' cd "$(dirname "${BASH_SOURCE[0]}")"
 cd ..
@@ -10,4 +10,5 @@ else
   rake_task="release:${1}"
 fi
 
-exec docker-compose run -T --rm opschain-api "bundle exec rake ${rake_task}"
+eval "$(grep OPSCHAIN_KUBERNETES_NAMESPACE .env)"
+exec kubectl exec -n "${OPSCHAIN_KUBERNETES_NAMESPACE}" deploy/opschain-api -- /usr/bin/container_start.sh -c "bundle exec rake ${rake_task}"

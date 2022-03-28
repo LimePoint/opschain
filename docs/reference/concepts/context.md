@@ -2,7 +2,7 @@
 
 The OpsChain context framework provides a read only set of values, describing the current step and the user who created the overall change. These values enable you to reuse code between projects and environments, conditionally performing logic based on when and where the step is being performed.
 
-After reading this guide you should understand
+After reading this guide you should understand:
 
 - the information available in the OpsChain context
 - how to access the OpsChain context values in your actions
@@ -77,7 +77,7 @@ _Note: The `OpsChain.context` structure is read only._
 
 ## Example usage
 
-In the example below, running the `main` action in the development environment will enable debug level logging. Running it in non-development environments, the OpsChain logger will remain in the default (INFO) level.
+In the example below, running the `main` action in the development environment will set the OpsChain logger to the DEBUG level. When running in any other environment, the OpsChain logger will remain in the default (INFO) level.
 
 ```ruby
 require 'opschain'

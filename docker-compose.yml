@@ -1,135 +1,16 @@
-version: '2.4'
-
-networks:
-  opschain-network:
-    name: opschain-network
-  opschain-runner-network:
-    name: opschain-runner-network
-
 services:
-  opschain-db:
-    image: limepoint/opschain-db:${OPSCHAIN_IMAGE_TAG}
-    networks:
-      - opschain-network
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}/opschain_db:/var/lib/postgresql/data
-    env_file:
-      - .env.internal
-      - .env
-    healthcheck:
-      test: "pg_isready -U $${PGUSER}"
-      interval: 10s
-      timeout: 5s
-      retries: ${HEALTHCHECK_RETRIES:-5}
-
-  opschain-ldap:
-    image: limepoint/opschain-ldap:${OPSCHAIN_IMAGE_TAG}
-    command: --loglevel error
-    networks:
-      - opschain-network
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}/opschain_ldap/ldap:/var/lib/ldap
-      - ${OPSCHAIN_DATA_DIR}/opschain_ldap/slapd.d:/etc/ldap/slapd.d
-    env_file:
-      - .env.internal
-      - .env
-
-  opschain-auth:
-    image: limepoint/opschain-auth:${OPSCHAIN_IMAGE_TAG}
-    networks:
-      - opschain-network
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}/opschain_auth/security_configuration.json:/opschain/security_configuration.json
-
-  opschain-log-aggregator:
-    image: limepoint/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}
-    networks:
-      - opschain-network
-    ports:
-      - '127.0.0.1::24224'
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}/opschain_log_aggregator/plugin:/etc/fluent/plugin
-      - ${OPSCHAIN_DATA_DIR}/opschain_log_aggregator:/opschain
-    env_file:
-      - .env.internal
-      - .env
-    healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost:24220/api/plugins.json"]
-      interval: 10s
-      timeout: 5s
-      retries: ${HEALTHCHECK_RETRIES:-5}
-
-  opschain-api:
-    image: limepoint/opschain-api:${OPSCHAIN_IMAGE_TAG}
-    command: [ "exec bin/run_api" ]
-    networks:
-      - opschain-network
-    ports:
-      - "${OPSCHAIN_API_PORT_MAPPING}"
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}/certs:/opt/opschain/certs
-      - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
-    env_file:
-      - .env.internal
-      - .env
-    depends_on:
-      opschain-auth:
-        condition: service_started
-      opschain-db:
-        condition: service_healthy
-    healthcheck:
-      test: ["CMD", "curl", "-fsS", "http://localhost:3000/healthcheck"]
-      interval: 10s
-      timeout: 5s
-      retries: ${HEALTHCHECK_RETRIES:-5}
-
-  opschain-api-worker:
-    scale: ${OPSCHAIN_API_WORKER_SCALE}
-    image: limepoint/opschain-api:${OPSCHAIN_IMAGE_TAG}
-    command: [ "/opt/opschain/bin/run_api_worker" ]
-    networks:
-      - opschain-network
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}/opschain_project_git_repos:/opt/opschain/opschain_project_git_repos
-      - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
-    env_file:
-      - .env.internal
-      - .env
-    depends_on:
-      opschain-log-aggregator:
-        condition: service_healthy
-      opschain-api:
-        condition: service_healthy
-
-  opschain-cli:
-    scale: 0
-    image: limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG}
-    networks:
-      - opschain-network
-    volumes:
-      - ${OPSCHAINRC:-./opschainrc}:/.opschainrc
-      - ${WORKING_DIR:-.}/cli-files:/cli-files
-    env_file:
-      - .env
-
   # for pulling updates and as a step development tool
   opschain-runner-devenv:
     scale: 0
     image: ${OPSCHAIN_RUNNER_IMAGE}
-    networks:
-      - opschain-runner-network
     volumes:
-      - ${OPSCHAIN_DOCKER_SOCKET_PATH}:/var/run/docker.sock
+      - source: "${PROJECT_DIR}"
+        target: /opt/opschain
+        type: bind
+      - source: ./opschain.lic
+        type: bind
+        target: /opt/opschain/opschain.lic
     env_file:
       - .env
-
-  # an operations tool in rootless installs
-  opschain-ops:
-    scale: 0
-    image: almalinux:8
-    command: /bin/bash
-    volumes:
-      - ${OPSCHAIN_DATA_DIR}:/opschain_data
-      - .:/opschain
-    env_file:
-      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

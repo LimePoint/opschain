@@ -38,57 +38,30 @@ After following this guide you should know how to:
 - configure OpsChain to use an external LDAP server for authentication
 - disable the supplied OpsChain LDAP server
 
-### Shutdown OpsChain
-
-Please ensure OpsChain is not running before making changes to the LDAP configuration.
-
-```bash
-docker-compose down
-```
-
-### OpsChain LDAP configuration
-
-See the [Configuring OpsChain](configuring_opschain.md#ldap-configuration) guide for details of the LDAP configuration variables that can be adjusted to enable the use of an external LDAP server. An example Active Directory configuration appears at the end of this document.
-
 ### Disable the supplied OpsChain LDAP server
 
-By default, OpsChain will use the LDAP server on the `opschain-ldap` container for user authentication. When using an external LDAP server, create (or modify your existing) `docker-compose.override.yml` to ensure the `opschain-ldap` container is not started.
+By default, OpsChain will use the LDAP server in the `opschain-ldap` pod for user authentication. To disable the opschain-ldap service, edit `values.yaml` and alter the `ldap` `enabled` setting to be false.
 
-Create the `docker-compose.override.yml` file as follows:
-
-```bash
-cat << EOF > docker-compose.override.yml
-version: '2.4'
-
-services:
-  opschain-ldap:
-    scale: 0
-EOF
+```yaml
+  ldap:
+    enabled: false
 ```
 
-_Note: If you have already created an override file for other reasons insert the `scale: 0` entry manually to avoid overwriting your file._
+_Note: This setting will be applied to the Kubernetes cluster when you [restart OpsChain API](#restart-opschain-api) after altering the LDAP configuration._
 
-### Restart OpsChain
+### Alter the OpsChain LDAP configuration
 
-After verifying the LDAP configuration and override file, restart the OpsChain environment:
+See the [configuring OpsChain](configuring_opschain.md#ldap-configuration) guide for details of the LDAP configuration variables that can be adjusted to enable the use of an external LDAP server. Edit your `.env` file, adding the relevant LDAP options to override the default values supplied in `.env.internal`.
+
+_Note: An example [Active Directory configuration](#example-active-directory-configuration) appears at the end of this document._
+
+### Restart OpsChain API
+
+Restart the OpsChain API server to allow the new LDAP configuration to take effect.
 
 ```bash
-docker-compose up
+kubectl rollout restart -n opschain-trial deployment.apps/opschain-api
 ```
-
-### Custom SSL certificates
-
-The OpsChain API server can use a custom certificate authority (CA) and/or a custom certificate path if required.
-
-#### Overriding the default CA file
-
-Install the custom certificate authority into `<OPSCHAIN_DATA>/certs/ca.pem`. If the file exists, OpsChain will configure the environment variable [`SSL_CERT_FILE=<OPSCHAIN_DATA>/certs/ca.pem`](https://www.openssl.org/docs/manmaster/man7/openssl-env.html#SSL_CERT_DIR-SSL_CERT_FILE) on the API server.
-
-_Note: OpsChain requires the CA certificate be named `ca.pem` otherwise it will be ignored._
-
-#### Overriding the default certificate directory
-
-Create a `cert_dir` folder within `<OPSCHAIN_DATA>/certs` and place the additional certificate and keys here. If the directory exists, OpsChain will configure the environment variable [`SSL_CERT_DIR=<OPSCHAIN_DATA>/certs/cert_dir`](https://www.openssl.org/docs/manmaster/man7/openssl-env.html#SSL_CERT_DIR-SSL_CERT_FILE) on the API server.
 
 ### Example Active Directory configuration
 

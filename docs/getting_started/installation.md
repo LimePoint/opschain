@@ -8,7 +8,7 @@ After following this guide you should know how to:
 - configure Docker Hub access
 - install, configure and start OpsChain
 - create an OpsChain user
-- download a native OpsChain CLI (optional)
+- download the OpsChain CLI
 
 ## Prerequisites
 
@@ -22,34 +22,42 @@ In order to clone the latest release of the OpsChain repository you will need a 
 
 As part of configuring the environment, the [OpenSSL](https://www.openssl.org/) utility is called to generate various keys.
 
-#### Docker Compose
+#### Helm
 
-You must have [Docker Compose](https://docs.docker.com/compose/install/) installed.
+You must have [Helm](https://helm.sh/docs/intro/install/) version 3 installed.
 
-_Note: [Compose V2](https://docs.docker.com/compose/cli-command/) is not supported during the OpsChain trial._
+##### Kubernetes
 
-The Docker service/daemon must be running.
-
-##### Docker version
-
-OpsChain supports the following Docker versions:
+OpsChain supports the following Kubernetes distributions on a single node only:
 
 - macOS - Docker Desktop Community 3.1.0 and above
-- Linux - the latest Docker release
-- Windows Subsystem for Linux (WSL) - the latest Docker release (installed in the WSL environment). Note:
+- Linux - the latest stable [`k3s`](https://k3s.io/) with the [Docker container runtime selected](https://rancher.com/docs/k3s/latest/en/advanced/#using-docker-as-the-container-runtime)
+- Windows Subsystem for Linux (WSL) - the latest Docker Desktop release (installed in the WSL environment). Note:
   - _For a better CLI experience we suggest using a modern terminal (like the [Windows Terminal from the Microsoft Store](https://aka.ms/terminal) or a WSL terminal)._
 
 ### Hardware/VM requirements
 
 OpsChain requires a minimum of 2GB of ram to function. We recommend 4GB if you intend to run our more advanced examples.
 
-OpsChain requires a minimum of 20GB of disk to function. We recommend 50GB if you intend to run our examples without having to perform [manual cleanup activities](../operations/maintenance/docker_image_cleanup.md#opschain-docker-image-cleanup) very frequently.
+OpsChain requires a minimum of 30GB of disk to function. We recommend 100GB if you intend to run our examples without having to perform [manual cleanup activities](../operations/maintenance/docker_image_cleanup.md#opschain-docker-image-cleanup) very frequently.
 
 If using Docker for Mac the [configuration UI](https://docs.docker.com/desktop/mac/#advanced) allows you to adjust the ram and disk allocation for Docker. After changing the configuration you will need to restart the Docker service.
 
 If using Docker for Windows the [WSL configuration](https://docs.microsoft.com/en-us/windows/wsl/wsl-config#global-configuration-options-with-wslconfig) (or the per [distribution configuration](https://docs.microsoft.com/en-us/windows/wsl/wsl-config#per-distribution-configuration-options-with-wslconf)) allows you to modify the ram allocation. There is no need to adjust the disk allocation. If WSL is already running it will need to be restarted.
 
 _Note: When using macOS or Windows we suggest ensuring that your Docker installation is not allocated too much of your system ram - or the rest of your system may struggle. As a rough guide, we suggest not allocating more than 50% of your system ram._
+
+### Image registry hostname (Linux only)
+
+The OpsChain image registry requires a hostname different to the OpsChain API hostname (that will resolve to the Kubernetes host) to allow it to route the registry traffic.
+
+By default OpsChain will attempt to use `opschain-image-registry.local.gd` which resolves to `127.0.0.1`. If your Kubernetes host does not resolve this address (e.g. if `host opschain-image-registry.local.gd` fails), add `127.0.0.1 opschain-image-registry.local.gd` to your hosts file.
+
+[`hostctl`](https://guumaster.github.io/) can be used to achieve this with the `hostctl add domains opschain opschain-image-registry.local.gd` command.
+
+_Note: A hostname other that `opschain-image-registry.local.gd` can be used if desired - the value would need to be manually updated in the `.env` file after the `opschain-configure` script below has been run._
+
+## Installation
 
 ### Clone the OpsChain trial repository
 
@@ -64,62 +72,11 @@ cd opschain-trial
 
 Copy the `opschain.lic` licence file into the current folder (`opschain-trial`).
 
-### Configure Docker Hub access
-
-You must be logged in to [Docker Hub](https://hub.docker.com/) as the `opschaintrial` user (or, if you have an [enterprise licence for OpsChain](../reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle), the `opschainenterprise` user). _Contact [LimePoint](mailto:opschain-support@limepoint.com) to obtain the user credentials._
-
-```bash
-docker login --username opschaintrial
-```
-
-TIP: use the DOCKER_CONFIG environment variable if you need to use multiple Docker Hub logins.
-
-```bash
-export DOCKER_CONFIG="$(pwd)/.docker" # this would need to be exported in all opschain-trial terminals
-docker login --username opschaintrial
-```
-
 ### Create a GitHub personal access token
 
-A variety of OpsChain Git repositories have been created to provide sample code for the getting started guide, and examples of how you might implement different types of changes. To access these repositories you will need to create a [GitHub personal access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token). Do this now to allow you to follow the getting started guide and access the more advanced examples.
+To access the private OpsChain repositories you will need to create a [GitHub personal access token](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token).
 
-## Configure the OpsChain environment
-
-OpsChain needs to be configured before first run (and when upgrading) by executing the configuration script:
-
-```bash
-./configure
-```
-
-You will be asked to confirm whether you would like to use certain features and will also be able to override default values for the location of database files and other settings.
-
-_Note: On Windows Subsystem for Linux (WSL) you will need to enable full read-write-execute (777) permissions on the /var/run/docker.sock file._
-
-### Pull latest OpsChain images
-
-Pull the latest versions of the Docker images:
-
-```bash
-docker-compose pull
-```
-
-_Note: this may take a while on a slow connection._
-
-### Start OpsChain containers
-
-Running containers in the foreground will allow you to see any log output directly on the console.
-
-To start all containers in the foreground:
-
-```bash
-docker-compose up
-```
-
-This will start the OpsChain server and its dependent services in separate Docker containers. For more information on these containers see the [architecture overview](../reference/architecture.md).
-
-When the OpsChain banner message has been displayed, the server is ready and you can proceed to the next steps of this guide.
-
-_Note: Use a new terminal to run any CLI commands below._
+This token will also be used for access to the example OpsChain Git repositories that been created to provide sample code for the getting started guide, and examples of how you might implement different types of changes.
 
 ### Add the OpsChain commands to the path
 
@@ -138,7 +95,49 @@ exec zsh # reload the shell config by starting a new session (replace zsh with b
 
 Alternatively, the OpsChain commands can be run without adding them to the path by specifying the full path to the command each time. The examples below assume the commands have been added to the path.
 
-_The OpsChain commands do not support being executed via symlinks (i.e. `ln -s opschain /usr/bin/opschain` will not work)._
+_The OpsChain commands do not support being executed via symlinks (i.e. `ln -s bin/opschain /usr/bin/opschain` will not work)._
+
+### Install `cert-manager`
+
+OpsChain depends on [`cert-manager`](https://cert-manager.io/) to manage its internal SSL/TLS certificates.
+
+```bash
+helm repo add jetstack https://charts.jetstack.io
+helm repo update
+helm upgrade --install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.7.1 --set installCRDs=true
+```
+
+`cert-manager` is now ready for OpsChain to use - no additional `cert-manager` configuration is required.
+
+_Please [contact OpsChain support](/docs/support.md#how-to-contact-us) if you would like the option to use OpsChain without installing `cert-manager`._
+
+### Configure OpsChain
+
+OpsChain needs to be configured before first run (and when upgrading) by executing the configuration script:
+
+```bash
+opschain-configure
+```
+
+You will be asked to confirm whether you would like to use certain features and provide your credentials for the OpsChain installation.
+
+### Deploy the OpsChain containers
+
+```bash
+opschain-deploy
+```
+
+This will start the OpsChain server and its dependent services in separate Kubernetes pods. For more information on these containers see the [architecture overview](../reference/architecture.md).
+
+The command may take several minutes to start, especially with slower internet connections as the OpsChain images are downloaded.
+
+The `kubectl` command can be used to see the deployment progress:
+
+```bash
+kubectl get all -n opschain-trial
+```
+
+Once the `opschain-deploy` script has returned you can continue with the rest of the setup process.
 
 ### Create an OpsChain user
 
@@ -150,7 +149,11 @@ opschain-utils "create_user['opschain','password']"
 
 _Note: Please ensure there are no spaces included in the parameter you supply to `opschain_utils`._
 
-### Create an OpsChain CLI configuration file
+### Setup the OpsChain CLI
+
+OpsChain has native CLI binaries for Windows, macOS and Linux.
+
+[Read our documentation about downloading the native CLI](../reference/cli.md#opschain-cli-download) and then add it to your path (e.g. by copying it into the bin directory.)
 
 Copy the example CLI configuration file to your home directory:
 
@@ -166,17 +169,38 @@ cat ~/.opschainrc
 
 If you changed the username or password in the create_user command above, please edit the `.opschainrc` file to reflect your changes.
 
+In addition, the `apiBaseUrl` configuration in `~/.opschainrc` must be updated to reflect the external OpsChain API address. This address reflects the  OpsChain listening port specified as part of the `opschain-configure` script. If you accepted the default setting, this will be `http://localhost:3000/`.
+
 Learn more about the `opschainrc` configuration in the [CLI configuration guide](../reference/cli.md#opschain-cli-configuration).
 
 _Note: If you create a `.opschainrc` file in your current directory, this will be used in precedence to the version in your home directory._
 
-#### Download the native CLI (optional)
+### Setup the custom CA (macOS only)
 
-OpsChain has native CLI binaries for Windows, macOS and Linux. The native CLI has better performance than the CLI bundled in the `opschain-trial` repository, as well as native filesystem access.
+On macOS, to ensure that the OpsChain registry certificate is trusted by Kubernetes the following setup is required:
 
-Once downloaded, the native CLI will need to be added to the path or used directly. In addition, the `apiBaseUrl` configuration in `~/.opschainrc` must be updated to reflect the external OpsChain API address. This address reflects the OpsChain listening port specified as part of the `./configure` script. If you accepted the default setting, this will be `http://localhost:3000/`.
+```bash
+kubectl -n opschain-trial get secret opschain-ca-key-pair -o jsonpath="{.data.ca\.crt}" | base64 -d > opschain-ca.pem
+security add-trusted-cert -k ~/Library/Keychains/login.keychain-db -p ssl opschain-ca.pem
+# You will be prompted for your admin password in a macOS dialog
+```
 
-[Read our documentation about downloading the native CLI.](../reference/cli.md#opschain-native-cli)
+Once that setup is complete you will need to restart Docker Desktop.
+
+### Configure Docker Hub access (optional)
+
+If you intend to use the `opschain-action`, `opschain-dev`, or `opschain-lint` developer utilities (used as aids when creating new action definitions) you will need to be logged in to [Docker Hub](https://hub.docker.com/) as the `opschaintrial` user (or, if you have an [enterprise licence for OpsChain](../reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle), the `opschainenterprise` user). These are the same Docker credentials requested by the `opschain-configure` command.
+
+```bash
+docker login --username opschaintrial
+```
+
+TIP: use the DOCKER_CONFIG environment variable if you need to use multiple Docker Hub logins.
+
+```bash
+export DOCKER_CONFIG="$(pwd)/.docker" # this would need to be exported in all opschain-trial terminals
+docker login --username opschaintrial
+```
 
 ## What to do next
 

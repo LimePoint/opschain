@@ -1,6 +1,6 @@
 # Running a complex change
 
-Run a more complex change that builds a multi-node [Confluent](https://www.confluent.io/) setup on your local Docker installation.
+Run a more complex change that builds a multi-node [Confluent](https://www.confluent.io/) setup in your local Kubernetes installation.
 
 After following this guide you should know how to:
 
@@ -12,11 +12,11 @@ After following this guide you should know how to:
 
 ## Prerequisites
 
-This example requires at least 4GB of ram and 50GB of disk space available on the Docker platform used to run OpsChain and the example.
+This example requires at least 4GB of ram and 50GB of disk space available on the node used to run OpsChain and the example.
 
-If using Docker for Windows or Docker for Mac see our [installation guide](getting_started/installation.md#hardwarevm-requirements) for more details.
+If using Docker for Windows or Docker for Mac see our [installation guide](../getting_started/installation.md#hardwarevm-requirements) for more details.
 
-## Create a project
+### Create a project
 
 Create a new project:
 
@@ -30,7 +30,7 @@ Verify that your new project appears in the list:
 opschain project list
 ```
 
-## Create an environment
+### Create an environment
 
 Environments represent the logical infrastructure environments under a project (for example Development or Production).
 
@@ -46,56 +46,59 @@ Verify that your new environment appears in the list:
 opschain environment list --project-code confluent
 ```
 
-## Add the Confluent example as a remote to the project Git repository
+### Add the Confluent example as a remote to the project Git repository
 
-Follow [adding a project Git repository as a remote](../reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the [OpsChain Confluent Example repository](https://github.com/LimePoint/opschain-examples-confluent) remote URL `https://username:password@github.com/LimePoint/opschain-examples-confluent.git`.
+Follow [adding a project Git repository as a remote](../reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the [OpsChain Confluent example repository](https://github.com/LimePoint/opschain-examples-confluent) remote URL `https://{username}:{personal access token}@github.com/LimePoint/opschain-examples-confluent.git`.
 
-## Fetch the latest Confluent example code
+### Clone the repository
 
-Navigate to the project's Git repository and fetch the latest code.
-
-_Note: Ensure you return to the opschain-trial directory before running further commands._
+Clone the Confluent example repository onto your machine:
 
 ```bash
-cd opschain_data/opschain_project_git_repos/confluent
-git fetch
-git checkout master
-cd ../../..
+git clone https://{username}:{personal access token}@github.com/LimePoint/opschain-examples-confluent.git
+cd opschain-examples-confluent
 ```
 
-_Note: The confluent path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
+### Deploy Kubernetes resources
 
-## OpsChain properties
+```bash
+kubectl apply -f k8s/namespace.yaml
+```
+
+This will create an `opschain-confluent` namespace, and assign relevant permissions to the `opschain-runner` role to allow it to create and destroy the Confluent deployment in it.
+
+_Note: this step assumes you are using the default `opschain-trial` Kubernetes namespace for OpsChain. You must modify the `ServiceAccount` namespace in `k8s/namespace.yaml` if this is not the case._
+
+### Build the base image
+
+Build the base container image used by the example:
+
+```bash
+docker build -t confluent-base:latest .
+```
+
+The base image includes the installation files for Oracle Java 1.8 and Confluent 6.2, as well as minor changes to the `pam.d` configuration to support containerisation (see the `Dockerfile` in the project root for further details).
+
+_Note: The base image is a basic Linux host running the OpenSSH daemon, allowing it to accept remote connections from OpsChain and should not be used as a basis for real world implementation._
+
+### OpsChain properties
 
 This example takes advantage of the [OpsChain properties](../reference/concepts/properties.md) feature of OpsChain to provide the configuration for the various Confluent servers. The `.opschain/properties.json` file in the Git repository provides the bulk of the configuration information. In addition, an example environment properties file is provided to highlight overriding the project repository defaults with specific values.
 
-### Import the environment properties
+#### Import the environment properties
 
-Properties can be loaded from a local file containing a valid JSON object. To make the file available to the opschain-cli container, copy the file into the opschain-trial `cli-files` directory. A sample environment properties file is included in the Confluent repository.
+Properties can be loaded from a local file containing a valid JSON object. Use the following command to load the example JSON environment [properties](../reference/concepts/properties.md):
 
-To load the file, perform the following steps:
+```bash
+opschain environment set-properties --project-code confluent --environment-code local --file-path environment_properties.json --confirm
+```
 
-1. Copy the sample file into the opschain-cli temporary directory as follows:
+These environment [properties](../reference/concepts/properties.md) will override values from the project [properties](../reference/concepts/properties.md)
 
-    ```bash
-    cp opschain_data/opschain_project_git_repos/confluent/environment_properties.json ./cli-files
-    ```
+- `auto.create.topics.enable` - set to false
+- `log.retention.check.interval.ms` - set to 301
 
-    _Note: The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
-
-2. Set the environment specific [properties](../reference/concepts/properties.md) using the following command:
-
-    ```bash
-    opschain environment set-properties --project-code confluent --environment-code local --file-path cli-files/environment_properties.json --confirm
-    ```
-
-    These environment [properties](../reference/concepts/properties.md) will:
-
-    - override values from the project [properties](../reference/concepts/properties.md)
-      - `auto.create.topics.enable` - set to false
-      - `log.retention.check.interval.ms` - set to 301
-
-### Setting properties dynamically
+#### Setting properties dynamically
 
 The `actions.rb` provided in the Confluent repository includes logic to set environment specific [properties](../reference/concepts/properties.md) as part of the provision action:
 
@@ -133,8 +136,6 @@ opschain change create --project-code confluent --environment-code local --git-r
 
 The [steps](../reference/concepts/concepts.md#step) that comprise the change will be shown as well as their status.
 
-_Note: the first step in this change may take a long time as it downloads a Centos Docker image as well as installation executables for Java and Confluent. Subsequent runs will use Docker's layer caching feature and should not require these to be re-downloaded._
-
 Manually copy and set the change ID as a variable, you'll need it for the next steps:
 
 ```bash
@@ -143,15 +144,19 @@ change_id=XXXXX
 
 **Use the `opschain change show-logs` command to see the log output from the change (including any failures). Use the `--follow` argument to watch the logs as the change progresses.**
 
-## Verify change deployment
+## Verify the change
 
-### Check running servers
+### View the `opschain-confluent` namespace
 
-Use Docker to check that you have two **brokers**, a **zookeeper** and a **control-center** running:
+Use `kubectl` to view the objects deployed in the `opschain-confluent` namespace:
 
 ```bash
-docker ps -f name=zookeeper\|broker\|control-center
+kubectl get all -n opschain-confluent
 ```
+
+The namespace will include two **brokers**, a **zookeeper**, and a **control-center**.
+
+_Note the use of a `broker` statefulset to create the brokers, with a headless `kafka` service to provide access to them._
 
 ### Check control center settings
 
@@ -162,24 +167,25 @@ Navigate to the _controlcenter.cluster, Cluster Settings, Brokers_  page in your
 First start a consumer on the control center:
 
 ```bash
-$ docker exec -it control-center bash
-[root@consumer /] export JAVA_HOME=/apps/confluent-demo/binaries/java/
-[root@consumer /] /apps/confluent-demo/binaries/kafka/bin/kafka-console-consumer --bootstrap-server broker1:9092 --topic demo --from-beginning --group cli-1
+$ kubectl exec -it -n opschain-confluent pod/confluent-control-center -- /bin/bash
+[root@confluent-control-center /] export JAVA_HOME=/apps/confluent-demo/binaries/java/
+[root@confluent-control-center /] /apps/confluent-demo/binaries/kafka/bin/kafka-console-consumer --bootstrap-server broker-0.kafka.opschain-confluent.svc.cluster.local:9092 --topic demo --from-beginning --group cli-1
+
 ```
 
 Then in a new terminal, produce a message:
 
 ```bash
-$ docker exec -it control-center bash
+$ kubectl exec -it -n opschain-confluent pod/confluent-control-center -- /bin/bash
 [root@producer /] export JAVA_HOME=/apps/confluent-demo/binaries/java/
-[root@producer /] /apps/confluent-demo/binaries/kafka/bin/kafka-console-producer --broker-list broker1:9092 --topic demo
+[root@producer /] /apps/confluent-demo/binaries/kafka/bin/kafka-console-producer --broker-list broker-0.kafka.opschain-confluent.svc.cluster.local:9092 --topic demo
 > hello there
 ```
 
 Verify that the message then appears in the consumer terminal:
 
 ```bash
-[root@consumer /] /apps/confluent-demo/binaries/kafka/bin/kafka-console-consumer --bootstrap-server broker1:9092 --topic demo --from-beginning --group cli-1
+[root@confluent-control-center /] /apps/confluent-demo/binaries/kafka/bin/kafka-console-consumer --bootstrap-server broker-0.kafka.opschain-confluent.svc.cluster.local:9092 --topic demo --from-beginning --group cli-1
 hello there
 ```
 
@@ -193,36 +199,46 @@ opschain change show-properties --change-id $change_id
 
 More detailed information about the specific versions of environment and project [properties](../reference/concepts/properties.md) supplied to each [step](../reference/concepts/concepts.md#step) of the change is available directly from the API server. Using your browser, navigate to `http://localhost:3000/changes/CHANGE_ID` _(where CHANGE_ID is the ID of the change)_. In the API response, each [step](../reference/concepts/concepts.md#step) has a reference to the project and environment [properties](../reference/concepts/properties.md) versions supplied to the [step](../reference/concepts/concepts.md#step).
 
+## Create a change to remove Confluent
+
+This change will use Terraform's `destroy` action to remove the Kubernetes resources from the `opschain-confluent` namespace:
+
+```bash
+opschain change create --project-code confluent --environment-code local --git-rev origin/master --action destroy --confirm
+```
+
+_Note: the [verify the change](#verify-the-change) steps above can be re-run to verify that Confluent has been removed from Kubernetes._
+
+### Remove Kubernetes resources
+
+```bash
+kubectl delete -f k8s/namespace.yaml
+```
+
+This will remove the `opschain-confluent` namespace, and the custom roles associated with the `opschain-runner` for this example.
+
 ## Notes on the Confluent example
 
 ### Repository Dockerfiles
 
-The repository includes two Dockerfiles
+The repository includes two Dockerfiles:
 
-1. The [`Dockerfile`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/.opschain/Dockerfile) in `.opschain` builds a custom OpsChain step runner image that includes the
+1. The [`Dockerfile`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/.opschain/Dockerfile) in `.opschain` builds a custom OpsChain step runner image that includes the Terraform binary required for the `terraform_config` resource type.
 
-    - Terraform binary required for the `terraform_config` resource type
-    - JRE Installer required for the Confluent containers
-    - Confluent Installer required for the Confluent containers
-
-2. The [`Dockerfile`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/Dockerfile) in the repository root is based off a Centos image and defines the image that is used as the basis for the Confluent containers. This image is built as part of the `provision` action, copying the installers from the custom step runner and installing the dynamically generated SSH keys.
-
-### OpsChain runner network
-
-The Terraform `main.tf` file specifies the control center, broker and zookeeper containers should be started on the `opschain-runner-network`. This is the same network as the OpsChain step runner containers and allows the Confluent containers to be referred to via their alias (e.g. broker1).
+2. The [`Dockerfile`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/Dockerfile) in the repository root is a RHEL based image that is used as the basis for the Confluent containers. The image includes the JRE and Confluent installation files required by the MintPress controllers to install the application.
 
 ### External packages
 
 The example makes use of the following packages
 
-- [Terraform Docker provider](https://www.terraform.io/docs/providers/docker)
+- [Terraform Kubernetes provider](https://www.terraform.io/docs/providers/kubernetes)
 - [MintPress](https://www.limepoint.com/mintpress) Confluent controller
 
 ## What to do next
 
 ### Create your own project
 
-Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/README.md) and [developing your own resources](../developing_resources.md) guide for more information.
+Try creating a new project using the steps above and instead of adding a remote, author your own commits. See the [reference documentation](../reference/README.md) and [developing your own resources](../getting_started/developer.md#developing-resources) guide for more information.
 
 ## Licence & authors
 

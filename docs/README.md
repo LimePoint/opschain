@@ -24,7 +24,7 @@ Operations guides for OpsChain, including security, installation and upgrade gui
 
 Understand the OpsChain Docker development environment.
 
-## [Developing your own resources](developing_resources.md)
+## [Developing your own resources](getting_started/developer.md#developing-resources)
 
 Learn the basics of developing your own resources.
 

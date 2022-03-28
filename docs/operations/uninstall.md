@@ -2,12 +2,14 @@
 
 If at some point you decide that OpsChain is not for you and you no longer wish to continue using the services it provides, follow these steps to permanently remove OpsChain from your machine.
 
-## Stop OpsChain containers
+## Remove the OpsChain containers and data
 
-Terminate the running OpsChain containers by executing the following command.
+_Before uninstalling OpsChain we suggest [making a backup](maintenance/backups.md) in case you would like to restore any OpsChain data in the future._
+
+Terminate and remove the running OpsChain containers (and associated data) by executing the following command:
 
 ```bash
-docker-compose down
+opschain-uninstall
 ```
 
 ## Remove LimePoint Docker images
@@ -26,7 +28,7 @@ docker system prune -a
 
 ## Logout OpsChain from Docker
 
-Run the following command to logout the `opschaintrial` user from Docker Hub.
+Run the following command to logout the `opschaintrial` user from Docker Hub. This step is only required if you ran the `docker login` step in the [install guide](../getting_started/installation.md#configure-docker-hub-access-optiona).
 
 ```bash
 docker logout
@@ -43,8 +45,6 @@ rm ~/.opschainrc
 ## Delete the OpsChain directory
 
 Remove the `opschain-trial` directory that you cloned from the [clone the OpsChain trial repository](../getting_started/installation.md#clone-the-opschain-trial-repository) section in the installation guide.
-
-_Note: This will also remove your project and data files unless you specified a different folder for your OpsChain data during the [configure](../getting_started/installation.md#configure-the-opschain-environment) step. Verify the `OPSCHAIN_DATA_DIR` variable in your `.env` file and remove that folder separately if it's outside the `opschain-trial` folder._
 
 ## Uninstall native CLI
 

@@ -26,7 +26,7 @@ An action is a task that can be performed (for example provisioning or restartin
 
 The logic for an action can be provided directly within the action definition, or if the action forms part of a Resource, it can call logic within its associated controller.
 
-See the [actions reference guide](actions.md#defining-standalone-actions) and [developing your own resources](../../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-standalone-actions) and [developing your own resources](/docs/getting_started/developer.md#developing-resources/) guide for more information.
 
 ## Resource
 
@@ -36,13 +36,13 @@ A resource represents something that OpsChain can perform actions on (e.g. SOA I
 - Any number of resource properties. These are key value pairs that can be referenced in the action code and are supplied as a hash to the controller's constructor
 - Any number of action definitions, allowing you to define actions that can be performed on the resource
 
-See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](../../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](/docs/getting_started/developer.md#developing-resources) guide for more information.
 
 ## Resource type
 
 A resource type is a template for creating resources. Rather than duplicating the definition for each instance of a resource, the controller, resource properties and action definitions can be defined in the resource type and automatically configured when the resource is created.
 
-See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](../../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](/docs/getting_started/developer.md#developing-resources) guide for more information.
 
 ## Composite resource
 
@@ -50,7 +50,7 @@ A composite resource is a resource that encapsulates child resources. An example
 
 Composite resources also allow you to define actions that will apply to all the composite's children. The confluent broker composite in the example defines three actions (configure, start and install). Executing any of these actions on the composite will execute the equivalent action on each of the child brokers.
 
-See the [actions reference guide](actions.md#defining-composite-resources--resource-types) and [developing your own resources](../../developing_resources.md) guide for more information.
+See the [actions reference guide](actions.md#defining-composite-resources--resource-types) and [developing your own resources](/docs/getting_started/developer.md#developing-resources) guide for more information.
 
 ## Project Git repository
 
@@ -83,6 +83,15 @@ Whilst a change or step is actively executing it is in the `running` state.
 If the change/step succeeds it transitions to the `success` state. If the change/step fails it transitions to the `error` state.
 
 If a change is cancelled by a user all finalised steps (i.e. in the `success` or `error` state) remain in their existing state, and all `pending`, `queued`, or `running` steps are transitioned to the `cancelled` state. There is no rollback of any kind, steps that have not yet started will not start, and steps that are in progress are stopped immediately.
+
+#### Behaviour when a child step fails
+
+Configuring a step's children to run sequentially or in parallel not only impacts how they are executed but also effects how OpsChain processes them if any fail. If a child step fails:
+
+- _Sequential:_ OpsChain terminates the change at the completion of the failed child step and any remaining steps will not run
+- _Parallel:_ OpsChain allows all siblings of the failed child step to complete and then terminates the change
+
+Note: The change status will transition to `error` when OpsChain terminates the change.
 
 #### Retrying changes
 

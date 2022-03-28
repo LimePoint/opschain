@@ -13,9 +13,14 @@ OpsChain resources and actions can be developed using the `opschain-action` or t
 
 ## Prerequisites
 
+This guide assumes that:
+
+- you have the [OpsChain commands available on your path](getting_started/installation.md#add-the-opschain-commands-to-the-path)
+- you have performed the [Docker Hub login step](getting_started/installation.md#configure-docker-hub-access-optional) from the getting started installation guide
+
 ### Navigate to the project Git repository
 
-Commands such as `opschain-action` or `opschain-dev` that use the development container must be run from an OpsChain project Git repository. The files in that directory will then be made available in the container using a [Docker bind mount](https://docs.docker.com/storage/bind-mounts/).
+The `opschain-action`, `opschain-dev`, and `opschain-lint` commands that use the development container must be run from an OpsChain project Git repository. The files in that directory will then be made available in the container using a [Docker bind mount](https://docs.docker.com/storage/bind-mounts/).
 
 ```bash
 cd opschain_data/opschain_project_git_repos/<project code>
@@ -23,8 +28,8 @@ cd opschain_data/opschain_project_git_repos/<project code>
 
 Notes:
 
-- _The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
-- _The `opschain-action` commands below assume the OpsChain development environment is being run in the original "Demo Hello World" project (created in the Getting Started guide). If using a different project, modify these commands to reflect the OpsChain actions available._
+- _The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration_
+- _The `opschain-action` commands below assume the OpsChain development environment is being run in the original "Demo Hello World" project (created in the Getting Started guide). If using a different project, modify these commands to reflect the OpsChain actions available_
 
 #### Create a `step_context.json` (optional)
 
@@ -213,8 +218,10 @@ EOF
 Use the following command to build the custom runner image. _Note: the image tag `custom_runner` can be replaced with a valid Docker tag of your choice_
 
 ```bash
-docker build --build-arg OPSCHAIN_IMAGE_TAG=latest --build-arg GIT_REV=HEAD --build-arg GIT_SHA=$(git rev-parse HEAD) -t custom_runner -f .opschain/Dockerfile .
+docker build --build-arg OPSCHAIN_BASE_RUNNER=limepoint/opschain-runner:latest --build-arg GIT_REV=HEAD --build-arg GIT_SHA=$(git rev-parse HEAD) -t custom_runner -f .opschain/Dockerfile .
 ```
+
+_Note: If using the enterprise runner, set the OPSCHAIN_BASE_RUNNER build argument to be `limepoint/opschain-runner-enterprise:latest`._
 
 Start the development environment using the OPSCHAIN_RUNNER_IMAGE environment variable to specify the runner image to use (replace `custom_runner` with the tag used in the build command above if you altered it).
 
@@ -232,7 +239,7 @@ When running OpsChain actions within the OpsChain development environment contai
 
 ## What to do next
 
-Try [developing your own resources](developing_resources.md)
+Try [developing your own resources](getting_started/developer.md#developing-resources)
 
 ## Licence & authors
 

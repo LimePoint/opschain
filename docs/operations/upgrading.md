@@ -1,31 +1,34 @@
 # Upgrading
 
-Before starting, ensure that your Docker daemon is running on your OpsChain host.
-
-To upgrade OpsChain go to the location on your OpsChain host where you cloned the [OpsChain trial repository](https://github.com/LimePoint/opschain-trial), stop OpsChain, pull the latest changes from the remote git repository, and pull the latest Docker images.
+To upgrade OpsChain go to the location on your OpsChain host where you cloned the [OpsChain trial repository](https://github.com/LimePoint/opschain-trial), stop OpsChain, pull the latest changes from the remote git repository, and deploy the latest version of OpsChain (which will pull the latest images).
 
 ```bash
 cd opschain-trial
-docker-compose down # or systemctl --user stop opschain.service if running OpsChain as a systemd service
 git pull
-./configure # if the changelog states that the configure script needs to be rerun
-docker-compose pull
+opschain-configure
+# reapply any manual modifications to values.yaml - the old values.yaml will be stored as a backup by the configure script
+opschain-deploy
 ```
 
-If you are using the [OpsChain enterprise runner](../reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle) you will need to pull the runner images:
+The updated OpsChain CLI native binaries (with the release date matching the current release (which can be found in the `RELEASE-VERSION` file in the `opschain-trial` repo)) must be [downloaded](../reference/cli.md#opschain-cli-download).
+
+## Updating runner images in the OpsChain registry
+
+OpsChain will not automatically remove old images in the registry during the upgrade process. This means that old runner images may still exist in the registry. OpsChain provides some utilities to remove these old images and free up some disk space.
+
+### List runner image tags in the registry
 
 ```bash
-OPSCHAIN_RUNNER_IMAGE=limepoint/opschain-runner-enterprise:latest docker-compose pull opschain-runner-devenv
-OPSCHAIN_RUNNER_IMAGE=limepoint/opschain-runner:latest docker-compose pull opschain-runner-devenv
+opschain-utils list_runner_image_tags
 ```
 
-Then OpsChain can be started again:
+### Remove a runner image tag from the registry
 
 ```bash
-docker-compose up # or systemctl --user start opschain.service if running OpsChain as a systemd service
+opschain-utils 'remove_runner_image_tag[<tag_to_remove>]'
 ```
 
-If you are using the OpsChain CLI native binaries then these should be [downloaded](../reference/cli.md#opschain-native-cli) for the current version.
+The [internal registry garbage collection](maintenance/docker_image_cleanup.md#internal-registry-garbage-collection) will then remove these images from disk.
 
 ## Licence & authors
 
