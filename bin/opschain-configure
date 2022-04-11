@@ -172,9 +172,9 @@ get_integer() {
 }
 
 confirm_ports() {
-  OPSCHAIN_API_PORT=$(get_integer "Which available port would you like the OpsChain server to listen on" 1 65535 "${OPSCHAIN_API_PORT:-3000}")
+  OPSCHAIN_API_EXTERNAL_PORT=$(get_integer "Which available port would you like the OpsChain server to listen on" 1 65535 "${OPSCHAIN_API_EXTERNAL_PORT:-3000}")
   OPSCHAIN_TLS_EXTERNAL_PORT=$(get_integer "Which available port would you like the OpsChain server to listen on for HTTPS requests" 1 65535 "${OPSCHAIN_TLS_EXTERNAL_PORT:-3443}")
-  export OPSCHAIN_API_PORT OPSCHAIN_TLS_EXTERNAL_PORT
+  export OPSCHAIN_API_EXTERNAL_PORT OPSCHAIN_TLS_EXTERNAL_PORT
 }
 
 confirm_github_credentials() {

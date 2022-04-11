@@ -1,6 +1,6 @@
 ; this file can be ini formatted, or a json object.
 
-apiBaseUrl = http://opschain-api:3000/
+apiBaseUrl = http://localhost:3000/
 username = opschain
 password = password
 

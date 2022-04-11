@@ -1,5 +1,18 @@
 # Changelog
 
+## [2022-04-11]
+
+### Added
+
+- The OpsChain CLI now supports [shell completion](docs/reference/cli.md#shell-completion).
+- OpsChain now supports SSH authentication (in addition to password authentication) for Git remotes.
+  - There is an SSH `known_hosts` file provided by OpsChain. See [the documentation](docs/reference/project_git_repositories.md#ssh-git-remotes) if you need to know more about this file.
+
+### Changed
+
+- The `opschain project set-git-remote` arguments have been updated to support the new authentication options.
+- The OpsChain CLI examples for `set-properties` no longer use the `cli-files` folder as the native binary does not require it.
+
 ## [2022-03-28]
 
 ### Added

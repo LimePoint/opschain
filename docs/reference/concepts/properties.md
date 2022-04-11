@@ -58,10 +58,10 @@ Properties stored in the database are encrypted prior to being written to disk s
 
 #### Loading properties
 
-The OpsChain CLI allows you to set properties at the project or environment level. The CLI can import JSON files from the `cli-files` directory within the OpsChain repository. First create a JSON file in the cli-files directory. E.g.
+The OpsChain CLI allows you to set properties at the project or environment level. First create a JSON file to import. E.g.
 
 ```bash
-$ cat << EOF > cli-files/my_opschain_properties.json
+$ cat << EOF > my_opschain_properties.json
 {
   "basic_prop": "some value",
   "parent_prop": {
@@ -74,13 +74,13 @@ EOF
 Now import the properties against the project:
 
 ```bash
-opschain project set-properties --project-code <project code> --file-path cli-files/my_opschain_properties.json --confirm
+opschain project set-properties --project-code <project code> --file-path my_opschain_properties.json --confirm
 ```
 
 or environment:
 
 ```bash
-opschain environment set-properties --project-code <project code> --environment-code <environment_code> --file-path cli-files/my_opschain_properties.json --confirm
+opschain environment set-properties --project-code <project code> --environment-code <environment_code> --file-path my_opschain_properties.json --confirm
 ```
 
 _Note: If the environment or project properties are in use by an active change, the API server will reject the set-properties request. This ensures OpsChain can guarantee the properties state throughout the life of the change._

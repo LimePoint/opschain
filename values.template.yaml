@@ -1,3 +1,7 @@
+api:
+  hostName: ${OPSCHAIN_API_HOST_NAME}
+  ceritficateSecretName: ${OPSCHAIN_API_CERTIFICATE_SECRET_NAME}
+
 sharedVolumes:
   projectGitRepos:
     storageClass: ${OPSCHAIN_SHARED_VOLUMES_STORAGE_CLASS}
@@ -16,7 +20,7 @@ kong:
     watchNamespaces: [ "${OPSCHAIN_KUBERNETES_NAMESPACE}" ]
   proxy:
     http:
-      servicePort: ${OPSCHAIN_API_PORT}
+      servicePort: ${OPSCHAIN_API_EXTERNAL_PORT}
     tls:
       servicePort: ${OPSCHAIN_TLS_EXTERNAL_PORT}
 
@@ -38,7 +42,7 @@ trow:
         hosts:
           - "${OPSCHAIN_IMAGE_REGISTRY_HOST}"
 
-useCertificateManager: true
+sshKnownHostsConfigMapRef: "${OPSCHAIN_SSH_KNOWN_HOSTS_CONFIG_MAP}"
 
 apiWorker:
   replicas: ${OPSCHAIN_API_WORKER_SCALE}
@@ -64,7 +68,7 @@ buildService:
 
 env:
   # OpsChain environment configuration
-  OPSCHAIN_API_EXTERNAL_PORT: "${OPSCHAIN_API_PORT}"
+  OPSCHAIN_API_EXTERNAL_PORT: "${OPSCHAIN_API_EXTERNAL_PORT}"
   OPSCHAIN_API_WORKER_SCALE: "${OPSCHAIN_API_WORKER_SCALE}"
   OPSCHAIN_AUTH_SERVICE: "${OPSCHAIN_AUTH_SERVICE}"
   OPSCHAIN_CHANGE_LOG_RETENTION_DAYS: "${OPSCHAIN_CHANGE_LOG_RETENTION_DAYS}"

@@ -19,43 +19,89 @@ _This reference guide covers concepts from the [developer getting started guide]
 
 Actions are defined in the `actions.rb` file in the root directory of the project Git repository. If required, actions can also be defined in separate files and [required](https://www.rubydoc.info/stdlib/core/Kernel%3Arequire) into the `actions.rb`.
 
-The `action` definition extends the Rake `task` definition, so standard [Rake features](https://ruby.github.io/rake/) can be used.
-
-An action can have __prerequisites__ that will run before the body of the action is run. These behave like standard [Rake prerequisites](https://ruby.github.io/rake/doc/rakefile_rdoc.html#label-Tasks+with+Prerequisites).
+The `action` definition extends the Rake `task` definition, so standard [Rake features](https://ruby.github.io/rake/) can be used. In its simplest form, an action requires a name, and the instructions to perform when it is executed (between the `do` and `end` keywords). The term "block" will be used to describe these instructions throughout the OpsChain documentation.
 
 ```ruby
 require 'opschain'
 
-action do_something: [:do_something_before, :do_something_else_before] do
-  # this will run after prerequisites
-end
-
-action :do_something_before do
-  # runs before do_something
-end
-
-action :do_something_else_before do
-  # runs before do_something
+action :hello_world do
+  OpsChain.logger.info "hello world!"
 end
 ```
 
-In the above example actions would run in this order:
+In the example above, the action's name is `hello_world`, and the action's block instructs OpsChain to log "hello world" as an informational message (see [OpsChain Logger](#opschain-logger) for more information on using OpsChain's logger).
 
-1. `do_something_before`
-2. `do_something_else_before`
-3. `do_something`
+_Note: You must `require 'opschain'` at the top of your `actions.rb` file to allow you to use the features described in this reference guide._
 
-An action can also have __steps__ that will run after the body of the action has run. Each step will be assigned to an OpsChain worker when one becomes available and run in a new OpsChain runner instance.
+## Sequencing actions
+
+In addition to the action name, OpsChain's DSL allows you specify [prerequisite actions](#prerequisite-actions) (to run before the action's block) and [child steps](#child-steps) (to run after the action's block). In this way you can describe a sequence of actions to perform.
+
+### Prerequisite actions
+
+Prerequisite actions will run in the same [step runner](step_runner.md) as the requested action. These behave like standard [Rake prerequisites](https://ruby.github.io/rake/doc/rakefile_rdoc.html#label-Tasks+with+Prerequisites).
 
 ```ruby
-require 'opschain'
+action go_to_work: ['wake_up', 'get_dressed'] do
+  # this optional block will run after get_dressed
+end
 
-action :do_something, steps: [:do_something_after, :do_something_else_after] do
+action :wake_up do
+  # this block will run before get_dressed
+end
+
+action :get_dressed do
+  # this block will run after wake_up
+end
+```
+
+In the example above, all actions would run in the same [step runner](step_runner.md), in this order:
+
+1. `wake_up`
+2. `get_dressed`
+3. `go_to_work`
+
+#### Combining actions on a single step runner
+
+As noted in the prerequisite actions example above, an action with prerequisites (or [child steps](#child-steps)) need not include a block and can be specified as:
+
+```ruby
+action holiday: ['wake_up', 'get_dressed']
+```
+
+Running the `holiday` action will execute the `wake_up` and `get_dressed` actions in a single [step runner](step_runner.md).
+
+Grouping actions on a single step runner comes with some advantages and disadvantages:
+
+##### Advantages
+
+1. Improved performance - as there is an overhead to building and launching each [step runner](step_runner.md), grouping actions can improve overall change performance
+2. De-isolation - passing data between actions running in their own [step runners](step_runner.md) requires you to store the data in OpsChain's [properties](properties.md) (or in a data store accessible to both runners). Grouping actions on a single [step runner](step_runner.md) means the actions have access to the same file system and memory. This removes the need to store sensitive (or single use) information in [properties](properties.md)
+
+##### Disadvantages
+
+1. Execution visibility - prerequisite steps are not displayed in OpsChain's change step tree. This reduces the visibility of their start and stop times, making it harder to follow the change's progress. Similarly, when viewing the change logs, there is no separator in the logs between each prerequisite action's log messages nor with the grouping action's log messages (if any)
+2. De-isolation - While it can be an advantage (as described above), care must be taken when deciding to combine actions on a single [step runner](step_runner.md). The modifications to the file system or memory that one action makes may have unintended effects if subsequent actions have been designed with an expectation that they will run in a "clean" [step runner](step_runner.md)
+
+### Child steps
+
+An action definition can include a list of other actions to run as child `steps`. After the parent's block has completed, these child steps will be added to the queue of actions to run. When an OpsChain worker becomes available, it will build and launch a [step runner](step_runner.md) to run the next action in the queue.
+
+The `steps:` argument accepts:
+
+1. A single action name - e.g. `steps: 'the_next_step'`
+2. A list of actions - e.g. `steps: ['first_child', 'second_child']`
+3. A Ruby method/proc that returns a single or list of actions - e.g. `steps: generate_step_list`
+
+Actions can be specified as strings or Ruby symbols.
+
+```ruby
+action :do_something, steps: ['do_something_after', :do_something_else_after] do
   # this will run before steps
 end
 
 action :do_something_after do
-  # runs after do_something
+  # runs after do_something and before do_something_else_after
 end
 
 action :do_something_else_after do
@@ -63,18 +109,94 @@ action :do_something_else_after do
 end
 ```
 
-In the above example actions would run in this order:
+In the example above each action will run in its own [step runner](step_runner.md), in this order:
 
 1. `do_something`
 2. `do_something_after`
 3. `do_something_else_after`
 
-By default the steps defined will run sequentially across the OpsChain workers. The steps will be run in parallel if `:parallel` is provided for the `run_as` option (the default is `:sequential`, ie one at a time in the order defined). Parallel tasks are limited by the number of available OpsChain workers:
+#### Dynamic child steps
+
+OpsChain allows you to dynamically alter a parent's child steps from within the action's block.
+
+_Notes:_
+
+- _The step tree displayed by the CLI when running a change will not reflect dynamic child steps until the parent action executes_
+- _the `append_child_steps` and `replace_child_steps` methods accept any value that can be supplied via the `steps:` argument when defining an action (see the valid argument values under [child steps](#child-steps))_
+
+##### Append child steps
+
+The `append_child_steps` method allows you to append additional children into the queue of steps the OpsChain workers will process. E.g.
 
 ```ruby
-require 'opschain'
+action :do_something, steps: 'do_something_after' do
+  if Time.now.strftime("%a") == 'Tue'
+    OpsChain.append_child_steps('do_something_on_tuesdays')
+  end
+end
 
-action :do_something, steps: [:do_something_after, :do_something_else_after], run_as: :parallel do
+action :do_something_after do
+  # runs after do_something
+end
+
+action :do_something_on_tuesdays do
+  # runs after do_something_after - on Tuesdays
+  OpsChain.logger.info "It's Tuesday!"
+end
+```
+
+In the example above actions would run in this order:
+
+1. `do_something`
+2. `do_something_after`
+3. `do_something_on_tuesdays` (if the change is run on a Tuesday)
+
+##### Replace child steps
+
+If you wish to replace the list of child steps, it can be overwritten by assigning the new value(s) to `OpsChain.child_steps`. E.g.
+
+```ruby
+action :replace_child_steps, steps: ['do_something_after', 'do_something_else'] do
+  OpsChain.child_steps = ['do_a_different_thing', 'do_another_thing']
+end
+```
+
+In the example above actions would run in this order:
+
+1. `replace_child_steps`
+2. `do_a_different_thing`
+3. `do_another_thing`
+
+_Note: Care must be taken when directly modifying the `child_steps` value, as this will override all standard OpsChain step handling functionality for the current step runner and may have unintended consequences._
+
+##### Accessing child steps
+
+OpsChain stores the list of actions to run in child steps as a [Set](https://ruby-doc.org/stdlib/libdoc/set/rdoc/Set.html). It is available from within your action blocks via `OpsChain.child_steps`. E.g.
+
+```ruby
+action check_for_child_step: ['prereq_with_conditional_step'] do
+  if OpsChain.child_steps.include?('conditional_step')
+    OpsChain.logger.info '"prereq_with_conditional_step" added "conditional_step" to the child steps'
+  end
+end
+```
+
+In the example above, `check_for_child_step` will log an informational message if the `prereq_with_conditional_step` prerequisite has added the `conditional_step` action into the child steps of `check_for_child_step`
+
+_Note: Modifying the child steps list via any method other than the append and replace methods described above is not supported._
+
+### Child execution strategy
+
+The action definition includes an optional `run_as:` parameter. By default it is set to `sequential`, meaning the action's child steps will run sequentially across the OpsChain workers.
+
+_Note: Only `sequential` and `parallel` (as strings or Ruby symbols) are valid values for the `run_as:` parameter._
+
+#### Parallel child step execution
+
+To run child steps in parallel, include the `run_as: :parallel` option in your action definition.
+
+```ruby
+action :do_something, steps: ['do_something_after', 'do_something_else_after'], run_as: :parallel do
   # this will run before steps
 end
 
@@ -87,18 +209,63 @@ action :do_something_else_after do
 end
 ```
 
-In the above example actions would run in this order:
+In the example above actions would run in this order:
 
 1. `do_something`
 2. `do_something_after` and `do_something_else_after`
 
-_Note: Running steps in parallel comes with its own risks and limitations. See the [changing properties in parallel steps](properties.md#changing-properties-in-parallel-steps) section of the [OpsChain properties guide](properties.md#opschain-properties-guide) for more information._
+_Notes:_
 
-Defining action bodies:
+- _Parallel task execution is limited by the number of available OpsChain workers_
+- _Care must be taken when modifying properties from within parallel steps. See the [changing properties in parallel steps](properties.md#changing-properties-in-parallel-steps) section of the [OpsChain properties guide](properties.md#opschain-properties-guide) for more information_
+
+#### Modifying the child execution strategy
+
+When using [dynamic child steps](#dynamic-child-steps), it may be necessary to override the child step execution strategy. This is performed by assigning the new value to `OpsChain.child_execution_strategy`.
+
+_Note: The override value will be used as the execution strategy for all child steps of the action. E.g._
 
 ```ruby
-require 'opschain'
+action :conditional_strategy, steps: ['do_something_after', 'do_something_else_after'], run_as: :parallel do
+  if some_condition
+    OpsChain.append_child_steps('do_the_final_thing')
+    OpsChain.child_execution_strategy = :sequential
+  end
+end
+```
 
+In the example above, `conditional_strategy` has two possible outcomes:
+
+1. If "some_condition" is true, the `do_the_final_thing` action will be added to the child steps of `do_something`. As this action performs the "final thing", we want it to run after `do_something_after` and `do_something_else_after` have completed. To do this, the child execution strategy for `do_something` is altered to run all of its children sequentially and the actions would run in this order:
+    1. `conditional_strategy`
+    2. `do_something_after`
+    3. `do_something_else_after`
+    4. `do_another_thing`
+2. If "some_condition" is false, the actions would run in this order:
+    1. `conditional_strategy`
+    2. `do_something_after` and `do_something_else_after`
+
+#### Accessing child execution strategy
+
+The strategy that will be used to run the current action's child steps is available via `OpsChain.child_execution_strategy`.
+
+```ruby
+action check_strategy: ['conditional_strategy'], steps: ['child1', 'child2'], run_as: :parallel do
+  if OpsChain.child_execution_strategy == :sequential
+    OpsChain.logger.info "conditional_strategy changed the strategy to sequential"
+  end
+end
+```
+
+In the example above, `check_strategy` executes `conditional_strategy` (from the [modifying the child execution strategy](#modifying-the-child-execution-strategy) example) as a prerequisite. Using `OpsChain.child_execution_strategy`, `check_strategy` can detect if `conditional_strategy` altered the child execution strategy from `parallel` to `sequential`.
+
+### Notes and limitations
+
+#### Multiple action definitions
+
+If the same action is defined multiple times in your `actions.rb`, each subsequent definition extends the existing action:
+
+```ruby
 action :say_hello do
   puts 'First hello'
 end
@@ -115,20 +282,17 @@ First hello
 Second hello
 ```
 
-Note: Current limitations:
+#### Marking a change as errored
 
-- Steps defined on a parent task will override any steps defined on any dependent tasks
-- In order for a step (and subsequently the change) status to be set to `error`, the `action` must raise an `Exception`
+In order for a step (and subsequently the change) status to be set to `error`, the `action` must raise an `Exception`.
 
-### OpsChain logger
+## OpsChain logger
 
 OpsChain provides a logger for use in actions.
 
 The OpsChain logger is a standard Ruby Logger object. By default the logger is configured to log all INFO severity (and higher) messages to STDOUT. You can use the OpsChain logger from anywhere in your `actions.rb` or project code:
 
 ```ruby
-require 'opschain'
-
 OpsChain.logger.info 'Informational message'
 OpsChain.logger.warn 'Warning message'
 OpsChain.logger.error 'Error message'
@@ -539,7 +703,7 @@ city :melbourne do
 end
 ```
 
-The above example would result in the creation of a controller with these properties:
+The example above would result in the creation of a controller with these properties:
 
 ```ruby
 {
@@ -687,8 +851,8 @@ This would define the following actions:
 
 _Notes:_
 
-1. _Each team's `barrack` action makes use of the `country` property defined on the parent `city` composite resource type._
-2. _`actions` can't be created directly inside the `each_child` block, and instead must be on a resource._
+- _Each team's `barrack` action makes use of the `country` property defined on the parent `city` composite resource type_
+- _`actions` can't be created directly inside the `each_child` block, and instead must be on a resource_
 
 ## What to do next
 

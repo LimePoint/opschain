@@ -4,10 +4,12 @@ set -eo pipefail -o nounset
 CDPATH='' cd "$(dirname "${BASH_SOURCE[0]}")"
 cd ..
 
-eval "$(grep -E 'OPSCHAIN_KUBERNETES_NAMESPACE|GITHUB|OPSCHAIN_HELM_REGISTRY' .env)"
+eval "$(grep -E 'OPSCHAIN_KUBERNETES_NAMESPACE|GITHUB|OPSCHAIN_HELM' .env)"
 
 helm repo add --force-update --username "${OPSCHAIN_GITHUB_USER}" --password "${OPSCHAIN_GITHUB_TOKEN}" opschain "${OPSCHAIN_HELM_REGISTRY:-https://raw.githubusercontent.com/LimePoint/opschain-helm/master/}" --insecure-skip-tls-verify
 
 helm repo update --fail-on-repo-update-fail opschain
 
-exec helm upgrade --install opschain opschain/opschain --create-namespace -n "${OPSCHAIN_KUBERNETES_NAMESPACE}" -f values.yaml --set-file opschainLicence=opschain.lic --set-file securityConfig=opschain_auth/security_configuration.json --wait --timeout 30m "$@"
+echo 'NOTE: The initial deployment may take a long time as the required OpsChain images must be downloaded (e.g up to 30 minutes).' >&2
+
+exec helm upgrade --install opschain "${OPSCHAIN_HELM_CHART:-opschain/opschain}" --create-namespace -n "${OPSCHAIN_KUBERNETES_NAMESPACE}" -f values.yaml --set-file opschainLicence=opschain.lic --set-file securityConfig=opschain_auth/security_configuration.json --wait --timeout 30m "$@"

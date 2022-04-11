@@ -85,6 +85,16 @@ export NODE_TLS_REJECT_UNAUTHORIZED=0
 opschain change ls # or any other command
 ```
 
+## Shell completion
+
+The OpsChain CLI supports shell completion. To use it run the `opschain completion` subcommand, for example:
+
+```bash
+opschain completion >> ~/.zshrc # this assumes you are using Zsh, modify as needed
+```
+
+Then reload your shell, e.g. by running `exec zsh`. Now the CLI will support tab-completion for commands and arguments.
+
 ## OpsChain CLI container image
 
 The OpsChain CLI is also distributed as a container image, `limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG}` - where OPSCHAIN_IMAGE_TAG is in the `.env` file in the `opschain-trial` directory.

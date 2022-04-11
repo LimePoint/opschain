@@ -31,11 +31,21 @@ opschain project create --code web --name Website --description 'Public facing w
 Add the `opschain-getting-started` Git repository as a [remote](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes) for your new project:
 
 ```bash
-# Note: to avoid potentially storing the repository credentials in the shell history the `--url` argument can be omitted and filled in when prompted
+# Note: to avoid potentially storing the repository credentials in the shell history the `--user` and `--password` arguments can be omitted and filled in when prompted
+# Option 1: Using password authentication:
 $ opschain project set-git-remote \
   --project-code web \
   --name origin \
-  --url 'https://{username}:{personal access token}@github.com/LimePoint/opschain-getting-started.git' \
+  --user '{username}' \
+  --password '{password / personal access token}' \
+  --url 'https://github.com/LimePoint/opschain-getting-started.git' \
+  --confirm
+# Option 2: Using SSH authentication:
+$ opschain project set-git-remote \
+  --project-code web \
+  --name origin \
+  --ssh-key-file ./path/to/private/key \
+  --url 'git@github.com:LimePoint/opschain-getting-started.git' \
   --confirm
 ```
 
@@ -68,7 +78,7 @@ _Note: This setting can be overridden by specifying a `--project-code` explicitl
 OpsChain allows you to define [properties](../reference/concepts/properties.md) that will be available to running changes. These can be key value pairs, environment variables and even secure files. Create a sample project and environment properties JSON by copy and pasting the commands below.
 
 ```bash
-cat << EOF > cli-files/project_properties.json
+cat << EOF > project_properties.json
 {
   "opschain": {
     "env": {
@@ -79,7 +89,7 @@ cat << EOF > cli-files/project_properties.json
   "instance_id": "i-0123abc45de6fg789"
 }
 EOF
-cat << EOF > cli-files/prod_properties.json
+cat << EOF > prod_properties.json
 {
   "opschain": {
     "env": {
@@ -95,8 +105,8 @@ EOF
 Use these JSON files to set project and environment specific properties.
 
 ```bash
-opschain project set-properties --file-path cli-files/project_properties.json --confirm
-opschain environment set-properties --environment-code prod --file-path cli-files/prod_properties.json --confirm
+opschain project set-properties --file-path project_properties.json --confirm
+opschain environment set-properties --environment-code prod --file-path prod_properties.json --confirm
 ```
 
 The project properties provide default values to use when running changes in any environment in the project. The production environment properties override these defaults with production specific values.
@@ -172,7 +182,7 @@ Understanding which changes have been applied to each environment is a critical 
 In addition to capturing the logs and properties used by each change, OpsChain allows additional metadata to be associated with a change. This metadata can then be used when reporting on and searching the change history (via the API). Create a sample metadata file to associate with the production change:
 
 ```bash
-cat << EOF > cli-files/prod_change_metadata.json
+cat << EOF > prod_change_metadata.json
 {
   "change_request": "CR921",
   "approver": "A. Manager"
@@ -185,7 +195,7 @@ EOF
 Rather than use the CLI in interactive mode, lets create the production change by supplying the parameters on the command line.
 
 ```bash
-opschain change create --environment-code prod --action deploy_war --git-rev origin/master --metadata-path cli-files/prod_change_metadata.json --confirm
+opschain change create --environment-code prod --action deploy_war --git-rev origin/master --metadata-path prod_change_metadata.json --confirm
 ```
 
 The same change action and git revision are provided, ensuring the change applied to the test environment is replicated in production. The only difference to the change we created in test, is the target environment and the inclusion of optional metadata.
@@ -217,7 +227,7 @@ The `--follow` argument added here means that the OpsChain CLI will continue sho
 As mentioned earlier, the war file to deploy is contained in the [`properties.json`](https://github.com/LimePoint/opschain-getting-started/blob/master/.opschain/properties.json) file in the project Git repository. Editing and committing the updated file would allow the war file name to be overridden. Alternatively, an override value for the `war_file` property can be added to the project or environment properties. Download the current project properties JSON:
 
 ```bash
-opschain project show-properties > cli-files/project_properties.json
+opschain project show-properties > project_properties.json
 ```
 
 Edit the file, adding the `war_file` property as follows:
@@ -240,7 +250,7 @@ _Note: Be sure to remove the first line containing the project information._
 Replace the project properties with the contents of the updated JSON.
 
 ```bash
-opschain project set-properties --file-path cli-files/project_properties.json --confirm
+opschain project set-properties --file-path project_properties.json --confirm
 ```
 
 Create a new change to deploy the WAR to the test environment and view the change logs:

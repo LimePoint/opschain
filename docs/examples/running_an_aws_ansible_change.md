@@ -98,9 +98,9 @@ The [steps](../reference/concepts/concepts.md#step) that comprise the change wil
 
 ### Verify change deployment
 
-The newly created `opschain-ansible` [key pair](https://us-west-2.console.aws.amazon.com/EC2/v2/home?region=us-west-2#KeyPairs:) and [security group](https://us-west-2.console.aws.amazon.com/EC2/v2/home?region=us-west-2#SecurityGroups:sort=group-name) can be viewed from your AWS Console.
+The newly created `opschain-ansible` [key pair](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#KeyPairs:) and [security group](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#SecurityGroups:sort=group-name) can be viewed from your AWS Console.
 
-Use the [AWS instances](https://us-west-2.console.aws.amazon.com/EC2/v2/home?region=us-west-2#Instances:) page to determine the "Public IPv4 address" assigned to your `opschain-ansible` instance. Copy this IP address into the address bar of your browser to see the OpsChain AWS Ansible Demo welcome page.
+Use the [AWS instances](https://us-west-2.console.aws.amazon.com/ec2/v2/home?region=us-west-2#Instances:) page to determine the "Public IPv4 address" assigned to your `opschain-ansible` instance. Copy this IP address into the address bar of your browser to see the OpsChain AWS Ansible Demo welcome page.
 
 ### Update the welcome page
 

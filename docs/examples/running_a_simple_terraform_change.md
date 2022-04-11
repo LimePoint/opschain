@@ -100,8 +100,7 @@ _Note: the [verify the change](#verify-the-change) steps above can be re-run to 
 The example takes advantage of the OpsChain properties to allow you to adjust the nginx port exposed by the Kubernetes cluster. Create the following properties file:
 
 ```bash
-mkdir -p cli-files
-cat << EOF > cli-files/terraform_properties.json
+cat << EOF > terraform_properties.json
 {
   "external_port": 7999
 }
@@ -111,7 +110,7 @@ EOF
 Associate the properties with the `terraform` project:
 
 ```bash
-opschain project set-properties -p terraform -f cli-files/terraform_properties.json -y
+opschain project set-properties -p terraform -f terraform_properties.json -y
 ```
 
 Now re-run the [create a change to deploy nginx](#create-a-change-to-deploy-nginx) and [verify the change](#verify-the-change) steps, noting how the service names have changed, and nginx is now exposed on port 7999. Finally, re-run the [create a change to remove nginx](#create-a-change-to-remove-nginx) step.
