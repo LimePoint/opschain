@@ -172,7 +172,9 @@ get_integer() {
 }
 
 confirm_ports() {
-  OPSCHAIN_API_EXTERNAL_PORT=$(get_integer "Which available port would you like the OpsChain server to listen on" 1 65535 "${OPSCHAIN_API_EXTERNAL_PORT:-3000}")
+  if ${OPSCHAIN_INSECURE_HTTP_PORT_ENABLED}; then
+    OPSCHAIN_API_EXTERNAL_PORT=$(get_integer "Which available port would you like the OpsChain server to listen on for HTTP requests" 1 65535 "${OPSCHAIN_API_EXTERNAL_PORT:-3000}")
+  fi
   OPSCHAIN_TLS_EXTERNAL_PORT=$(get_integer "Which available port would you like the OpsChain server to listen on for HTTPS requests" 1 65535 "${OPSCHAIN_TLS_EXTERNAL_PORT:-3443}")
   export OPSCHAIN_API_EXTERNAL_PORT OPSCHAIN_TLS_EXTERNAL_PORT
 }
@@ -261,8 +263,8 @@ set_permissions_ids() {
 }
 
 load_opschain_version() {
-  OPSCHAIN_IMAGE_TAG="$(< RELEASE-VERSION)"
-  export OPSCHAIN_IMAGE_TAG OPSCHAIN_RUNNER_IMAGE=limepoint/opschain-${OPSCHAIN_RUNNER_NAME}:${OPSCHAIN_IMAGE_TAG}
+  OPSCHAIN_VERSION="$(< RELEASE-VERSION)"
+  export OPSCHAIN_VERSION OPSCHAIN_RUNNER_IMAGE=limepoint/opschain-${OPSCHAIN_RUNNER_NAME}:${OPSCHAIN_VERSION}
 }
 
 create_values_yaml() {

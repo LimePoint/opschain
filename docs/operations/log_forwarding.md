@@ -16,8 +16,8 @@ To add additional output plugins to the OpsChain log aggregator, you should buil
 Most Fluentd output plugins can be installed by using the `fluent-gem install` command. For example, to install the Splunk output plugin your Dockerfile might look like this:
 
 ```Dockerfile
-ARG OPSCHAIN_IMAGE_TAG
-FROM limepoint/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}
+ARG OPSCHAIN_VERSION
+FROM limepoint/opschain-log-aggregator:${OPSCHAIN_VERSION}
 
 RUN fluent-gem install fluent-plugin-splunk-enterprise
 ```
@@ -25,8 +25,8 @@ RUN fluent-gem install fluent-plugin-splunk-enterprise
 You may also use the custom Dockerfile to include your company's private CA certificate if the output plugin you are using requires it to verify the TLS connection to your logging infrastructure.
 
 ```Dockerfile
-ARG OPSCHAIN_IMAGE_TAG
-FROM limepoint/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}
+ARG OPSCHAIN_VERSION
+FROM limepoint/opschain-log-aggregator:${OPSCHAIN_VERSION}
 
 RUN fluent-gem install fluent-plugin-splunk-enterprise
 
@@ -39,9 +39,9 @@ Once you have added the required customisations to the Dockerfile, build and pus
 _Note: The example below uses the `RELEASE-VERSION` file in the opschain-release repo to provide a build argument to the build and to tag the built image with the same base version as your OpsChain release. For the purposes of illustration, we'll assume that the OpsChain `RELEASE-VERSION` file contains the version **1.0.9**._
 
 ```shell
-export OPSCHAIN_IMAGE_TAG="$(< /path/to/opschain-release/RELEASE-VERSION)"
-docker build --build-arg OPSCHAIN_IMAGE_TAG --tag "image-registry.myco.com/myco/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}-1" .
-docker push "image-registry.myco.com/myco/opschain-log-aggregator:${OPSCHAIN_IMAGE_TAG}-1"
+export OPSCHAIN_VERSION="$(< /path/to/opschain-release/RELEASE-VERSION)"
+docker build --build-arg OPSCHAIN_VERSION --tag "image-registry.myco.com/myco/opschain-log-aggregator:${OPSCHAIN_VERSION}-1" .
+docker push "image-registry.myco.com/myco/opschain-log-aggregator:${OPSCHAIN_VERSION}-1"
 # builds and pushes an image tagged as image-registry.myco.com/myco/opschain-log-aggregator:1.0.9-1
 ```
 

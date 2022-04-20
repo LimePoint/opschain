@@ -4,5 +4,8 @@ apiBaseUrl = http://localhost:3000/
 username = opschain
 password = password
 
+; modify the API request timeout (in milliseconds)
+; requestTimeout = 30000
+
 ; use plain text for step status rather than emoji - suggested for terminals that don't support emoji, eg on Windows
 ; stepEmoji = false

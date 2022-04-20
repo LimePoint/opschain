@@ -122,11 +122,6 @@ A custom base image can be created as follows:
     ```dockerfile
     FROM limepoint/opschain-runner
 
-    # the custom Dockerfile must include the following lines to ensure the OpsChain licence is available to the runner
-    ONBUILD ARG OPSCHAIN_LICENCE_BASE64
-    ONBUILD ENV OPSCHAIN_LICENCE_BASE64=${OPSCHAIN_LICENCE_BASE64}
-    ONBUILD RUN /usr/bin/create_opschain_licence.sh
-
     # run your custom build commands like any Dockerfile
     # Note: the OpsChain build context files will not be available here
     ```
@@ -269,6 +264,10 @@ The `project/properties_diff` and `environment/properties_diff` values contain [
 The `step/properties` contains the merged set of properties applied to the action. These are linked to the step to support future investigation / debugging.
 
 The `steps/children` value contains the child steps (and execution strategy) the OpsChain workers will execute.
+
+### Log messages for step phases
+
+OpsChain includes log messages in your change logs to allow you to follow each step's progress as OpsChain builds its step runner and executes the step's action. These messages will log when the phase starts, initialises (if relevant), is completing (if relevant), and finishes. These log messages can be used to diagnose how much time the different phases of a change/step are taking.
 
 ## Licence & authors
 

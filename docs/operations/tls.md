@@ -45,3 +45,12 @@ For example, to configure the CLI to trust the internal opschain-ca certificate 
 kubectl -n opschain-trial get secret opschain-ca-key-pair -o jsonpath="{.data.ca\.crt}" | base64 -d > opschain-ca.pem
 export NODE_EXTRA_CA_CERTS=path/to/opschain-ca.pem
 ```
+
+## Disable the insecure HTTP listener
+
+Once the OpsChain API HTTPS listener has been successfully configured, you can disable the insecure HTTP listener so that OpsChain is only accessible via HTTPS. To disable the HTTP port, edit `.env` file and set `OPSCHAIN_INSECURE_HTTP_PORT_ENABLED` to `false`, apply the update by running the following:
+
+```bash
+opschain-configure
+opschain-deploy
+```

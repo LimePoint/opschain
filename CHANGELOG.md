@@ -1,5 +1,35 @@
 # Changelog
 
+## [2022-04-20]
+
+### Added
+
+- The OpsChain CLI request timeout can now be modified. [Learn more](docs/reference/cli.md#opschain-cli-configuration-settings).
+- Log messages pertaining to the step phases. [Learn more](docs/reference/concepts/step_runner.md#log-messages-for-step-phases).
+
+### Changed
+
+- The OpsChain CLI will now retry lookup requests (up to three times total) if they fail due to timeouts.
+- Upgraded Ruby to 2.7.6.
+- Upgraded Bundler to 2.3.11.
+- Upgraded Fluentd to v1.14.6-1.0.
+- Upgraded Fluent Bit to v1.9.2.
+- Upgraded BuildKit to v0.10.1
+- Upgraded OPA to v0.39.0.
+- Upgraded Terraform to 1.1.8 in the OpsChain examples.
+- Upgraded Terraform 'hashicorp/aws' provider to 4.9.0 in the OpsChain Ansible example.
+- Upgraded Terraform 'hashicorp/kubernetes' provider to 2.10.0 in the OpsChain WebLogic, Terraform, and Confluent examples.
+- Upgraded HashiCorp Vault to 1.9.4 in the OpsChain Vault example.
+- Upgraded Confluent to 6.2.3 in the OpsChain Confluent example.
+- Upgraded recommended cert-manager version to v1.8.0.
+- Upgraded Kong ingress controller to v2.3.1.
+- A full backtrace will be shown in the change logs when an action raises an error.
+- **Breaking changes**
+  - The `OPSCHAIN_IMAGE_TAG` variable has been renamed `OPSCHAIN_VERSION`.
+  - The `opschain.lic` path has changed in the custom Dockerfile, it is now stored in `/` in the runner image.
+
+  _Use the `opschain-utils dockerfile_template` command to see the new Dockerfile format and ensure any custom project Dockerfiles are updated to reflect these changes._
+
 ## [2022-04-11]
 
 ### Added

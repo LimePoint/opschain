@@ -45,6 +45,7 @@ The `.opschainrc` file must be valid JSON and supports the following configurati
 | `apiBaseUrl`      | no       | OpsChain API server URL                                                                   |
 | `username`        | no       | OpsChain API username                                                                     |
 | `password`        | no       | OpsChain API password                                                                     |
+| `requestTimeout`  | yes      | modify the API request timeout (in milliseconds), increase this for slow servers/networks |
 | `stepEmoji`       | yes      | show emoji for the step status, default `true` - set to `false` to display status as text |
 | `projectCode`     | yes      | default OpsChain project code used for commands                                           |
 | `environmentCode` | yes      | default OpsChain environment code used for commands                                       |
@@ -97,14 +98,14 @@ Then reload your shell, e.g. by running `exec zsh`. Now the CLI will support tab
 
 ## OpsChain CLI container image
 
-The OpsChain CLI is also distributed as a container image, `limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG}` - where OPSCHAIN_IMAGE_TAG is in the `.env` file in the `opschain-trial` directory.
+The OpsChain CLI is also distributed as a container image, `limepoint/opschain-cli:${OPSCHAIN_VERSION}` - where OPSCHAIN_VERSION is in the `.env` file in the `opschain-trial` directory.
 
 Some examples of how the CLI image can be used are shown below:
 
 ```bash
-docker run -ti -v ~/.opschainrc:$(pwd)/.opschainrc limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG} environment ls
+docker run -ti -v ~/.opschainrc:$(pwd)/.opschainrc limepoint/opschain-cli:${OPSCHAIN_VERSION} environment ls
 # with files:
-docker run -ti -v $(pwd):$(pwd) -v ~/.opschainrc:$(pwd)/.opschainrc -w $(pwd) limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG} environment set-properties -f ./properties.json
+docker run -ti -v $(pwd):$(pwd) -v ~/.opschainrc:$(pwd)/.opschainrc -w $(pwd) limepoint/opschain-cli:${OPSCHAIN_VERSION} environment set-properties -f ./properties.json
 ```
 
 ### Using the OpsChain CLI in an OpsChain change
@@ -112,9 +113,9 @@ docker run -ti -v $(pwd):$(pwd) -v ~/.opschainrc:$(pwd)/.opschainrc -w $(pwd) li
 The OpsChain CLI container image also makes it simple to access the OpsChain CLI within a [custom step runner Dockerfile](concepts/step_runner.md#custom-step-runner-dockerfiles):
 
 ```dockerfile
-ARG OPSCHAIN_IMAGE_TAG
+ARG OPSCHAIN_VERSION
 ARG OPSCHAIN_BASE_RUNNER
-FROM limepoint/opschain-cli:${OPSCHAIN_IMAGE_TAG} as cli
+FROM limepoint/opschain-cli:${OPSCHAIN_VERSION} as cli
 FROM ${OPSCHAIN_BASE_RUNNER}
 
 ...
