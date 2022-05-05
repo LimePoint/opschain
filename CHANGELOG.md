@@ -1,5 +1,17 @@
 # Changelog
 
+## [2022-05-05]
+
+### Added
+
+- Documentation has been added explaining how container image builds can be achieved with OpsChain. [Learn more](docs/reference/building_container_images.md).
+- A link to the step's log lines is now included in the step JSON.
+- The `opschain change create` command now accepts the `--background` argument, allowing you to create changes and not follow their progress.
+
+### Fixed
+
+- The OpsChain licence has been fixed in the OpsChain development environment.
+
 ## [2022-04-20]
 
 ### Added

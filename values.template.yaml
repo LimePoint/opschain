@@ -18,6 +18,7 @@ kong:
     tag: "${OPSCHAIN_VERSION}"
   ingressController:
     watchNamespaces: [ "${OPSCHAIN_KUBERNETES_NAMESPACE}" ]
+    ingressClass: "opschain-${OPSCHAIN_KUBERNETES_NAMESPACE}"
   proxy:
     http:
       servicePort: ${OPSCHAIN_API_EXTERNAL_PORT}
@@ -42,6 +43,8 @@ trow:
       - secretName: opschain-image-registry-cert
         hosts:
           - "${OPSCHAIN_IMAGE_REGISTRY_HOST}"
+    annotations:
+      kubernetes.io/ingress.class: opschain-${OPSCHAIN_KUBERNETES_NAMESPACE}
 
 sshKnownHostsConfigMapRef: "${OPSCHAIN_SSH_KNOWN_HOSTS_CONFIG_MAP}"
 

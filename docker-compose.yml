@@ -9,7 +9,7 @@ services:
         type: bind
       - source: ./opschain.lic
         type: bind
-        target: /opt/opschain/opschain.lic
+        target: /opschain.lic
     env_file:
       - .env
     extra_hosts:

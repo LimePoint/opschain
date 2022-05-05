@@ -8,6 +8,10 @@ Introduces various concepts that will help you to understand the tool and its us
 
 An overview of the components that make up OpsChain.
 
+## [Building container images](building_container_images.md)
+
+Learn more about building container images from within your OpsChain actions.
+
 ## [Included resource types](included_resource_types.md)
 
 The pre-defined resource types available in OpsChain.
