@@ -14,7 +14,7 @@ After following this guide you should know how to:
 
 This example requires at least 4GB of ram and 50GB of disk space available on the node used to run OpsChain and the example.
 
-If using Docker for Windows or Docker for Mac see our [installation guide](../getting_started/installation.md#hardwarevm-requirements) for more details.
+If using Docker for Windows or Docker for Mac see our [installation guide](../operations/installation.md#hardwarevm-requirements) for more details.
 
 ### Create a project
 

@@ -4,23 +4,28 @@ This document provides information on obtaining, configuring and using the OpsCh
 
 When configuring the CLI, please note that some of the options described are optional and may not be required depending on your operating environment.
 
-## OpsChain CLI download
+## Installation
 
-The OpsChain CLI binary can be downloaded from the `opschain-trial` repository on [GitHub](https://github.com/LimePoint/opschain-trial/releases). Ensure the native build matches the version of OpsChain that you are using.
+The OpsChain CLI binary can be downloaded from the `opschain-trial` repository on [GitHub](https://github.com/LimePoint/opschain-trial/releases). Ensure the native build matches the version of OpsChain that you are using. We suggest moving the binary to a location in your `PATH` to ensure it is easily accessible.
 
-After downloading the binary you may need to make it executable (this is required on macOS or Linux):
+### macOs & Linux configuration
+
+Throughout the documentation we refer to the CLI as `opschain`. For macOS and Linux users we suggest renaming the binary to reflect the common name (and save some future typing):
 
 ```bash
-chmod +x opschain*
+mv opschain-* opschain
 ```
 
-Please note that:
+macOS and Linux users will also need to make it executable:
 
-- the `.opschainrc` configuration will need to be modified to update the `apiBaseUrl` (likely to `http://localhost:3000/`, assuming a local OpsChain install and the default 3000 port)
-- the native binaries are currently a release preview and offer support for the latest version of the respective OS on a best effort basis (older versions of the respective OS may work)
-- unlike the OpsChain CLI container, you will need to manually update the native binary whenever you upgrade your OpsChain installation
+```bash
+chmod +x opschain
+```
 
-_Note: On macOS you may need to trust the OpsChain CLI binary as it is not currently signed. See [the Apple documentation](https://support.apple.com/en-au/guide/mac-help/mh40616/mac) for details._
+### Notes
+
+- On macOS you may need to trust the OpsChain CLI binary as it is not currently signed. See [the Apple documentation](https://support.apple.com/en-au/guide/mac-help/mh40616/mac) for details
+- The native binaries offer support for the latest version of the respective OS (older versions of the respective OS may work)
 
 ## OpsChain CLI configuration
 
@@ -103,6 +108,7 @@ The OpsChain CLI is also distributed as a container image, `limepoint/opschain-c
 Some examples of how the CLI image can be used are shown below:
 
 ```bash
+OPSCHAIN_VERSION='2022-04-11' # EXAMPLE ONLY - Use the value from the .env file in your API installation
 docker run -ti -v ~/.opschainrc:$(pwd)/.opschainrc limepoint/opschain-cli:${OPSCHAIN_VERSION} environment ls
 # with files:
 docker run -ti -v $(pwd):$(pwd) -v ~/.opschainrc:$(pwd)/.opschainrc -w $(pwd) limepoint/opschain-cli:${OPSCHAIN_VERSION} environment set-properties -f ./properties.json

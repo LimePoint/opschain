@@ -12,9 +12,12 @@ If you have not already done so, we suggest completing the main [getting started
 
 This guide assumes that:
 
-- you have installed OpsChain and that it is running. See the [getting started installation guide](installation.md) for more details
-- you have the [OpsChain commands available on your path](installation.md#add-the-opschain-commands-to-the-path)
-- you have performed the [Docker Hub login step](installation.md#configure-docker-hub-access-optional) from the getting started installation guide
+- you have have access to a running OpsChain API server, either locally or network accessible. See the [getting started installation guide](../operations/installation.md) for more details
+- you have performed the [Docker Hub login step](../operations/installation.md#configure-docker-hub-access-optional) from the getting started installation guide
+- you have installed:
+  - the [OpsChain CLI](../reference/cli.md#installation)
+  - [Docker](https://docs.docker.com/engine/install/)
+  - [Docker Compose](https://docs.docker.com/compose/install/)
 
 ### Create a Git repository
 
@@ -28,19 +31,17 @@ cd opschain-git-repo
 git init
 ```
 
-This guide uses an existing repository that already contains some sample content:
-
-_Tip: [fork the sample repo on GitHub](https://docs.github.com/en/get-started/quickstart/fork-a-repo) and use your own fork to allow you to push your changes and use them from your OpsChain project - replace `LimePoint` with your GitHub username in the command below._
+This guide uses an existing repository that already contains some sample content. [Fork the sample repo on GitHub](https://docs.github.com/en/get-started/quickstart/fork-a-repo) and use your own fork to allow you to push your changes and use them from your OpsChain project.
 
 ```bash
-git remote add origin https://{github username}:{github personal access token}@github.com/LimePoint/opschain-getting-started.git
+git remote add origin https://{github username}:{github personal access token}@github.com/{github username}/opschain-getting-started.git
 git fetch
 git checkout developer-guide
 ```
 
 #### Repository setup
 
-All OpsChain project Git repositories need to contain a `Gemfile` and an `actions.rb`.
+All OpsChain project Git repositories must contain a `Gemfile` and an `actions.rb`.
 
 ```bash
 $ tree
@@ -54,35 +55,47 @@ By using the existing sample repository these files have already been created - 
 
 OpsChain changes run actions from a project's Git repository.
 
-OpsChain actions can be developed interactively by using the `opschain-action` and `opschain-dev` utilities.
+OpsChain actions can be developed interactively in the OpsChain development environment, accessed via the `opschain dev` CLI subcommand.
 
-Once an action is ready, the `opschain change create` command should be used to execute it via the OpsChain server to get the collaboration and auditing benefits that OpsChain provides. This also allows the change to run with secure network access that can be granted to the OpsChain server, without giving that network access directly to developers.
+_Note: Throughout the documentation, the following prefixes for bash commands will be used to denote where the command should be run._
+
+- _`[host] $` execute the command on your local host_
+- _`[dev] $` execute the command inside the OpsChain development environment_
 
 ### Developing actions locally
 
-You can use the `opschain-action` utility to list the actions available within the current project Git repository:
+Start the OpsChain development environment:
 
 ```bash
-opschain-action -AT # this will list all actions - use `opschain-action -T` to show only actions with a description
+# From your project repository folder
+[host] $ opschain dev
+```
+
+The OpsChain development environment opens a Bash prompt within an OpsChain runner container. You can now use the `opschain-action` utility to list the actions available within the current project Git repository:
+
+```bash
+[dev] $ opschain-action -AT # this will list all actions - use `opschain-action -T` to show only actions with a description
 ```
 
 The sample branch we checked out earlier has an `actions.rb` file in the repository that contains a single action, `hello_world`.
 
-You can run this action locally by using the `opschain-action` command as follows:
+You can run this action in the development environment by using the `opschain-action` command as follows:
 
 ```bash
-$ opschain-action hello_world
+[dev] $ opschain-action hello_world
 Hello world
 ```
 
+_Note: Once an action is ready, the `opschain change create` command should be used to execute it via the OpsChain server to gain the collaboration and auditing benefits that OpsChain provides. This also allows the change to run with secure network access that can be granted to the OpsChain server, without giving that network access directly to developers._
+
 ### Adding a new action
 
-Open the `actions.rb` file with your favourite editor so that you can add the new action to the Git repository.
+Open the `actions.rb` file with your favourite editor so that you can add a new action to the Git repository.
 
 Add the following to the bottom of the file (after the `hello_world` action):
 
 ```ruby
-desc 'Say goodbye world' # if this line were omitted then this action would not be shown in `opschain-action -T`
+desc 'Say goodbye world' # if this line were omitted then this action would not be shown in the tasks displayed by `opschain-action -T`
 action :goodbye_world do
   puts 'Goodbye world' # you could write any Ruby in here, but OpsChain provides a friendlier API in addition to this
 end
@@ -91,7 +104,7 @@ end
 You can now manually run the new `goodbye_world` task in addition to the existing `hello_world` task:
 
 ```bash
-$ opschain-action hello_world goodbye_world
+[dev] $ opschain-action hello_world goodbye_world
 Hello world
 Goodbye world
 ```
@@ -105,7 +118,7 @@ action default: [:hello_world, :goodbye_world]
 You can now run the default action:
 
 ```bash
-$ opschain-action
+[dev] $ opschain-action
 Hello world
 Goodbye world
 ```
@@ -127,18 +140,20 @@ Edit the `actions.rb` file to make the `default` action run it's dependent actio
 action :default, steps: [:hello_world, :goodbye_world]
 ```
 
-Child steps are always run automatically when running a change, however to automatically run these child steps when using the `opschain-dev` and `opschain-action` utilities, the `OPSCHAIN_ACTION_RUN_CHILDREN` environment variable must be set to `true`:
+Child steps are always run automatically when running a change, however to automatically run these child steps when running them in the OpsChain development environment the `OPSCHAIN_ACTION_RUN_CHILDREN` environment variable must be set to `true`:
 
 ```bash
-$ opschain-action
+[dev] $ opschain-action
 2021-01-01 12:05:00.000+1000 WARNING: Child steps (hello_world, goodbye_world) will not be executed - set OPSCHAIN_ACTION_RUN_CHILDREN to run locally.
-$ export OPSCHAIN_ACTION_RUN_CHILDREN=true # tip: put this in your opschain-release/.env file to avoid needing to repeat it
-$ opschain-action
+[dev] $ export OPSCHAIN_ACTION_RUN_CHILDREN=true
+[dev] $ opschain-action
 Hello world
 Goodbye world
 ```
 
-#### The `opschain-lint` pre-commit hook
+_Tip: Add `export OPSCHAIN_ACTION_RUN_CHILDREN=true` to your host's shell configuration (e.g. `~/.zshrc`) to avoid needing to set it each time you start the development environment._
+
+#### OpsChain lint pre-commit hook
 
 OpsChain provides a linting command for detecting issues in project Git repositories.
 
@@ -146,22 +161,20 @@ This command is automatically setup as a pre-commit hook for project Git reposit
 
 If you would like to commit code that fails linting (e.g. incomplete code) the Git `--no-verify` argument can be used when committing, e.g. `git commit --no-verify`.
 
-See the [Docker development environment (`opschain-lint`)](../docker_development_environment.md#using-opschain-lint) guide to learn more.
+See the [OpsChain lint](../docker_development_environment.md#using-opschain-dev-lint) documentation to learn more.
 
 #### Commit your action
 
 Commit the changes to the `actions.rb` file to allow them to be used via the OpsChain server:
 
 ```bash
-git add actions.rb
-git commit -m 'Add a goodbye action and run hello_world and goodbye_world by default.'
+[host] $ git add actions.rb
+[host] $ git commit -m 'Add a goodbye action and run hello_world and goodbye_world by default.'
 ```
 
 ### Running the action as a change (optional)
 
 Now that you've developed and tested your actions, use the OpsChain server to run them as part of a change. This facilitates collaboration and record keeping, and can also be done to improve security by only executing changes in a secure environment.
-
-If you created a fork of the OpsChain getting started repository, you can now push your updated code and run it from the OpsChain server as an OpsChain change.
 
 This step assumes you have completed the [running sample changes](README.md#setup-opschain-to-run-sample-changes) steps from the getting started guide - alternatively you could create a new [project](README.md#create-an-opschain-project) and [environment](README.md#create-opschain-environments) to run the change in.
 
@@ -170,7 +183,7 @@ This step assumes you have completed the [running sample changes](README.md#setu
 Push your new Git commit to the Git repository on GitHub for use by your project Git repository:
 
 ```bash
-git push origin HEAD:hello-goodbye
+[host] $ git push origin HEAD:hello-goodbye
 ```
 
 #### Add the project Git remote
@@ -229,7 +242,7 @@ file :temp_file do
 end
 ```
 
-With a working resource type (which we haven't created yet), you could run this action using `opschain-action temp_file:create` - see how this uses the resource name and the action name.
+With a working resource type (which we haven't created yet), you could run this action using `opschain-action temp_file:create` - note how this uses the resource name and the action name.
 
 Resources are instances of resource types. The resource type is the backing definition of the resource.
 
@@ -242,7 +255,7 @@ resource_type :file do
 end
 ```
 
-Because all of the file resources can be created the same way, the `create` action can be moved from the `temp_file` resource to the `file` resource type - this allows it to be reused. Replace the contents of the sample `actions.rb` with the following to demonstrate this:
+If we assume all file resources can be created the same way, the `create` action can be moved from the `temp_file` resource to the `file` resource type - this allows it to be reused. Replace the contents of the sample `actions.rb` with the following to demonstrate this:
 
 ```ruby
 Bundler.require
@@ -265,7 +278,7 @@ end
 Now run the `temp_file:create` command:
 
 ```bash
-$ opschain-action temp_file:create
+[dev] $ opschain-action temp_file:create
 2021-01-01 12:05:00.000+1000 Lets create a file.
 ```
 
@@ -281,36 +294,29 @@ end
 Run the `temp_file:create` command again:
 
 ```bash
-$ opschain-action temp_file:create
+[dev] $ opschain-action temp_file:create
 2021-01-01 12:05:00.000+1000 Lets create a file: /tmp/testing
-$ cat /tmp/testing
-cat: /tmp/testing: No such file or directory
-```
-
-Why did we get the error? Because the `opschain-action` command runs in a short-lived container, and that's where the file was created. Lets use the `opschain-dev` command which provides a long-running container for action development:
-
-```bash
-[host] $ opschain-dev
-Creating opschain-release_opschain-runner-devenv_run ... done
-[container] $ opschain-action temp_file:create
-2021-01-01 12:05:00.000+1000 Lets create a file: /tmp/testing
-[container] $ cat /tmp/testing
+[dev] $ cat /tmp/testing
 Hello :-)
 ```
 
-Creating files in a short-lived container isn't the most useful - lets make the host where the resource type will create the file configurable. OpsChain provides some tools to make this more convenient.
+Creating files in the short-lived OpsChain development container isn't the most useful - lets make the host where the resource type will create the file configurable. OpsChain provides some tools to make this more convenient.
 
 Add the `opschain-resource-types` Gem to your Gemfile (see the [included resource types guide](/docs/reference/included_resource_types.md) to learn more about this Gem):
 
 ```ruby
-# The following gems are pre-installed on the OpsChain runner image
+# The following Gems are pre-installed on the OpsChain runner image
 gem 'opschain-core', require: 'opschain'
 # the require below automatically requires `opschain-infrastructure` (rather than doing it manually in the actions.rb)
 # `require:` uses an array because `opschain-resource-types` includes many paths that can be required, and in the future more could be required here
 gem 'opschain-resource-types', require: ['opschain-infrastructure']
 ```
 
-Run `rm -f Gemfile.lock; bundle install` to load the new Gem.
+To load the new Gem:
+
+```bash
+[dev] $ rm -f Gemfile.lock; bundle install
+```
 
 Update your `actions.rb` with the following:
 
@@ -339,11 +345,11 @@ end
 Run the temp_file action again:
 
 ```bash
-[container] $ rm -f /tmp/testing
-[container] $ export MINTPRESS_LOG_LEVEL=error # hide the detailed logging - it's not necessary for this guide
-[container] $ opschain-action temp_file:create
+[dev] $ rm -f /tmp/testing
+[dev] $ export MINTPRESS_LOG_LEVEL=error # hide the detailed logging - it's not necessary for this guide
+[dev] $ opschain-action temp_file:create
 2021-01-01 12:05:00.000+1000 Lets create a file: /tmp/testing
-[container] $ cat /tmp/testing
+[dev] $ cat /tmp/testing
 Hello :-)
 ```
 
@@ -365,17 +371,19 @@ end
 
 Again, using the `temp_file:create` action will do this locally.
 
-To show this code working with a remote host, in a new terminal run `docker-compose up` to start a container we can treat like a remote host:
+To show this code working with a remote host, the repository includes a `docker-compose.yml` file to create an `opschain-getting-started` Docker network, with a `target` host that we can treat like a remote host:
 
 ```bash
-[host] $ docker-compose -p opschain-development-environment up
-...
-... | Server listening on 0.0.0.0 port 22.
+[host] $ docker-compose up -d
 ```
 
-_Note: this command assumes you are using the default `COMPOSE_PROJECT_NAME` value in your .env file. This value ensures that the `opschain-dev` and `opschain-action` containers can talk to this container._
+Once `docker-compose` completes, we need to add the OpsChain development environment container to the `opschain-getting-started` network so it can communicate with it.
 
-Once a listening message is shown you are ready to proceed. Open a new terminal to perform the following steps.
+```bash
+[host] $ docker network connect opschain-getting-started "$(docker ps --filter 'label=opschain-dev' -q)"
+```
+
+Return to the terminal running the OpsChain development environment to perform the following steps.
 
 Update the `test_host` resource to use the sample container:
 
@@ -390,10 +398,10 @@ end
 Run the action again:
 
 ```bash
-$ rm -f /tmp/testing
-$ opschain-action temp_file:create
+[dev] $ rm -f /tmp/testing
+[dev] $ opschain-action temp_file:create
 2021-01-01 12:05:00.000+1000 Lets create a file: /tmp/testing
-$ cat /tmp/testing
+[dev] $ cat /tmp/testing
 cat: /tmp/testing: No such file or directory
 ```
 
@@ -402,7 +410,7 @@ Now the file does not exist locally as it has been created on the remote host.
 In a new terminal verify that the new file exists:
 
 ```bash
-$ docker-compose -p opschain-development-environment exec target cat /tmp/testing
+$ docker exec target cat /tmp/testing
 Hello :-)
 ```
 
@@ -447,7 +455,7 @@ desc 'Create sample files'
 action :default, steps: ['temp_file:create', 'another_temp_file:create']
 ```
 
-Running `OPSCHAIN_ACTION_RUN_CHILDREN=true opschain-action` now will create two files on the target host.
+Running `[dev] $ OPSCHAIN_ACTION_RUN_CHILDREN=true opschain-action` now will create two files on the target host.
 
 ### Moving the complexity to a reusable controller
 
@@ -491,7 +499,7 @@ resource_type :file do
 end
 ```
 
-Running `opschain-action` will now use the new controller to create two files.
+Running `[dev] $ opschain-action` will now use the new controller to create two files.
 
 Notice that the `action_methods` argument has specified that this controller's `create` method should be exposed as an action on the `file` resource type.
 
@@ -534,7 +542,7 @@ end
 Listing the actions available using the `opschain-action` command now includes the new delete command:
 
 ```bash
-$ opschain-action -AT temp_file: # adding the `temp_file:` here filters the output to only show actions that match this pattern
+[dev] $ opschain-action -AT temp_file: # adding the `temp_file:` here filters the output to only show actions that match this pattern
 opschain-action another_temp_file:create  #
 opschain-action another_temp_file:delete  #
 opschain-action temp_file:create          #
@@ -544,7 +552,7 @@ opschain-action temp_file:delete          #
 Try running the delete command to remove one of the files:
 
 ```bash
-$ opschain-action temp_file:delete
+[dev] $ opschain-action temp_file:delete
 2021-01-01 12:05:00.000+1000 Deleting file: /tmp/testing
 ```
 
@@ -581,7 +589,7 @@ action :clean, steps: ['temp_file:delete', 'another_temp_file:delete'], run_as: 
 By adding descriptions to the core actions in the `actions.rb` they will be listed when running `opschain-action -T` - which only lists actions with a description:
 
 ```bash
-$ opschain-action -T
+[dev] $ opschain-action -T
 opschain-action clean    # Remove sample files
 opschain-action default  # Create sample files
 ```
@@ -601,8 +609,8 @@ end
 Lets create an in-repository set of default properties (these will be used if the project or environment doesn't provide overrides) - this is not mandatory in all project repositories, but is for this example:
 
 ```bash
-mkdir -p .opschain
-cat <<EOH > .opschain/properties.json
+[dev] $ mkdir -p .opschain
+[dev] $ cat <<EOH > .opschain/properties.json
 {
   "target_host": {
     "protocol": "local"
@@ -636,17 +644,25 @@ _Note: The values would need to be updated to match a server that the OpsChain A
 Commit the changes to the `actions.rb` and `lib/controllers/file_controller.rb` files to allow them to be used via the OpsChain server:
 
 ```bash
-git add Gemfile actions.rb lib/controllers/file_controller.rb .opschain/properties.json
-git commit -m 'Example creating and removing files.'
+[dev] $ git add Gemfile actions.rb lib/controllers/file_controller.rb .opschain/properties.json
+[dev] $ git commit -m 'Example creating and removing files.'
 ```
 
-Once committed, the code can be pushed to the Git remote (assuming you forked the sample repo at the start of this guide) and then could be used as part of a change by following the same process as [earlier](#running-the-action-as-a-change-optional).
+Once committed, the code can be pushed to the Git remote and can then be used as part of a change by following the same process as [earlier](#running-the-action-as-a-change-optional).
 
 #### A completed example
 
 The sample repository includes the `developer-guide-complete` branch which is a completed example of this tutorial.
 
 It includes the `actions.rb` with resources and actions, the `file` resource type, and the `FileController` with tests (in the `spec` directory).
+
+## Remove `target` container and `opschain-getting-started` network
+
+_Note: Before running the command below, ensure you have exited the OpsChain development environment._
+
+```bash
+[host] $ docker-compose down
+```
 
 ## What to do next
 

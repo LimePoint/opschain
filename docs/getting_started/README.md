@@ -4,11 +4,15 @@
 
 [Learn more about how OpsChain can help your organisation.](https://opschain.io/why)
 
-The following example will allow you to explore some of the features of OpsChain and how you can use it to simplify, track and manage change in your organisation.
+The following example will allow you to explore some of the features of OpsChain and how you can use it to simplify, track and manage change in your organisation. You will need access to an OpsChain API server, either installed locally or network accessible.
 
-## Install OpsChain
+## Install OpsChain CLI
 
-Follow the getting started [installation guide](installation.md) to install and configure OpsChain on your machine.
+The OpsChain CLI allows you to interact with the OpsChain API server and is required to run the examples in this guide. See the [installation](../reference/cli.md#installation) section of the CLI reference guide to install the CLI.
+
+## Install OpsChain server
+
+If you do not have access to an OpsChain API server, follow the [installation guide](../operations/installation.md) to install and configure OpsChain on your machine.
 
 ## Explore OpsChain
 
@@ -51,7 +55,7 @@ $ opschain project set-git-remote \
 
 _Notes:_
 
-1. _Use the GitHub personal access token you created while following the [installation guide](installation.md#create-a-github-personal-access-token)._
+1. _Use the GitHub personal access token you created while following the [installation guide](../operations/installation.md#create-a-github-personal-access-token)._
 2. _If your token contains special characters, they must be [URL encoded](https://www.w3schools.com/tags/ref_urlencode.asp) in order to use them in the URL parameter._
 
 #### Create OpsChain environments

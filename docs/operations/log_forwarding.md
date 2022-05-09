@@ -39,7 +39,7 @@ Once you have added the required customisations to the Dockerfile, build and pus
 _Note: The example below uses the `RELEASE-VERSION` file in the opschain-release repo to provide a build argument to the build and to tag the built image with the same base version as your OpsChain release. For the purposes of illustration, we'll assume that the OpsChain `RELEASE-VERSION` file contains the version **1.0.9**._
 
 ```shell
-export OPSCHAIN_VERSION="$(< /path/to/opschain-release/RELEASE-VERSION)"
+OPSCHAIN_VERSION='2022-04-11' # EXAMPLE ONLY - Use the value from the .env file in your API installation
 docker build --build-arg OPSCHAIN_VERSION --tag "image-registry.myco.com/myco/opschain-log-aggregator:${OPSCHAIN_VERSION}-1" .
 docker push "image-registry.myco.com/myco/opschain-log-aggregator:${OPSCHAIN_VERSION}-1"
 # builds and pushes an image tagged as image-registry.myco.com/myco/opschain-log-aggregator:1.0.9-1

@@ -50,7 +50,7 @@ If more than one of these files exist in the repository, they will be merged tog
 #### Notes
 
 1. The repository properties are read only within each action (as OpsChain cannot modify the underlying Git repository to store any changes).
-2. Running `opschain-action -AT` from within your Git repository will cause the properties files to be validated. If the schema or structure of the files is invalid, explanatory exceptions will be raised. See the [Docker development environment](../../docker_development_environment.md) guide for more information.
+2. Opening the [OpsChain development environment](../../docker_development_environment.md)) (`opschain dev`) and running `opschain-action -AT` will raise explanatory exceptions if the schema or structure of the files is invalid.
 
 ### Database
 
@@ -383,7 +383,7 @@ Each [step](concepts.md#step) [action](concepts.md#action) is executed using the
 
 ##### Bundler credentials
 
-[Bundler gem source credentials can be configured via environment variables](https://bundler.io/v1.16/bundle_config.html#CREDENTIALS-FOR-GEM-SOURCES). Defining an OpsChain environment variable with the relevant username/password (e.g. `"BUNDLE_BITBUCKET__ORG": "username:password"`) will make this available to bundler.
+[Bundler Gem source credentials can be configured via environment variables](https://bundler.io/v1.16/bundle_config.html#CREDENTIALS-FOR-GEM-SOURCES). Defining an OpsChain environment variable with the relevant username/password (e.g. `"BUNDLE_BITBUCKET__ORG": "username:password"`) will make this available to bundler.
 
 #### Setting environment variables example
 

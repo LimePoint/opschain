@@ -10,7 +10,7 @@ opschain-configure
 opschain-deploy
 ```
 
-The updated OpsChain CLI native binaries (with the release date matching the current release (which can be found in the `RELEASE-VERSION` file in the `opschain-trial` repo)) must be [downloaded](../reference/cli.md#opschain-cli-download).
+The updated OpsChain CLI native binaries (with the release date matching the current release (which can be found in the `RELEASE-VERSION` file in the `opschain-trial` repo)) must be [downloaded](../reference/cli.md#installation).
 
 ## Updating runner images in the OpsChain registry
 

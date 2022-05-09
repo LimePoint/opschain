@@ -12,7 +12,7 @@ When errors are encountered with OpsChain, the following high-level checklist ma
 - check the log output from any relevant changes using `opschain change show-logs`
 - check the log output from Kubernetes, e.g. via [`kubetail -n opschain-trial --since 0`](https://github.com/johanhaleby/kubetail)
   - to see the logs for a specific OpsChain service using `kubetail`, run `kubetail {{service}} -n opschain-trial` (use `kubectl get deployments -n opschain-trial` to see the list of OpsChain services)
-- ensure the OpsChain [hardware/VM prerequisites](getting_started/installation.md#hardwarevm-requirements) are met
+- ensure the OpsChain [hardware/VM prerequisites](operations/installation.md#hardwarevm-requirements) are met
   - ensure that adequate disk space is still available
 - ensure the system time is accurate
 - check [known issues](#known-issues) below
@@ -63,7 +63,7 @@ Set the `stepEmoji` CLI configuration option to `false` to show text rather than
 
 ### `opschain-exec` / `opschain-action` - Argument list too long
 
-When using the `opschain-exec` or `opschain-action` commands (for example during an OpsChain step runner image build or local development activities) the command may fail with the following error:
+When using the `opschain-exec` or `opschain-action` commands (for example during an OpsChain step runner image build or from within the OpsChain development environment) the command may fail with the following error:
 
 ```bash
 .../bin/opschain-exec:4:in `exec': Argument list too long - ... (Errno::E2BIG)
@@ -86,7 +86,7 @@ To resolve this issue remove environment variables (or reduce the size of enviro
 When using the `ospchain-action` or `opschain-dev` command you may encounter the following error (your version will vary):
 
 ```bash
-$ opschain-action -AT # or another command
+[dev] $ opschain-action -AT # or another command
 Could not find proper version of opschain-core (0.1.0.82) in any of the sources
 Run `bundle install` to install missing gems.
 ```
@@ -106,36 +106,11 @@ rm -f Gemfile.lock
 Alternatively, the `Gemfile.lock` can be updated by running:
 
 ```bash
-[host] opschain-dev
-[container] bundle update opschain-core
-[container] exit
+$ opschain dev
+[dev] $ bundle update opschain-core
 ```
 
 You can then continue with your original command.
-
-### `opschain` - `Error: getaddrinfo EAI_AGAIN opschain-api`
-
-When using the OpsChain CLI on Windows some users have reported encountering the following error while running different commands:
-
-```text
-Error: Couldn't create Change: Error: getaddrinfo EAI_AGAIN opschain-api
-```
-
-_If this issue is encountered on other platforms please [let us know](mailto:opschain-support@limepoint.com) - the solutions suggested here may work on your platform too._
-
-#### Suggested solution - use the native OpsChain CLI binary
-
-Installing and using the OpsChain native CLI is the suggested solution for this issue. Learn more about the native CLI and how to install it [here](reference/cli.md#opschain-cli-download).
-
-_If you encounter this issue with the native CLI please [let us know](mailto:opschain-support@limepoint.com)._
-
-#### Alternative solution - restart OpsChain
-
-In some cases restarting OpsChain has been reported to resolve this issue.
-
-#### Alternative solution - modify the Windows Docker DNS configuration
-
-Updating the Docker daemon's DNS configuration as suggested in [fix Docker's networking DNS config](https://web.archive.org/web/20210920032745/https://robinwinslow.uk/fix-docker-networking-dns) has been reported to resolve this issue.
 
 ### Poor image build performance
 
@@ -196,21 +171,21 @@ some_resource 'something' do
 end
 ```
 
-The `ref` (short for reference) method looks up the resource in the same way as [referencing previous resources](reference/concepts/actions.md#referencing-previous-resources).
+The `ref` (short for reference) method looks up the resource in the same way as [referencing previous resources](reference/concepts/actions.md#referencing-resources).
 
-### `opschain-lint` - Command not found
+### Git commit: `opschain: command not found`
 
-OpsChain automatically sets up the [`opschain-lint` tool](docker_development_environment.md#using-opschain-lint) to detect issues in the project Git repositories.
+OpsChain automatically sets up the [`opschain dev lint` tool](docker_development_environment.md#using-the-opschain-linter) to detect issues in the project Git repositories.
 
 If the command is not available on the path when committing the following error will be shown:
 
 ```text
-.git/hooks/pre-commit: line 2: exec: opschain-lint: not found
+.git/hooks/pre-commit: line 2: exec: opschain: not found
 ```
 
-#### Solution - `opschain-lint: not found`
+#### Solution - `opschain: not found`
 
-To enable the `opschain-lint` command as part of the Git pre-commit hook, it needs to be [added to the path](getting_started/installation.md#add-the-opschain-commands-to-the-path), or the pre-commit hook could be modified to include the full path to `opschain-lint`.
+To enable the `opschain dev lint` command as part of the Git pre-commit hook, it needs to be added to the PATH. Alternatively, the pre-commit hook could be modified to include the full path to the `opschain` binary.
 
 Alternatively, the pre-commit hook can be removed from the project Git repository:
 

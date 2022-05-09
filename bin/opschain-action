@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -eo pipefail
-
-bin_dir="$(CDPATH='' cd -- "$(dirname -- "${BASH_SOURCE[0]}")"; pwd)"
-
-exec bash "${bin_dir}"/_opschain-dev.sh "$@"

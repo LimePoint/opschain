@@ -10,7 +10,7 @@ OpsChain can be used on Mac, Linux and Windows Subsystem for Linux (WSL).
 
 ## [Getting started](getting_started/README.md)
 
-Install OpsChain and explore its features.
+Explore OpsChain's features.
 
 ## [Example projects](examples/README.md)
 

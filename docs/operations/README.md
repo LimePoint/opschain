@@ -10,6 +10,10 @@ New features, bug fixes and changes in OpsChain - please read this before perfor
 
 The main OpsChain documentation page.
 
+## [Installation guide](installation.md)
+
+A guide to installing the OpsChain API server.
+
 ## [Maintenance guides](maintenance/README.md)
 
 Information about backing up OpsChain and configuration options to manage data retention, archiving and overall disk usage.

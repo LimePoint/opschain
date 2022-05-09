@@ -41,63 +41,52 @@ After updating the `.env` file, follow the steps from the [upgrading guide](../.
 
 ### Custom step runner Dockerfiles
 
-If your resources or actions rely on external software, the image used for these containers can be modified to add extra packages or executables. The image may also be modified to optimise the performance of build steps by performing tasks as part of the step image build rather than as part of the step execution.
+If your resources or actions rely on external software, the image used by your project for its step runner containers can be modified to add extra packages or executables. The image may also be modified to optimise the performance of build steps by performing tasks as part of the step image build rather than as part of the step execution.
 
-_Please note: The [Docker development environment](../../docker_development_environment.md#using-custom-runner-images) guide provides instructions on using a custom step runner image with `opschain-action`/`opschain-dev`._
+_Please note: The [Docker development environment](../../docker_development_environment.md#using-custom-runner-images) guide provides instructions on using a custom step runner image as your local OpsChain development environment._
 
 #### Creating a custom step runner Dockerfile
 
-OpsChain provides a template for the step runner image Dockerfile which is the same as the Dockerfile used by OpsChain to build the default step runner image.
+If your project Git repository contains a Dockerfile in `.opschain/Dockerfile`, this will be used to build the image for your project's step runner containers. It must be based on the default step runner image Dockerfile to ensure compatibility with OpsChain. To make a copy of the default step runner Dockerfile in your repository, execute the `opschain dev create-dockerfile` command:
 
-Run the following steps from the `opschain-trial` directory to add the Dockerfile template to your repository.
+```bash
+cd /path/to/project/git/repository
+opschain dev create-dockerfile
+```
 
-1. Change into your project directory using the project ID:
+Using the editor of your choice, make any desired modifications to the Dockerfile. See the [customising the dockerfile](#customising-the-dockerfile) and [supported customisations](#supported-customisations) sections below for more information.
 
-    ```bash
-    cd opschain_data/opschain_project_git_repos/<project code>
-    ```
+Finally, add and commit the Dockerfile to your project's Git repository
 
-    _Note: The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration._
+```bash
+git add .opschain/Dockerfile
+git commit -m "Adding a custom Dockerfile."
+```
 
-2. Create the `.opschain` directory the Dockerfile will reside in:
+_Notes:_
 
-    ```bash
-    mkdir -p .opschain
-    ```
-
-3. Use the `opschain-utils` command to output the template into the Dockerfile:
-
-    ```bash
-    opschain-utils dockerfile_template > .opschain/Dockerfile
-    ```
-
-4. You can now make your desired modifications to the Dockerfile. See the [supported customisations](#supported-customisations) section for more information.
-
-5. Add and commit the Dockerfile:
-
-    ```bash
-    git add .opschain/Dockerfile
-    git commit -m "Adding a custom Dockerfile."
-    ```
-
-    When running your steps OpsChain will now use this Dockerfile when running changes.
-
-    _Note: Commits before this point won't use the custom Dockerfile because it is not present._
-
-If you no longer wish to use a custom Dockerfile, `.opschain/Dockerfile` can be removed from the project repository.
+1. _commits prior to this point won't use the custom Dockerfile because it is not present in the repository._
+2. _if you no longer wish to use the custom Dockerfile, `.opschain/Dockerfile` can be removed from the project repository._
 
 #### Customising the Dockerfile
 
 This Dockerfile can be modified and committed like any other file in the project Git repository.
 
-The image is built in a build context with access to the following files:
+The build context used when building the step runner image has access to the following files:
 
 - `repo.tar` - The complete project Git repository including the .git directory with all commit info. This file will change (and invalidate the build context) when a different commit is used for a change or when there are changes to the project's Git repository
 - `step_context_env.json` - The environment variables for the project and environment for use by `opschain-exec`. This file will change if the environment variables in the project or environment [properties](properties.md) change
 
-The [Dockerfile reference](https://docs.docker.com/engine/reference/builder/) and the [best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) guide provide more information about writing Dockerfiles.
+The build arguments supplied to [BuildKit](https://docs.docker.com/develop/develop-images/build_enhancements/) when building the image include:
 
-OpsChain uses [BuildKit](https://docs.docker.com/develop/develop-images/build_enhancements/) when building the step image.
+| Argument             | Description                                                                                                                                                                          |
+| :------------------- |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| GIT_REV              | The Git revision supplied to OpsChain as part of the `opschain change create` command.                                                                                               |
+| GIT_SHA              | The Git SHA this revision resolved to at the time of creating the change.                                                                                                            |
+| OPSCHAIN_BASE_RUNNER | The system default base runner image (including image tag). <br/>(i.e. `limepoint/opschain-runner:<OPSCHAIN_VERSION>` or `limepoint/opschain-enterprise-runner:<OPSCHAIN_VERSION>`). |
+| OPSCHAIN_VERSION     | The current OpsChain Docker image version.                                                                                                                                           |
+
+The [Dockerfile reference](https://docs.docker.com/engine/reference/builder/) and the [best practices for writing Dockerfiles](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/) guide provide more information about writing Dockerfiles.
 
 #### Supported customisations
 
@@ -107,7 +96,7 @@ For maximum compatibility with OpsChain we suggest only using the Dockerfile `RU
 
 More advanced modifications (like modifying the `ENTRYPOINT`) are not supported and may break OpsChain.
 
-Custom Dockerfiles must use the `limepoint/opschain-runner` or `limepoint/opschain-enterprise-runner` image as a base (i.e. `FROM limepoint/opschain-runner` or `FROM limepoint/opschain-runner-enterprise`).
+Custom Dockerfiles must be based on an OpsChain base runner image (i.e. `limepoint/opschain-runner` or `limepoint/opschain-enterprise-runner`) and we suggest using `FROM ${OPSCHAIN_BASE_RUNNER}` (as per the default Dockerfile) to achieve this.
 
 #### Image performance - base images
 

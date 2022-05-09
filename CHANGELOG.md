@@ -1,5 +1,24 @@
 # Changelog
 
+## [2022-05-09]
+
+### Added
+
+- OpsChain project Git remotes can now be queried using the `opschain project list-git-remotes` command.
+
+### Changed
+
+- The `opschain-dev` command has been replaced with a new CLI command `opschain dev`. Execute `opschain dev --help` for more information.
+- the `opschain-lint` Git pre-commit hook has been updated and should be recreated in your project Git repositories. From within the OpsChain development environment, execute `rm -f .git/hooks/pre-commit && opschain-lint --setup`
+- Outside the development environment:
+  - the `opschain-action` command is no longer available.
+  - the `opschain-lint` command has been replaced with a new OpsChain CLI command `opschain dev lint`.
+  - The `opschain-utils dockerfile_template` command has been replaced with a new OpsChain CLI command `opschain dev create-dockerfile`
+
+### Fixed
+
+- Updates to properties made by parallel steps are now applied correctly.
+
 ## [2022-05-05]
 
 ### Added
@@ -88,7 +107,7 @@
 
 ### Added
 
-- The OpsChain hardware requirements are now [documented](docs/getting_started/installation.md#hardwarevm-requirements).
+- The OpsChain hardware requirements are now [documented](docs/operations/installation.md#hardwarevm-requirements).
 - The `opschain change show-logs` command now accepts a `--follow` argument to follow the logs until the change completes.
 - [Documentation](docs/reference/concepts/properties.md#changing-properties-in-parallel-steps) and [troubleshooting guide](docs/troubleshooting.md#updates-made-to-properties-could-not-be-applied) when changing properties within parallel steps.
 - Added [Kubernetes resource types](docs/reference/included_resource_types.md#opschain-kubernetes).

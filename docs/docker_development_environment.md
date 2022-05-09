@@ -3,56 +3,48 @@
 The OpsChain Docker development environment enables you to list and run individual actions in a manner similar to a running change. After following this guide you should know how to:
 
 - create a `step_context.json` file to provide environment variables and properties for your action(s)
-- list available project resources and actions
-- run individual actions
-- enter the development container interactively
+- enter the interactive OpsChain development environment to:
+  - list available project resources and actions
+  - develop and test your project actions
 
 ## Introduction
 
-OpsChain resources and actions can be developed using the `opschain-action` or the `opschain-dev` commands in this repository (these are wrappers for the `opschain-runner-devenv` container).
+OpsChain resources and actions can be developed using the OpsChain development environment, accessed via the the `opschain dev` CLI command.
 
 ## Prerequisites
 
-This guide assumes that:
+This guide assumes that you have performed the following steps from the installation guide:
 
-- you have the [OpsChain commands available on your path](getting_started/installation.md#add-the-opschain-commands-to-the-path)
-- you have performed the [Docker Hub login step](getting_started/installation.md#configure-docker-hub-access-optional) from the getting started installation guide
+- [Configured Docker Hub access](operations/installation.md#configure-docker-hub-access-optional)
+- [Downloaded the OpsChain CLI](reference/cli.md#installation)
+- [Created an OpsChain project](getting_started/README.md#create-an-opschain-project)
+- [Created a project Git repository](getting_started/developer.md#create-a-git-repository) and associated its remote with your OpsChain project.
 
 ### Navigate to the project Git repository
 
-The `opschain-action`, `opschain-dev`, and `opschain-lint` commands that use the development container must be run from an OpsChain project Git repository. The files in that directory will then be made available in the container using a [Docker bind mount](https://docs.docker.com/storage/bind-mounts/).
+The `opschain dev` command launches an OpsChain step runner Docker container and must be run from an OpsChain project Git repository. The files in that directory will be made available in the container using a [Docker bind mount](https://docs.docker.com/storage/bind-mounts/).
 
 ```bash
-cd opschain_data/opschain_project_git_repos/<project code>
+$ cd /path/to/project/git/repository
+$ opschain dev
+[dev] $ bundle install
 ```
 
-Notes:
-
-- _The path above assumes the default `opschain_data` path was accepted when you ran `configure` - adapt the path as necessary based on your configuration_
-- _The `opschain-action` commands below assume the OpsChain development environment is being run in the original "Demo Hello World" project (created in the Getting Started guide). If using a different project, modify these commands to reflect the OpsChain actions available_
+_Note: The `opschain-action` commands below assume the OpsChain development environment is being run in the Git repository created as part of the [getting started - developer edition](getting_started/developer.md). If using a different project, modify these commands to reflect the OpsChain actions available._
 
 #### Create a `step_context.json` (optional)
 
-The `opschain-action` command uses a `.opschain/step_context.json` file if it exists within the project Git repository working directory. For more information about the `step_context.json` file, see the [actions reference guide](reference/concepts/actions.md#step-context-json).
-
-If your action requires [properties](reference/concepts/properties.md) then you can use the `opschain` `show-properties` sub command to output the required properties values:
+The `opschain-action` command uses a `.opschain/step_context.json` file if it exists within the project Git repository working directory. For more information about the `step_context.json` file, see the [step runner reference guide](reference/concepts/step_runner.md#step-context-json).
 
 ```bash
- opschain project show-properties --project-code demo
- opschain environment show-properties --project-code demo --environment-code dev
-```
-
-Use the output of these commands to replace the `{}` in the project and environment properties below:
-
-```bash
-mkdir -p .opschain
-cat << EOF > .opschain/step_context.json
+$ mkdir -p .opschain
+$ cat << EOF > .opschain/step_context.json
 {
    "project": {
-      "properties": {}
+      "properties": $(opschain project show-properties -p web)
    },
    "environment": {
-      "properties": {}
+      "properties": $(opschain environment show-properties -p web -e test)
    }
 }
 EOF
@@ -73,75 +65,57 @@ If your actions rely on [OpsChain context](reference/concepts/context.md) values
 
 ## Using the OpsChain development environment
 
-The `opschain-action` command can be used to run OpsChain actions the same way they are run by the step runner. See the [running OpsChain actions](getting_started/developer.md#running-opschain-actions) section of the Getting Started guide for instructions on how to list and run individual actions.
+The `opschain-action` command can be used to run OpsChain actions the same way they are run by the step runner. See the [OpsChain development environment](getting_started/developer.md#opschain-development-environment) section of the getting started guide for instructions on how to list and run individual actions.
 
-Unlike when actions are run as part of an OpsChain change, the OpsChain development environment does not persist changes to the project and environment properties to the OpsChain database. Instead, the properties changes are output into the `.opschain/step_result.json` file. For more information about the `step_result.json` file, see the [actions reference guide](reference/concepts/actions.md#step-result-json).
+Unlike when actions are run as part of an OpsChain change, the OpsChain development environment does not persist changes to the project and environment properties to the OpsChain database. Instead, the properties changes are output into the `.opschain/step_result.json` file. For more information about the `step_result.json` file, see the [step runner reference guide](reference/concepts/step_runner.md#step-result-json).
 
 ### Child Steps
 
 #### Viewing step dependencies
 
-The `opschain-action` command can be used to view the expected step tree for an action. Using the `OPSCHAIN_DRY_RUN` environment variable means the step tree will be output without any of the actions running.
+Within the OpsChain development environment (accessed via `opschain dev`), the `opschain-action` command can be used to view the expected step tree for an action. Using the `OPSCHAIN_DRY_RUN` environment variable means the step tree will be output without any of the actions running.
 
 _Note: The steps listed may not be accurate during execution because the step information may change dynamically._
 
 ```bash
-OPSCHAIN_DRY_RUN=true opschain-action hello_world
+[dev] $ OPSCHAIN_DRY_RUN=true opschain-action deploy_in_maintenance_mode
 ```
 
 The `step_result.json` will now contain an `expected_step_tree` field showing the complete known step tree for the action.
 
 #### Running child steps
 
-During OpsChain change execution, each child step of an action is executed in its own isolated runner container. As the `opschain-action` command runs locally in a single container, it does not execute an action's child steps. This safeguards the child steps from any issues that may have arisen from running them in the same runner as their parent action. Instead a warning is displayed, detailing the child steps that are not being run.
+During OpsChain change execution, each child step of an action is executed in its own isolated runner container. As the `opschain-action` command is being run in the OpsChain development environment, it does not execute an action's child steps. This safeguards the child steps from any issues that may arise from running them in the same container as their parent action. Instead a warning is displayed, detailing the child steps that are not being run.
 
 ##### Automatic execution
 
-To enable `opschain-action` to run child steps automatically, configure the `OPSCHAIN_ACTION_RUN_CHILDREN` environment variable (either in your `.env` file, or directly on the command line):
+To enable `opschain-action` to run child steps automatically, configure the `OPSCHAIN_ACTION_RUN_CHILDREN` environment variable:
 
 ```bash
-OPSCHAIN_ACTION_RUN_CHILDREN=true opschain-action hello_world
+[dev] $ OPSCHAIN_ACTION_RUN_CHILDREN=true opschain-action deploy_in_maintenance_mode
 ```
 
 _Notes:_
 
-1. _The `run_as:` `:serial`/`:parallel` flags are taken into account by `opschain-action` and child steps will be executed accordingly._
-2. _The `OPSCHAIN_ACTION_RUN_CHILDREN` variable is only applicable to local `opschain-action` usage and has no affect on actions running within an OpsChain change._
+1. _The `OPSCHAIN_ACTION_RUN_CHILDREN` variable_:
+   - _can be set in your shell's configuration, e.g. your `.zshrc`, to persist the config_
+   - _is only applicable when using `opschain-action` in the development environment and has no affect on actions running within an OpsChain change_
+2. _The `run_as:` `:serial`/`:parallel` flags are ignored by `opschain-action` when running in the development environment. Child steps will always be executed sequentially._
 
 ##### Manual execution
 
 For more granular control of child step execution, actions and their child steps can be listed on the command line directly, and will be executed in the order specified:
 
 ```bash
-opschain-action hello_world sample:hello_world_1:run # run the original step and the child step in sequence
+[dev] $ opschain-action deploy_in_maintenance_mode enable_maintenance_mode deploy_war disable_maintenance_mode # manually run deploy_in_maintenance_mode and it's children in sequence
 ```
 
-## Running a step using the interactive development environment
+## Using the OpsChain linter
 
-Working directly in the OpsChain development environment container can dramatically simplify the process of developing and testing actions. If your project does not use a custom dockerfile, the `opschain-dev` command can be invoked directly from your project repository. This will interactively enter a Docker container that provides access to the `opschain-action` command for running steps:
-
-```bash
-[host] opschain-dev
-[container] bundle update opschain-core && bundle install # update to the latest version of opschain-core and install any extra dependencies if needed
-[container] opschain-action hello_world # the `opschain-action` command is now available to run steps directly
-[container] opschain-action -AT # the `opschain-action` command also supports listing actions
-```
-
-Notes:
-
-1. The `opschain-dev` command will mount the current directory (your project repository) as `/opt/opschain` in the OpsChain development environment.
-2. Similar to the `opschain-action` command, child steps are not invoked automatically.
-
-## Using `opschain-lint`
-
-OpsChain provides a linting tool for detecting issues in project Git repositories. Currently, it supports only detecting Ruby syntax errors.
-
-The linter can be invoked manually (`opschain-lint`) to test the files in a Git repository - when run like this the linter tests all not-ignored files in the Git repository. The linter can be invoked as `OPSCHAIN_LINT_GIT_KNOWN_ONLY=true opschain-lint` to only lint files tracked by Git.
-
-To reduce the likelihood of committing mistakes into your project repository, the linter can be setup as a pre-commit hook in Git. To create the hook, run the following setup command from the root directory of your Git repository:
+OpsChain provides a linting tool for detecting issues in project Git repositories. Currently, it only supports detecting Ruby syntax errors. To reduce the likelihood of committing mistakes into your project repository, the linter can be setup as a pre-commit hook in Git. To create the hook, run the following setup command from inside the OpsChain development environment:
 
 ```bash
-opschain-lint --setup
+[dev] $ opschain-lint --setup
 ```
 
 _Note: The pre-commit hook will automatically ignore untracked files._
@@ -154,37 +128,30 @@ The hook can be removed permanently by removing the pre-commit hook script:
 rm -f .git/hooks/pre-commit
 ```
 
-If you would like to suggest a feature for `opschain-lint` please [contact us](mailto:opschain-support@limepoint.com).
+If you would like to suggest a feature for OpsChain's linter please [contact us](mailto:opschain-support@limepoint.com).
+
+### Manual linting
+
+The command to invoke the linter manually differs depending on whether you are working inside or outside the OpsChain development environment.
+
+- outside the OpsChain development environment, the linter can be invoked via the OpsChain CLI `opschain dev lint`
+- inside the OpsChain development environment, the linter can be invoked via the `opschain-lint` command
+
+When run manually, the linter tests all not-ignored files in the Git repository. To only lint files tracked by Git set the `OPSCHAIN_LINT_GIT_KNOWN_ONLY` environment variable, e.g.
+
+`[host] $ OPSCHAIN_LINT_GIT_KNOWN_ONLY=true opschain dev lint`.
 
 ## Using custom runner images
 
-If your project uses a custom Dockerfile (`.opschain/Dockerfile`) you can use the custom runner image as the base for `opschain-action` or `opschain-dev`.
-
-### Query and use an existing runner image ID
-
-If you have access to the host running the OpsChain worker containers, and have executed a change for your project that successfully built a custom runner, the images built for the change can be found with the following filter:
-
-```bash
-docker image ls --filter 'label=opschain.change_id=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-```
-
-_Note: If multiple images were created by the change, we suggest trying the most recently created first._
-
-Start the development environment, using the OPSCHAIN_RUNNER_IMAGE environment variable to specify the runner image to use.
-
-```bash
-OPSCHAIN_RUNNER_IMAGE=db25da0dcc7f opschain-dev # or opschain-action
-```
-
-_Note: Your image ID will differ from the example above._
+If your project uses a custom Dockerfile (`.opschain/Dockerfile`) you can use the custom runner image as the base for `opschain dev`.
 
 ### Build and use a custom runner image
 
-If the OpsChain workers are on a remote host or you are yet to run a change with the custom Dockerfile, the image can be built locally. Use the following procedure to create the image:
+Use the following procedure to create the custom runner image:
 
 #### 1. Obtain the standard runner image
 
-The custom Dockerfile must be based on an OpsChain runner image (`limepoint/opschain-runner:latest` or `limepoint/opschain-runner-enterprise:latest`). Ensure you have the image locally or have run the [configure Docker Hub access](getting_started/installation.md#configure-docker-hub-access) steps from the getting started guide.
+The custom Dockerfile must be based on an OpsChain runner image (`limepoint/opschain-runner:latest` or `limepoint/opschain-runner-enterprise:latest`). Ensure you have the image locally or have run the [configure Docker Hub access](operations/installation.md#configure-docker-hub-access) steps from the getting started guide.
 
 #### 2. Create a repository tarball
 
@@ -194,7 +161,7 @@ A repository tarball is required to build the custom runner image. From your pro
 tar -cf repo.tar --exclude=repo.tar .
 ```
 
-_Note: The project repository is mounted into the container when the image is in use via `opschain-action` or `opschain-dev` so it is not necessary to rebuild this tarball following local repository changes._
+_Note: The project repository is mounted into the container when the image is in use via `opschain dev` so it is not necessary to rebuild this tarball following local repository changes._
 
 #### 3. Create a `step_context_env.json`
 
@@ -204,21 +171,24 @@ The repository build requires a `step_context_env.json` file in the root directo
 cat << EOF > ./step_context_env.json
 {
    "project": {
-      "properties": {}
+      "properties": $(opschain project show-properties -p web)
    },
    "environment": {
-      "properties": {}
+      "properties": $(opschain environment show-properties -p web -e test)
    }
 }
 EOF
 ```
+
+_Note: Replace the `web` project and `test` environment codes with the codes applicable to your project and environment._
 
 #### 4. Build and use the image
 
 Use the following command to build the custom runner image. _Note: the image tag `custom_runner` can be replaced with a valid Docker tag of your choice_
 
 ```bash
-docker build --build-arg OPSCHAIN_BASE_RUNNER=limepoint/opschain-runner:latest --build-arg GIT_REV=HEAD --build-arg GIT_SHA=$(git rev-parse HEAD) -t custom_runner -f .opschain/Dockerfile .
+OPSCHAIN_VERSION='2022-04-11' # EXAMPLE ONLY - Use the value from the .env file in your API installation
+docker build --build-arg OPSCHAIN_BASE_RUNNER=limepoint/opschain-runner:${OPSCHAIN_VERSION} --build-arg GIT_REV=HEAD --build-arg GIT_SHA=$(git rev-parse HEAD) -t custom_runner -f .opschain/Dockerfile .
 ```
 
 _Note: If using the enterprise runner, set the OPSCHAIN_BASE_RUNNER build argument to be `limepoint/opschain-runner-enterprise:latest`._
@@ -226,15 +196,37 @@ _Note: If using the enterprise runner, set the OPSCHAIN_BASE_RUNNER build argume
 Start the development environment using the OPSCHAIN_RUNNER_IMAGE environment variable to specify the runner image to use (replace `custom_runner` with the tag used in the build command above if you altered it).
 
 ```bash
-OPSCHAIN_RUNNER_IMAGE=custom_runner opschain-dev # or opschain-action
+[host] $ OPSCHAIN_RUNNER_IMAGE=custom_runner opschain dev
 ```
 
 ### Enabling tracing
 
-When running OpsChain actions within the OpsChain development environment container you can enable tracing by setting the OPSCHAIN_TRACE environment variable.
+When running OpsChain actions within the OpsChain development environment you can enable tracing by setting the OPSCHAIN_TRACE environment variable.
 
 ```bash
-[container] OPSCHAIN_TRACE=1 opschain-action hello_world
+[dev] $ OPSCHAIN_TRACE=1 opschain-action hello_world
+```
+
+## Removing older runner images
+
+The OpsChain development environment container uses the OpsChain step runner image. Upgrading the CLI (or altering the `OPSCHAIN_VERSION` environment variable) will cause a new version of the image to be downloaded. To recover the space used by these older images, the `docker rmi` command can be used to remove them.
+
+_Note: The following commands assume you are not using the OPSCHAIN_RUNNER_IMAGE to specify your runner image._
+
+To list the runner images on your machine, execute the following:
+
+```bash
+export OPSCHAIN_BASE_RUNNER="${OPSCHAIN_BASE_RUNNER:-limepoint/opschain-runner}"
+docker images --filter "reference=${OPSCHAIN_BASE_RUNNER}:*"
+```
+
+Take note of the image ids of the older images and remove them as follows:
+
+```bash
+# The image ids below are for example purposes only.
+# Replace them with the image ids of the no longer required runner images
+# (from the filtered "docker images" command above)
+docker rmi 62651bfbd35e b05e297066d6
 ```
 
 ## What to do next

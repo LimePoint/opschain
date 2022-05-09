@@ -39,7 +39,7 @@ OpsChain supports the following Kubernetes distributions on a single node only:
 
 OpsChain requires a minimum of 2GB of ram to function. We recommend 4GB if you intend to run our more advanced examples.
 
-OpsChain requires a minimum of 30GB of disk to function. We recommend 100GB if you intend to run our examples without having to perform [manual cleanup activities](../operations/maintenance/docker_image_cleanup.md#opschain-docker-image-cleanup) very frequently.
+OpsChain requires a minimum of 30GB of disk to function. We recommend 100GB if you intend to run our examples without having to perform [manual cleanup activities](maintenance/docker_image_cleanup.md#opschain-docker-image-cleanup) very frequently.
 
 If using Docker for Mac the [configuration UI](https://docs.docker.com/desktop/mac/#advanced) allows you to adjust the ram and disk allocation for Docker. After changing the configuration you will need to restart the Docker service.
 
@@ -151,9 +151,7 @@ _Note: Please ensure there are no spaces included in the parameter you supply to
 
 ### Setup the OpsChain CLI
 
-OpsChain has native CLI binaries for Windows, macOS and Linux.
-
-[Read our documentation about downloading the native CLI](../reference/cli.md#opschain-cli-download) and then add it to your path (e.g. by copying it into the bin directory.)
+OpsChain has native CLI binaries for Windows, macOS and Linux. See the [installation](../reference/cli.md#installation) section of our CLI reference guide to download and configure the `opschain` executable.
 
 Copy the example CLI configuration file to your home directory:
 
@@ -169,7 +167,7 @@ cat ~/.opschainrc
 
 If you changed the username or password in the create_user command above, please edit the `.opschainrc` file to reflect your changes.
 
-In addition, the `apiBaseUrl` configuration in `~/.opschainrc` must be updated to reflect the external OpsChain API address. This address reflects the  OpsChain listening port specified as part of the `opschain-configure` script. If you accepted the default setting, this will be `http://localhost:3000/`.
+In addition, the `apiBaseUrl` configuration in `~/.opschainrc` must be updated to reflect the external OpsChain API address. This address reflects the OpsChain listening port specified as part of the `opschain-configure` script. If you accepted the default setting, this will be `http://localhost:3000/`.
 
 Learn more about the `opschainrc` configuration in the [CLI configuration guide](../reference/cli.md#opschain-cli-configuration).
 
@@ -177,19 +175,18 @@ _Note: If you create a `.opschainrc` file in your current directory, this will b
 
 ### Setup the custom CA (macOS only)
 
-On macOS, to ensure that the OpsChain registry certificate is trusted by Kubernetes the following setup is required:
+On macOS, to ensure that the OpsChain registry certificate is trusted by Kubernetes the following setup is required (_*Note: Once this setup is complete you must restart Docker Desktop*_).
 
 ```bash
 kubectl -n opschain-trial get secret opschain-ca-key-pair -o jsonpath="{.data.ca\.crt}" | base64 -d > opschain-ca.pem
 security add-trusted-cert -k ~/Library/Keychains/login.keychain-db -p ssl opschain-ca.pem
 # You will be prompted for your admin password in a macOS dialog
+# Remember to restart Docker Desktop once these commands have completed
 ```
-
-Once that setup is complete you will need to restart Docker Desktop.
 
 ### Configure Docker Hub access (optional)
 
-If you intend to use the `opschain-action`, `opschain-dev`, or `opschain-lint` developer utilities (used as aids when creating new action definitions) you will need to be logged in to [Docker Hub](https://hub.docker.com/) as the `opschaintrial` user (or, if you have an [enterprise licence for OpsChain](../reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle), the `opschainenterprise` user). These are the same Docker credentials requested by the `opschain-configure` command.
+If you intend to use the OpsChain development environment (used when creating new action definitions) you will need to be logged in to [Docker Hub](https://hub.docker.com/) as the `opschaintrial` user (or, if you have an [enterprise licence for OpsChain](../reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle), the `opschainenterprise` user). These are the same Docker credentials requested by the `opschain-configure` command.
 
 ```bash
 docker login --username opschaintrial
@@ -204,8 +201,8 @@ docker login --username opschaintrial
 
 ## What to do next
 
-- (optional) OpsChain is supplied with an LDAP server for authentication. If you'd prefer to use your own LDAP server, follow the [OpsChain LDAP](../operations/opschain_ldap.md) guide to alter the OpsChain authentication configuration.
-- Return to the [getting started guide](README.md) to learn more about OpsChain.
+- (optional) OpsChain is supplied with an LDAP server for authentication. If you'd prefer to use your own LDAP server, follow the [OpsChain LDAP](opschain_ldap.md) guide to alter the OpsChain authentication configuration.
+- Return to the [getting started guide](../getting_started/README.md) to learn more about OpsChain.
 
 ## Licence & authors
 

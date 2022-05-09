@@ -6,7 +6,7 @@ A project Git repository is where you store the actions and related configuratio
 
 Each project Git repository must include a `Gemfile` and an `actions.rb` in the root directory.
 
-- The `Gemfile` must include the `opschain-core` gem.
+- The `Gemfile` must include the `opschain-core` Gem.
 
   ```ruby
   gem 'opschain-core', require: 'opschain'

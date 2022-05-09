@@ -15,13 +15,13 @@ The table below outlines the file to `require` in your resource definition and t
 |                                                       | `kubernetes_deployment`  | Perform common operations on a Kubernetes deployment resource                                                                                                    |
 |                                                       | `kubernetes_statefulset` | Perform common operations on a Kubernetes statefulset resource                                                                                                   |
 | [`opschain-ssh-key-pair`](#opschain-ssh-key-pair)     | `ssh_key_pair`           | Generate an SSH public/private key pair and optionally stores the key files in OpsChain properties                                                               |
-| [`opschain-terraform`](#opschain-terraform)           | `terraform_config`       | Exposes the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/tree/v1.4.0) gem                                                                       |
+| [`opschain-terraform`](#opschain-terraform)           | `terraform_config`       | Exposes the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/tree/v1.4.0) Gem                                                                       |
 
 _Note: Contact [LimePoint](mailto:opschain-support@limepoint.com) to obtain the password required to access the MintPress Reference Documentation._
 
 ### Usage
 
-The resource types are pre-installed in the OpsChain step runner image via the `opschain-resource-types` gem. To use them, simply add the following line to your `Gemfile` in your project Git repository:
+The resource types are pre-installed in the OpsChain step runner image via the `opschain-resource-types` Gem. To use them, simply add the following line to your `Gemfile` in your project Git repository:
 
 ```ruby
 gem 'opschain-resource-types'

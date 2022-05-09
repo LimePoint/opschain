@@ -28,7 +28,7 @@ docker system prune -a
 
 ## Logout OpsChain from Docker
 
-Run the following command to logout the `opschaintrial` user from Docker Hub. This step is only required if you ran the `docker login` step in the [install guide](../getting_started/installation.md#configure-docker-hub-access-optiona).
+Run the following command to logout the `opschaintrial` user from Docker Hub. This step is only required if you ran the `docker login` step in the [install guide](installation.md#configure-docker-hub-access-optiona).
 
 ```bash
 docker logout
@@ -36,7 +36,7 @@ docker logout
 
 ## Delete .opschainrc file
 
-Remove the `.opschainrc` file that you created from the [create an OpsChain CLI configuration file](../getting_started/installation.md#create-an-opschain-cli-configuration-file) section in the installation guide.
+Remove the `.opschainrc` file that you created from the [create an OpsChain CLI configuration file](installation.md#create-an-opschain-cli-configuration-file) section in the installation guide.
 
 ```bash
 rm ~/.opschainrc
@@ -44,12 +44,12 @@ rm ~/.opschainrc
 
 ## Delete the OpsChain directory
 
-Remove the `opschain-trial` directory that you cloned from the [clone the OpsChain trial repository](../getting_started/installation.md#clone-the-opschain-trial-repository) section in the installation guide.
+Remove the `opschain-trial` directory that you cloned from the [clone the OpsChain trial repository](installation.md#clone-the-opschain-trial-repository) section in the installation guide.
 
 ## Uninstall native CLI
 
-Delete the binary file if you opted to use the native CLI in the [download the native CLI (optional)](../getting_started/installation.md#download-the-native-cli-optional) section in the installation guide.
+Delete the binary file if you opted to use the native CLI in the [download the native CLI (optional)](installation.md#download-the-native-cli-optional) section in the installation guide.
 
 ## Uninstall prerequisites (optional)
 
-If no longer required, you may opt to uninstall the prerequisites detailed in the [required software](../getting_started/installation.md#required-software) section in the installation guide.
+If no longer required, you may opt to uninstall the prerequisites detailed in the [required software](installation.md#required-software) section in the installation guide.
