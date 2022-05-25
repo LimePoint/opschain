@@ -117,6 +117,7 @@ The following is the list of API events that are currently supported, these valu
 - `api:properties:update`
 - `api:properties_versions:index`
 - `api:properties_versions:show`
+- `api:steps:continue`
 - `api:steps:show`
 
 Custom (i.e. user created) events can have any `type` as it is specified when the event is created.

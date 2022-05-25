@@ -670,6 +670,10 @@ _Note: Before running the command below, ensure you have exited the OpsChain dev
 
 Read our more comprehensive [actions reference guide](../reference/concepts/actions.md#actions-reference-guide) to learn more about creating actions, resources, resource types and controllers.
 
+### Create OpsChain actions that need manual intervention
+
+Read more about [OpsChain wait steps](../reference/concepts/actions.md#wait-steps) to learn how to create changes that can pause and wait for human intervention before continuing.
+
 ### Learn more about the OpsChain step runner
 
 Read our more comprehensive [step runner guide](../reference/concepts/step_runner.md) to learn more about how OpsChain steps are executed - and how to install custom commands and dependencies.

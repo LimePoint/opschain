@@ -1,5 +1,38 @@
 # Changelog
 
+## 2022-05-25
+
+### Known issues
+
+- OpsChain changes may fail with `BUG: error: failed to solve ...`. See the [troubleshooting guide](docs/troubleshooting.md#opschain-change---bug-error-failed-to-solve) to learn how to resolve this issue.
+
+### Added
+
+- The `opschain change show-logs` command now supports the `--timestamps` option, to prefix each log line with the date and time it was logged.
+- OpsChain now supports [wait steps](docs/reference/concepts/actions.md#wait-steps) - steps that pause a change execution and wait for a user to continue the change manually.
+- CLI version, server version and runner image can be retrieved via the `opschain info` CLI command.
+- An `/info` endpoint has been added to the OpsChain API to return the currently running version and runner image.
+
+### Changed
+
+- Upgraded Bundler to 2.3.12.
+- Upgraded Fluent Bit to v1.9.3.
+- Upgraded BuildKit to v0.10.3
+- Upgraded OPA to v0.40.0.
+- Upgraded Terraform to 1.1.9 in the OpsChain examples.
+- Upgraded Terraform 'hashicorp/aws' provider to 4.13.0 in the OpsChain Ansible example.
+- Upgraded Terraform 'hashicorp/kubernetes' provider to 2.11.0 in the OpsChain WebLogic, Terraform, and Confluent examples.
+- Upgraded HashiCorp Vault to 1.9.6 in the OpsChain Vault example.
+- Upgraded Confluent to 6.2.4 in the OpsChain Confluent example.
+- Upgraded Kong to v2.8.1.
+- Upgraded Kong ingress controller to v2.3.1.
+
+### Fixed
+
+- Added the missing `OpsChain.repository.properties` method that is described in the Git repository section of the [properties guide](docs/reference/concepts/properties.md#git-repository).
+- The project links in the Git remotes response body.
+- Fixed runner image building on macOS M1 hosts.
+
 ## [2022-05-09]
 
 ### Added

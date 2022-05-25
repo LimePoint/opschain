@@ -21,6 +21,19 @@ When errors are encountered with OpsChain, the following high-level checklist ma
 
 ## Known issues
 
+### OpsChain change - `BUG: error: failed to solve`
+
+OpsChain changes may fail with the following error: `BUG: error: failed to solve: opschain-image-registry:8000/limepoint/opschain-runner:2022-05-25 opschain-image-registry:8000/limepoint/opschain-runner:2022-05-25: not found`.
+
+#### Solution - `BUG: error: failed to solve`
+
+Run the following command in your `opschain-trial` directory and then retry your change:
+
+```bash
+source .env
+kubectl exec -ti -n ${OPSCHAIN_KUBERNETES_NAMESPACE} deploy/opschain-api-worker -- /usr/bin/container_start.sh 'rake opschain:copy_runner_image'
+```
+
 ### Container "xxxxxxxxxxxx" is unhealthy
 
 The most likely cause of this issue is an invalid or expired licence file, although other scenarios can cause a container to be flagged as unhealthy. To view the container log files execute:
@@ -215,6 +228,63 @@ To avoid getting this error message, you can use one of the following options:
 
 - ensure that your parallel steps aren't [modifying the same property](reference/concepts/properties.md#conflicting-changes)
 - convert those child steps to serial
+
+### OpsChain change - `OpsChain wait steps can't be created as actions - they can only be used as steps.`
+
+OpsChain [wait steps](reference/concepts/actions.md#wait-steps), and the associated `OpsChain.wait_step` method, can't be used as an action name. This means that the following code is invalid:
+
+```ruby
+# invalid, don't do this
+action OpsChain.wait_step, steps: [:do_something]
+```
+
+#### Solution - use `OpsChain.wait_step` as the first child of the change action
+
+```ruby
+action :do_something_with_acknowledgement, steps: [OpsChain.wait_step, :do_something]
+```
+
+### OpsChain change - `OpsChain wait steps can't be used as prerequisites.`
+
+OpsChain [wait steps](reference/concepts/actions.md#wait-steps), and the associated `OpsChain.wait_step` method, can't be used as [prerequisite actions](reference/concepts/actions.md#prerequisite-actions). This means that the following code is invalid:
+
+```ruby
+# invalid, don't do this
+action do_something: [OpsChain.wait_step] do
+  # after wait step
+end
+```
+
+#### Solution - only use `OpsChain.wait_step` within `steps`
+
+OpsChain wait steps can only be used within the `steps` definition. Restructuring the example above allows the code to use the `OpsChain.wait_step` in the `steps` definition rather than as a prerequisite:
+
+```ruby
+action :do_something_with_acknowledgement, steps: [OpsChain.wait_step, :do_something]
+
+action :do_something do
+  # after wait step
+end
+```
+
+### OpsChain change - parallel steps run before wait step
+
+OpsChain [wait steps](reference/concepts/actions.md#wait-steps), and the associated `OpsChain.wait_step` method, can be used with parallel `steps` - however this means that all the sibling parallel steps will kickoff whilst the wait step is waiting, not before. For example:
+
+```ruby
+# warning - the `do_something_1` and `do_something_2` steps will run before the wait step has been continued
+action :broken_acknowledgement_example, steps: [OpsChain.wait_step, :do_something_1, :do_something_2], run_as: :parallel
+```
+
+#### Solution - parallel steps with wait step
+
+To make the change pause before the parallel steps, add a step that runs before the parallel steps:
+
+```ruby
+action :do_something_with_acknowledgement, steps: [OpsChain.wait_step, :do_something_parallel]
+
+action :do_something_parallel, steps: [:do_something_1, :do_something_2], run_as: :parallel
+```
 
 ## Licence & authors
 

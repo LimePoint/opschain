@@ -151,7 +151,7 @@ Use the following procedure to create the custom runner image:
 
 #### 1. Obtain the standard runner image
 
-The custom Dockerfile must be based on an OpsChain runner image (`limepoint/opschain-runner:latest` or `limepoint/opschain-runner-enterprise:latest`). Ensure you have the image locally or have run the [configure Docker Hub access](operations/installation.md#configure-docker-hub-access) steps from the getting started guide.
+The custom Dockerfile must be based on an OpsChain runner image (`limepoint/opschain-runner` or `limepoint/opschain-runner-enterprise`). To find the current version for your OpsChain instance, you can run the `opschain info` CLI command. Ensure you have the image locally or have run the [configure Docker Hub access](operations/installation.md#configure-docker-hub-access) steps from the getting started guide.
 
 #### 2. Create a repository tarball
 
@@ -187,7 +187,7 @@ _Note: Replace the `web` project and `test` environment codes with the codes app
 Use the following command to build the custom runner image. _Note: the image tag `custom_runner` can be replaced with a valid Docker tag of your choice_
 
 ```bash
-OPSCHAIN_VERSION='2022-04-11' # EXAMPLE ONLY - Use the value from the .env file in your API installation
+OPSCHAIN_VERSION='2022-04-11' # EXAMPLE ONLY - To find the current version for your OpsChain instance, you can run the `opschain info` CLI command
 docker build --build-arg OPSCHAIN_BASE_RUNNER=limepoint/opschain-runner:${OPSCHAIN_VERSION} --build-arg GIT_REV=HEAD --build-arg GIT_SHA=$(git rev-parse HEAD) -t custom_runner -f .opschain/Dockerfile .
 ```
 

@@ -36,13 +36,11 @@ COPY myco-cacert.pem /etc/ssl/myco-cacert.pem
 
 Once you have added the required customisations to the Dockerfile, build and push the image to your private image registry.
 
-_Note: The example below uses the `RELEASE-VERSION` file in the opschain-release repo to provide a build argument to the build and to tag the built image with the same base version as your OpsChain release. For the purposes of illustration, we'll assume that the OpsChain `RELEASE-VERSION` file contains the version **1.0.9**._
-
 ```shell
-OPSCHAIN_VERSION='2022-04-11' # EXAMPLE ONLY - Use the value from the .env file in your API installation
+OPSCHAIN_VERSION='2022-04-11' # EXAMPLE ONLY - To find the current version for your OpsChain instance, you can run the `opschain info` CLI command
 docker build --build-arg OPSCHAIN_VERSION --tag "image-registry.myco.com/myco/opschain-log-aggregator:${OPSCHAIN_VERSION}-1" .
 docker push "image-registry.myco.com/myco/opschain-log-aggregator:${OPSCHAIN_VERSION}-1"
-# builds and pushes an image tagged as image-registry.myco.com/myco/opschain-log-aggregator:1.0.9-1
+# builds and pushes an image tagged as image-registry.myco.com/myco/opschain-log-aggregator:2022-04-11-1
 ```
 
 ## Configure OpsChain to use your custom log aggregator
@@ -51,7 +49,7 @@ Once you have built and pushed your custom log aggregator image to your private 
 
 ```yaml
 logAggregator:
-  image: image-registry.myco.com/myco/opschain-log-aggregator:1.0.9-1
+  image: image-registry.myco.com/myco/opschain-log-aggregator:2022-04-11-1
 ```
 
 If your internal registry requires credentials to pull this image, update the OpsChain [imagePullSecret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/) config to allow this image to be pulled:
@@ -73,7 +71,7 @@ To enable sending the logs to Splunk, add configuration similar to the example b
 
 ```yaml
 logAggregator:
-  image: image-registry.myco.com/myco/opschain-log-aggregator:1.0.9-1
+  image: image-registry.myco.com/myco/opschain-log-aggregator:2022-04-11-1
   additionalOutputConfig: |-
     <store>
       @type splunk_hec
