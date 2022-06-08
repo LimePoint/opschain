@@ -34,7 +34,7 @@ A new automated change rule can be created by using the `opschain automated-chan
 The following command will create an automated change rule that will create an OpsChain change to run the `hello_world` action whenever the `demo` project's Git repository's `master` branch changes.
 
 ```bash
-opschain automated-change create --project-code demo --environment-code dev --git-rev master --new-commits-only --action hello_world --cron-schedule '* * * * *' --repeat --confirm
+opschain automated-change create --project-code demo --environment-code dev --git-remote-name origin --git-rev master --new-commits-only --action hello_world --cron-schedule '* * * * *' --repeat --confirm
 ```
 
 _If the current commit that `master` points to hasn't been used in a change for the `hello_world` action in the `dev` environment then a new change will be created straight away as part of this automated change rule._
@@ -50,8 +50,6 @@ opschain change list --project-code demo --environment-code dev
 The output will now include a new change that has been created in response to our new Git commit.
 
 As more commits are added to the Git repository, new changes will be created. Automated change rules poll the project's Git repository for new commits on the Git revision. If multiple commits occur on the relevant Git revision between polls then only one automated change will be created with the latest commit.
-
-_Note that when referring to a remote branch, the remote name needs to be used as part of the Git revision for a change commit rule (eg `origin/master` rather than `master`)._
 
 ## Listing automated change rules in an environment
 
@@ -78,7 +76,7 @@ Automated change rules can be scheduled to create changes at a certain time. The
 The following command creates a new automated change rule that will create a new change running the `hello_world` action daily at 7pm (based on the OpsChain server time).
 
 ```bash
-opschain automated-change create --project-code demo --environment-code dev --git-rev master --new-commits-only=false --action hello_world --cron-schedule '0 19 * * *' --repeat --confirm
+opschain automated-change create --project-code demo --environment-code dev --git-remote-name origin --git-rev master --new-commits-only=false --action hello_world --cron-schedule '0 19 * * *' --repeat --confirm
 ```
 
 If the `--new-commits-only=false` were changed to `--new-commits-only=true` then the new change would only be created if new commits had been added to `master`. If the `--repeat` argument were changed to `--repeat=false` then a single new change would be created at 7pm and then the automated change rule would be deleted - the change would be created once rather than daily.

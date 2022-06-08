@@ -203,7 +203,7 @@ $ opschain project set-git-remote -p <project code> -n origin -s ./path/to/priva
 Use the OpsChain CLI to run the change using the OpsChain server. This will run the new steps in isolated containers and will report on the status of each step as it progresses.
 
 ```bash
-opschain change create -p web -e test -g getting-started/hello-goodbye -a '' -y # -a '' is a synonym for -a 'default'
+opschain change create -p web -e test -G origin -g hello-goodbye -a '' -y # -a '' is a synonym for -a 'default'
 ```
 
 Use the `opschain change show-logs` command in another terminal to see the latest log output whilst the change is still executing, or wait until the change completes:

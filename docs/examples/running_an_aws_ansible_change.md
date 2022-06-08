@@ -89,7 +89,7 @@ To enable the OpsChain Runner to access your AWS account, configure the [AWS env
 Create a new change for the current `origin/master` branch of your project and run the `default` action:
 
 ```bash
-opschain change create --project-code ansible --environment-code ansbl --git-rev origin/master --action default --confirm
+opschain change create --project-code ansible --environment-code ansbl --git-remote-name origin --git-rev master --action default --confirm
 ```
 
 _Note: the first time you run a change from this project it may take a long time as it constructs the Runner image (with Terraform, Ansible and the AWS CLI)._
@@ -107,7 +107,7 @@ Use the [AWS instances](https://us-west-2.console.aws.amazon.com/ec2/v2/home?reg
 Create a new change for the current `origin/master` branch of your project and run the `nginx_host:deploy_index` action:
 
 ```bash
-opschain change create --project-code ansible --environment-code ansbl --git-rev origin/master --action nginx_host:deploy_index --confirm
+opschain change create --project-code ansible --environment-code ansbl --git-remote-name origin --git-rev master --action nginx_host:deploy_index --confirm
 ```
 
 Refresh the OpsChain AWS Ansible Demo welcome page page and note the last changed date has been updated to reflect the new deployment.
@@ -117,7 +117,7 @@ Refresh the OpsChain AWS Ansible Demo welcome page page and note the last change
 The EC2 instance, security group and key pair can be removed by running:
 
 ```bash
-opschain change create --project-code ansible --environment-code ansbl --git-rev origin/master --action destroy --confirm
+opschain change create --project-code ansible --environment-code ansbl --git-remote-name origin --git-rev master --action destroy --confirm
 ```
 
 _Note: the AWS Console pages described in the [verify change deployment](#verify-change-deployment) steps above can be used to confirm the aws resources have been removed/terminated._

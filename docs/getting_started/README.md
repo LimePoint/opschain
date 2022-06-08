@@ -138,7 +138,8 @@ Choose/enter the following parameters:
 
 ```text
 Environment: Test
-Git rev: origin/master
+Git remote: origin
+Git rev: master
 Action (optional): deploy_war
 Create this change? Yes
 ```
@@ -199,7 +200,7 @@ EOF
 Rather than use the CLI in interactive mode, lets create the production change by supplying the parameters on the command line.
 
 ```bash
-opschain change create --environment-code prod --action deploy_war --git-rev origin/master --metadata-path prod_change_metadata.json --confirm
+opschain change create --environment-code prod --action deploy_war --git-remote-name origin --git-rev master --metadata-path prod_change_metadata.json --confirm
 ```
 
 The same change action and git revision are provided, ensuring the change applied to the test environment is replicated in production. The only difference to the change we created in test, is the target environment and the inclusion of optional metadata.
@@ -260,7 +261,7 @@ opschain project set-properties --file-path project_properties.json --confirm
 Create a new change to deploy the WAR to the test environment and view the change logs:
 
 ```bash
-opschain change create --environment-code test --action deploy_war --git-rev origin/master --confirm
+opschain change create --environment-code test --action deploy_war --git-remote-name origin --git-rev master --confirm
 opschain change show-logs --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 ```
 
@@ -271,7 +272,7 @@ Notice how the updated WAR file has been used when running the `artifact_deploy.
 With OpsChain's DSL and Ruby integration you can develop actions to do almost anything. Take advantage of the best tool for every task and combine tools to manage change in the way that best suits your business. Imagine the web server needs to be placed into maintenance mode prior to deploying the new WAR file, then restored to active service afterwards. OpsChain allows you to combine these steps into a single automated change. Lets run a multi-step change to see how OpsChain manages this process:
 
 ```bash
-opschain change create --environment-code test --action deploy_in_maintenance_mode --git-rev origin/master --confirm
+opschain change create --environment-code test --action deploy_in_maintenance_mode --git-remote-name origin --git-rev master --confirm
 ```
 
 Notice how the `deploy_war` action is performed in between the enable and disable maintenance mode actions.
@@ -283,7 +284,7 @@ As you can see, once the OpsChain actions have been developed, your team can use
 Our project team uses a cloud service provider for their webserver hosting. To save money, the team shuts down the test instance every evening, and starts it again each morning. Rather than teach the team how to use the cloud providers CLI, they've wrapped the start and stop instance commands into `stop_instance` and `start_instance` actions. Try creating a change to stop the test instance:
 
 ```bash
-opschain change create --environment-code test --action stop_instance --git-rev origin/master --confirm
+opschain change create --environment-code test --action stop_instance --git-remote-name origin --git-rev master --confirm
 ```
 
 Note: The hypothetical cloud provider's CLI makes use of an `ACCESS_KEY_ID` and `SECRET_ACCESS_KEY` in the user's Linux environment to authorise CLI commands. As each action runs inside an isolated container, OpsChain allows you to define [environment variables](../reference/concepts/properties.md#environment-variables) in your properties that will automatically be set in the container before the action is executed.
@@ -307,8 +308,8 @@ Automated change rules accept a [cron expression](https://crontab.guru/) that pr
 To save the project team manual effort and enable them to consistently realise the cost savings of stopping their test instance overnight, lets configure some test environment rules, to execute `stop_instance` each evening, and `start_instance` each morning.
 
 ```bash
-opschain automated-change create --environment-code test --git-rev origin/master --action stop_instance --cron-schedule '0 0 20 * * *' --new-commits-only=false --repeat --confirm
-opschain automated-change create --environment-code test --git-rev origin/master --action start_instance --cron-schedule '0 0 6 * * *' --new-commits-only=false --repeat --confirm
+opschain automated-change create --environment-code test --git-remote-name origin --git-rev master --action stop_instance --cron-schedule '0 0 20 * * *' --new-commits-only=false --repeat --confirm
+opschain automated-change create --environment-code test --git-remote-name origin --git-rev master --action start_instance --cron-schedule '0 0 6 * * *' --new-commits-only=false --repeat --confirm
 ```
 
 Now the test instance will be stopped each evening at 8pm (in the OpsChain server's timezone) and started each morning at 6am.

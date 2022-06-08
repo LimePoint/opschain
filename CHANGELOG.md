@@ -1,5 +1,29 @@
 # Changelog
 
+## 2022-06-08
+
+### Important breaking changes
+
+- OpsChain must be installed from scratch for this release. Follow the steps in the [uninstall guide](docs/operations/uninstall.md) to remove OpsChain and then perform a [fresh install](docs/operations/installation.md). The existing Git remotes can be re-used with the new installation.
+
+### Added
+
+- When the list of options for an argument contains a single value, the OpsChain CLI will now automatically select it.
+- OpsChain now tracks the Git remote used for a change explicitly.
+- OpsChain now tracks the Git remote used for an automated change rule explicitly.
+
+### Changed
+
+- **Breaking changes**
+  - When creating a change the Git remote and revision must be specified individually via the `--git-remote-name` and `--git-rev` options.
+  - When creating an automated change rule the Git remote and revision must be specified individually via the `--git-remote-name` and `--git-rev` options.
+  - The `GIT_REV` build argument provided to custom project `Dockerfile`s no longer includes the remote name.
+
+### Fixed
+
+- [Wait steps](docs/reference/concepts/actions.md#wait-steps) within namespaces now work as expected.
+- A sporadic bug whilst running changes or using `opschain dev` - `iseq_compile_each: unknown node (NODE_SCOPE) (SyntaxError)` - has been fixed.
+
 ## 2022-05-25
 
 ### Known issues

@@ -131,7 +131,7 @@ Note: project or environment [properties](../reference/concepts/properties.md) s
 Create a new change for the current `origin/master` branch of your project and run the `default` action:
 
 ```bash
-opschain change create --project-code confluent --environment-code local --git-rev origin/master --action default --confirm
+opschain change create --project-code confluent --environment-code local --git-remote-name origin --git-rev master --action default --confirm
 ```
 
 The [steps](../reference/concepts/concepts.md#step) that comprise the change will be shown as well as their status.
@@ -204,7 +204,7 @@ More detailed information about the specific versions of environment and project
 This change will use Terraform's `destroy` action to remove the Kubernetes resources from the `opschain-confluent` namespace:
 
 ```bash
-opschain change create --project-code confluent --environment-code local --git-rev origin/master --action destroy --confirm
+opschain change create --project-code confluent --environment-code local --git-remote-name origin --git-rev master --action destroy --confirm
 ```
 
 _Note: the [verify the change](#verify-the-change) steps above can be re-run to verify that Confluent has been removed from Kubernetes._
