@@ -79,7 +79,6 @@ OPSCHAIN_LDAP_GROUP_ATTRIBUTE=member
 OPSCHAIN_LDAP_ADMIN=CN=Administrator,CN=Users,DC=myopschain,DC=io
 OPSCHAIN_LDAP_PASSWORD=AdministratorPassword!
 OPSCHAIN_LDAP_HC_USER=
-OPSCHAIN_LDAP_ENABLE_SSL=false
 ```
 
 ## Licence & authors

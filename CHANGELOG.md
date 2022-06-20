@@ -1,5 +1,28 @@
 # Changelog
 
+## 2022-06-20
+
+### Added
+
+- `OpsChain.context.change.automated` is now populated in the [OpsChain context](docs/reference/concepts/context.md) - indicating whether a change was created by an [automated change rule](docs/reference/concepts/automated_changes.md).
+- The `automated` field is now included in the OpsChain changes API response - indicating whether a change was created by an [automated change rule](docs/reference/concepts/automated_changes.md).
+
+### Changed
+
+- The OpsChain CLI now displays the provided command line argument values before prompting for any required values.
+- Upgraded all base images used by the OpsChain examples to AlmaLinux 8.6.
+- Upgraded Bundler to 2.3.15.
+- Upgraded HashiCorp Vault to 1.10.3 in the OpsChain Vault example.
+- Upgraded Kong to v2.8.2.
+- Upgraded OPA to v0.41.0.
+- Upgraded PostgreSQL to 14.3.
+- The `ruby-terraform` Gem version supported by the `opschain-resource-types` Gem has been updated to v1.5.0.
+- Upgraded Terraform to 1.2.2 in the OpsChain examples.
+- Upgraded Terraform 'hashicorp/aws' provider to 4.17.0 in the OpsChain Ansible example.
+- Upgraded the base OS for the OpsChain LDAP server to Debian bullseye
+- Upgraded the OpsChain base runner image to AlmaLinux 8.6.
+- Upgraded the CLI to Node.js v16.15.1.
+
 ## 2022-06-08
 
 ### Important breaking changes
@@ -293,7 +316,7 @@ You **must** run `configure` after upgrading to update the `.env` file with the 
 - The OpsChain API `projects` and `environments` endpoints now
   - return a boolean `archived` attribute.
   - accept `DELETE` requests. _Note: Only projects and environments with no associated changes can be deleted._
-- The OpsChain API `automated_change_rules` endpoint now includes a `next_run_at` attribute containing the time when the rule will next run. See the [automated changes guide](docs/automated_changes.md#creating-an-automated-change-rule-for-new-commits) for more information on what happens when an automated change rule runs.
+- The OpsChain API `automated_change_rules` endpoint now includes a `next_run_at` attribute containing the time when the rule will next run. See the [automated changes guide](docs/reference/concepts/automated_changes.md#creating-an-automated-change-rule-for-new-commits) for more information on what happens when an automated change rule runs.
 - The `opschain automated-change list` output no longer include the `Project` and `Environment` columns (as these are parameter values to the command) and includes a `Next Run At` column.
 - The `opschain-action` command now supports a _best-effort_ mode for running the child steps of an action. See the [child steps](docs/docker_development_environment.md#child-steps) section of the Docker development environment guide for more details.
 - OpsChain now provides an `opschain-lint` command for detecting issues with the OpsChain DSL. Learn more in the [Docker development environment](docs/docker_development_environment.md#using-opschain-lint) guide.
@@ -317,7 +340,7 @@ You **must** run `configure` after upgrading to update the `.env` file with the 
 
 ### Added
 
-- OpsChain now supports events. The `/events` endpoint can be used for reporting and auditing, see the [events](docs/events.md) guide for more details.
+- OpsChain now supports events. The `/events` endpoint can be used for reporting and auditing, see the [events](docs/reference/concepts/events.md) guide for more details.
 - The list of configuration in the `.env` file is now documented in the [configuration options](docs/operations/configuring_opschain.md) guide.
 - Changes can now take metadata (JSON structured data) to help identify and track changes.
   - The `opschain change create/retry` commands now takes an optional argument to allow providing the metadata for a change.
@@ -325,7 +348,7 @@ You **must** run `configure` after upgrading to update the `.env` file with the 
   - The `opschain change show/list` commands now include the change metadata.
   - The `/changes` API can now be filtered using the same filtering syntax as events.
     - For example, `?filter[metadata_cr_eq]=CR73` would match all changes with the metadata `{ "cr": "CR73" }`.
-    - See the [events filtering](docs/events.md#filtering-events) documentation for more details.
+    - See the [events filtering](docs/reference/concepts/events.md#filtering-events) documentation for more details.
 
 ### Changed
 

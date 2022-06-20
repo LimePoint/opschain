@@ -1,6 +1,6 @@
 # Upgrading
 
-To upgrade OpsChain go to the location on your OpsChain host where you cloned the [OpsChain trial repository](https://github.com/LimePoint/opschain-trial), stop OpsChain, pull the latest changes from the remote git repository, and deploy the latest version of OpsChain (which will pull the latest images).
+To upgrade OpsChain go to the location on your OpsChain host where you cloned the [OpsChain trial repository](https://github.com/LimePoint/opschain-trial), pull the latest changes from the remote Git repository, and deploy the latest version of OpsChain (which will pull the latest images).
 
 ```bash
 cd opschain-trial

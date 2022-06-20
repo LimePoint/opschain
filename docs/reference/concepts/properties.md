@@ -14,6 +14,7 @@ After following this guide you should understand:
 - how to import OpsChain properties into the database using the CLI
 - how to view project and environment OpsChain properties from the CLI and API server
 - the various types of values that can be stored in OpsChain properties
+- the difference between OpsChain properties and OpsChain context values
 
 ## OpsChain properties
 
@@ -34,6 +35,16 @@ _Notes:_
 1. _You will not be able to use dot notation to access a property with the same name as a method on the properties object (for example `keys`). In this case you must use square bracket notation instead._
 2. _Any arrays in the properties will be overwritten during a deep merge (use JSON objects with keys instead to ensure they are merged)_
 3. _The `OpsChain.properties` structure is read only. Please see [modifiable properties](#modifiable-properties) below for information on making changes to the environment or project properties._
+
+### Comparison with OpsChain context
+
+In addition to the user defined and maintained OpsChain properties available in an OpsChain change, OpsChain also provides OpsChain context values.
+
+The OpsChain context is automatically populated by OpsChain with information about the context in which a change is run, for example the environment name or the action being executed by the change.
+
+Rather than manually putting change related values - e.g. the environment code, project code, action name, etc. - into your properties, consider whether you could use the OpsChain context instead.
+
+See the [OpsChain context guide](context.md) if you would like to learn more about the OpsChain context framework.
 
 ## Storage options
 

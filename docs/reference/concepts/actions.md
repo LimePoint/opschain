@@ -127,7 +127,7 @@ An OpsChain wait step can only be added as part of a step's child steps, for exa
 action :do_something, steps: [:do_something_before_waiting, OpsChain.wait_step, :do_something_else_after_waiting]
 ```
 
-Another useful scenario for wait steps is when an [automated change rule](../../automated_changes.md) is used to create a change automatically, but a team member should then allow the change to proceed manually. To achieve this the OpsChain wait step can be used as the first child step of an action:
+Another useful scenario for wait steps is when an [automated change rule](automated_changes.md) is used to create a change automatically, but a team member should then allow the change to proceed manually. To achieve this the OpsChain wait step can be used as the first child step of an action:
 
 ```ruby
 action :do_something, steps: [:do_something_after] do
@@ -145,7 +145,7 @@ _Note: OpsChain wait steps use the naming convention `opschain_wait_step_{{uniqu
 
 ##### Step continuation auditing
 
-Information about step continuation can be viewed by using the [events endpoint](/docs/events.md). The continue action will be recorded with the type `api:steps:continue` (these can be fetched via the API by requesting `/events?filter[type_eq]=api:steps:continue`). The username of the user who continued the step is available in the API response.
+Information about step continuation can be viewed by using the [events endpoint](events.md). The continue action will be recorded with the type `api:steps:continue` (these can be fetched via the API by requesting `/events?filter[type_eq]=api:steps:continue`). The username of the user who continued the step is available in the API response.
 
 Please [let us know](mailto:opschain-support@limepoint.com) if you would like to suggest improvements in this area.
 

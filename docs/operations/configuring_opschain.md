@@ -38,7 +38,6 @@ _Note: After making changes to your `.env` file, you must run `opschain-configur
 | OPSCHAIN_LDAP_ADMIN           | LDAP/AD administrator DN to connect to.<br/> _Note: As OpsChain does not write to the LDAP database, this need only be a DN with permission to search all users and groups._                                  | cn=admin,dc=opschain,dc=io  |
 | OPSCHAIN_LDAP_BASE_DN         | LDAP/AD base DN value.                                                                                                                                                                                        | dc=opschain,dc=io           |
 | OPSCHAIN_LDAP_DOMAIN          | LDAP/AD domain.                                                                                                                                                                                               | opschain.io                 |
-| OPSCHAIN_LDAP_ENABLE_SSL      | To connect to the LDAP host using the `ldaps://` protocol, set this to true.<br/> _Note: To use a custom Certificate Authority (CA) see [custom SSL certificates](opschain_ldap.md#custom-ssl-certificates)._ | false                       |
 | OPSCHAIN_LDAP_GROUP_BASE      | LDAP/AD base DN to search for groups.                                                                                                                                                                         | ou=groups,dc=opschain,dc=io |
 | OPSCHAIN_LDAP_GROUP_ATTRIBUTE | LDAP/AD group attribute containing OpsChain user DNs.                                                                                                                                                         | member                      |
 | OPSCHAIN_LDAP_HC_USER         | To verify the LDAP server is available, OpsChain performs a regular query of the LDAP database for the username supplied here. <br/>_Note: If you do not wish to perform this check, leave this blank._       | healthcheck                 |
@@ -56,7 +55,7 @@ _Note: After making changes to your `.env` file, you must run `opschain-configur
 
 ### Development environment
 
-The following variables can be manually set inside the OpsChain development environment or configured in your `.env` file.
+The following variables can be manually set inside the OpsChain development environment or configured in your host environment and they will be passed through (e.g. in your `~/.zshrc`).
 
 | Variable                     | Description                                                                                                                                                                                                 | Default value |
 | :--------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :------------ |

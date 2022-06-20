@@ -43,7 +43,13 @@ opschain environment list --project-code terraform
 
 Follow [adding a project Git repository as a remote](../reference/project_git_repositories.md#adding-a-project-git-repository-as-a-remote) using the [OpsChain Terraform example repository](https://github.com/LimePoint/opschain-examples-terraform) remote URL `https://username:password@github.com/LimePoint/opschain-examples-terraform.git`.
 
-### Deploy Kubernetes resources
+## Configure the target Kubernetes namespace
+
+### Using your own Kubernetes cluster
+
+_If you are using a SaaS trial instance of OpsChain see the section below._
+
+If this example, and your OpsChain API server, are running on your own Kubernetes cluster, you will need to create a namespace and a role that grants the opschain-runner service account, permissions to create the example resources. You can do this by applying the manifest included in this repo.
 
 ```bash
 kubectl apply -f k8s/namespace.yaml
@@ -52,6 +58,30 @@ kubectl apply -f k8s/namespace.yaml
 This will create an `opschain-terraform` namespace, and assign relevant permissions to the `opschain-runner` role to allow it to create and destroy the nginx deployment in it.
 
 _Note: this step assumes you are using the default `opschain-trial` Kubernetes namespace for OpsChain. You must modify the `ServiceAccount` namespace in `k8s/namespace.yaml` if this is not the case._
+
+### Using the examples namespace provided as part of your OpsChain SaaS trial
+
+If you are using a SaaS trial instance of OpsChain, an example namespace will have been provisioned for you and the necessary permissions granted to the opschain-runner service account.
+
+To ensure that the correct namespace is passed to Terraform, you will need to add this examples namespace to your OpsChain project properties.
+
+Create the following properties file:
+
+```bash
+cat << EOF > terraform_properties.json
+{
+  "namespace": "<YOUR EXAMPLES NAMESPACE>"
+}
+EOF
+```
+
+Replace `<YOUR EXAMPLES NAMESPACE>` with the examples namespace that was provided to you as part of your OpsChain trial onboarding.
+
+Apply the properties to the `terraform` project:
+
+```bash
+opschain project set-properties --project-code terraform --file-path terraform_properties.json -y
+```
 
 ## Create a change to deploy nginx
 
@@ -69,21 +99,40 @@ _Note: the first step in this change may take a long time as it downloads an ngi
 
 ## Verify the change
 
-### View the `opschain-terraform` namespace
+Once the change has completed successfully, view the change logs. The log output will contain the Kubernetes load balancer status in the form of a Terraform output value.
 
-Use `kubectl` to view the objects deployed in the `opschain-terraform` namespace:
+This value will contain a hostname or IP address that you can use to connect to the service in your browser.
 
-```bash
-kubectl get all -n opschain-terraform
+A local Kubernetes cluster (like Docker Desktop) would output something similar to this example:
+
+```text
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+load_balancer_status = tolist([
+  {
+    "load_balancer" = tolist([
+      {
+        "ingress" = tolist([
+          {
+            "hostname" = "localhost"
+            "ip" = ""
+          },
+        ])
+      },
+    ])
+  },
+])
 ```
 
-The output will include a load balancer that is used to route traffic to the tutorial pod and the nginx container it contains.
+Note this value (`localhost`, in the example above) as we will use it to view the nginx welcome page below.
 
 ### View the nginx welcome page
 
-Navigate to the nginx welcome page via `http://<external-ip>:8080` to confirm the successful deployment.
+Navigate to the nginx welcome page via `http://<load balancer hostname or ip address>:8080` to confirm the successful deployment.
 
-_Note: Replace `<external-ip>` with the `EXTERNAL-IP` assigned to the `LoadBalancer` in the output from the `kubectl` command executed in the previous step._
+_Note: Replace `<load balancer hostname or ip address>` with the relevant value returned in the Terraform output from the previous step. This will depend on your Kubernetes cluster load balancer implementation._
 
 ## Create a change to remove nginx
 
@@ -97,7 +146,18 @@ _Note: the [verify the change](#verify-the-change) steps above can be re-run to 
 
 ## Customise deployment settings
 
-The example takes advantage of the OpsChain properties to allow you to adjust the nginx port exposed by the Kubernetes cluster. Create the following properties file:
+The example takes advantage of the OpsChain properties to allow you to adjust the nginx port exposed by the Kubernetes cluster.
+
+If you created a `terraform_properties.json` to configure your [target Kubernetes namespace](#using-the-examples-namespace-provided-as-part-of-your-opschain-saas-trial) earlier, edit it and add the `external_port` property e.g.
+
+```json
+{
+  "namespace": "<YOUR EXAMPLES NAMESPACE>",
+  "external_port": 7999
+}
+```
+
+Alternatively, if you have not already created a properties file, create one containing the following external port property:
 
 ```bash
 cat << EOF > terraform_properties.json
@@ -107,15 +167,17 @@ cat << EOF > terraform_properties.json
 EOF
 ```
 
-Associate the properties with the `terraform` project:
+Apply the properties to the `terraform` project:
 
 ```bash
-opschain project set-properties -p terraform -f terraform_properties.json -y
+opschain project set-properties --project-code terraform --file-path terraform_properties.json -y
 ```
 
 Now re-run the [create a change to deploy nginx](#create-a-change-to-deploy-nginx) and [verify the change](#verify-the-change) steps, noting how the service names have changed, and nginx is now exposed on port 7999. Finally, re-run the [create a change to remove nginx](#create-a-change-to-remove-nginx) step.
 
-### Remove Kubernetes resources
+### Remove Kubernetes namespace
+
+If you are running this example on your own Kubernetes cluster, you can now remove the resources you created when you [configured the target namespace](#using-your-own-kubernetes-cluster)
 
 ```bash
 kubectl delete -f k8s/namespace.yaml

@@ -10,7 +10,7 @@ After following this guide you should know:
 
 ## Prerequisites
 
-The CLI examples in this guide assume the steps from the [getting started](getting_started/README.md) guide have been run.
+The CLI examples in this guide assume the steps from the [getting started](/docs/getting_started/README.md) guide have been run.
 
 ## About automated changes rules
 
@@ -39,7 +39,7 @@ opschain automated-change create --project-code demo --environment-code dev --gi
 
 _If the current commit that `master` points to hasn't been used in a change for the `hello_world` action in the `dev` environment then a new change will be created straight away as part of this automated change rule._
 
-Follow the steps from the [adding a new action](getting_started/developer.md#adding-a-new-action) guide (or make a change to the existing `hello_world` action) to create the new commit for OpsChain to deploy.
+Follow the steps from the [adding a new action](/docs/getting_started/developer.md#adding-a-new-action) guide (or make a change to the existing `hello_world` action) to create the new commit for OpsChain to deploy.
 
 Run the OpsChain change list command to list changes in this environment. _Note: it can take a minute for the OpsChain worker to detect the Git updates and create the new change_.
 

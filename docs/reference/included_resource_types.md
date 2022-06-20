@@ -15,7 +15,7 @@ The table below outlines the file to `require` in your resource definition and t
 |                                                       | `kubernetes_deployment`  | Perform common operations on a Kubernetes deployment resource                                                                                                    |
 |                                                       | `kubernetes_statefulset` | Perform common operations on a Kubernetes statefulset resource                                                                                                   |
 | [`opschain-ssh-key-pair`](#opschain-ssh-key-pair)     | `ssh_key_pair`           | Generate an SSH public/private key pair and optionally stores the key files in OpsChain properties                                                               |
-| [`opschain-terraform`](#opschain-terraform)           | `terraform_config`       | Exposes the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/tree/v1.4.0) Gem                                                                       |
+| [`opschain-terraform`](#opschain-terraform)           | `terraform_config`       | Exposes the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/tree/v1.5.0) Gem                                                                       |
 
 _Note: Contact [LimePoint](mailto:opschain-support@limepoint.com) to obtain the password required to access the MintPress Reference Documentation._
 
@@ -175,7 +175,7 @@ The [OpsChain AWS Ansible](https://github.com/LimePoint/opschain-examples-ansibl
 
 ## OpsChain Terraform
 
-Requiring `opschain-terraform` provides the `terraform_config` resource type. The resource type will accept any of the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/blob/v1.4.0/README.md) command arguments as properties, but will only pass those supported by the command when the action is invoked.
+Requiring `opschain-terraform` provides the `terraform_config` resource type. The resource type will accept any of the [RubyTerraform](https://github.com/infrablocks/ruby_terraform/blob/v1.5.0/README.md) command arguments as properties, but will only pass those supported by the command when the action is invoked.
 
 Please see the [RubyTerraform module documentation](https://infrablocks.github.io/ruby_terraform/RubyTerraform.html) for further information about the available actions and their parameters.
 

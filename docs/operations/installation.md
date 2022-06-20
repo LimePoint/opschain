@@ -95,7 +95,7 @@ exec zsh # reload the shell config by starting a new session (replace zsh with b
 
 Alternatively, the OpsChain commands can be run without adding them to the path by specifying the full path to the command each time. The examples below assume the commands have been added to the path.
 
-_The OpsChain commands do not support being executed via symlinks (i.e. `ln -s bin/opschain /usr/bin/opschain` will not work)._
+_The OpsChain commands do not support being executed via symlinks (i.e. `ln -s bin/opschain-deploy /usr/bin/opschain-deploy` will not work)._
 
 ### Install `cert-manager`
 

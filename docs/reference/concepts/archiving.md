@@ -44,7 +44,7 @@ By default, archived resources are included in the results returned from the API
 
 #### Result filtering
 
-If required, the API endpoints allow you to use result filtering (described in more detail in [the events guide](../../events.md#filtering-events)) to return only active projects or environments. To do this, append the filter `filter[archived_eq]=false` to your API request. e.g.
+If required, the API endpoints allow you to use result filtering (described in more detail in [the events guide](events.md#filtering-events)) to return only active projects or environments. To do this, append the filter `filter[archived_eq]=false` to your API request. e.g.
 
 ```text
 http://localhost:3000/projects?filter[archived_eq]=false`

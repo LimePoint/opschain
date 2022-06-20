@@ -6,33 +6,57 @@
 
 The following example will allow you to explore some of the features of OpsChain and how you can use it to simplify, track and manage change in your organisation. You will need access to an OpsChain API server, either installed locally or network accessible.
 
-## Install OpsChain CLI
-
-The OpsChain CLI allows you to interact with the OpsChain API server and is required to run the examples in this guide. See the [installation](../reference/cli.md#installation) section of the CLI reference guide to install the CLI.
-
-## Install OpsChain server
+## Install the OpsChain server
 
 If you do not have access to an OpsChain API server, follow the [installation guide](../operations/installation.md) to install and configure OpsChain on your machine.
 
+## Install the OpsChain CLI
+
+The OpsChain CLI allows you to interact with the OpsChain API server and is required to run the examples in this guide. If you followed the OpsChain server [installation guide](../operations/installation.md) then you can skip this section as it has already covered these steps.
+
+The latest version of the CLI can be downloaded from the [`opschain-trial` repository](https://github.com/LimePoint/opschain-trial/releases).
+
+Download the release for your platform. Once downloaded, we suggest renaming the binary to `opschain` (e.g. `mv opschain-* opschain`), and it will need to be made executable if using Linux, macOS, or WSL - e.g. `chmod +x opschain`.
+
+We suggest putting the executable somewhere on your `PATH` to allow it to be executed without specifying the full path - e.g. `sudo mv opschain /usr/local/bin/opschain`.
+
+_Note: On macOS you may need to trust the OpsChain CLI binary as it is not currently signed. See [the Apple documentation](https://support.apple.com/en-au/guide/mac-help/mh40616/mac) for details._
+
+### Configure the OpsChain CLI
+
+Create a `.opschainrc` in your home directory (e.g. `~/.opschainrc` on Linux, macOS, or WSL) based on the [example](/.opschainrc.example) - be sure to update the `apiBaseUrl` to point to your OpsChain server installation, and the `username` and `password` configuration for your user account. On Windows - not within WSL - the configuration file should be placed in the `USERPROFILE` directory. See the [CLI configuration locations](../reference/cli.md#cli-configuration-locations) guide if you would like to learn more.
+
+_Note: If you create a `.opschainrc` file in your current working directory, it will be used instead of the version in your home directory._
+
+Run the `opschain info` subcommand to verify that the server is accessible - it will include the server version if it is able to connect to the OpsChain server.
+
+If you would like to learn more about the CLI, see the [CLI reference guide](../reference/cli.md).
+
 ## Explore OpsChain
 
-The OpsChain [concepts guide](../reference/concepts/concepts.md) describes the terminology used throughout this guide. You may find it helpful to review prior to continuing.
+The OpsChain [concepts guide](../reference/concepts/concepts.md) describes the terminology used throughout this guide. You may find it helpful to review prior to continuing - alternatively it is designed as a reference that you can revisit at any time.
 
-### Setup OpsChain to run sample changes
+### Setup OpsChain to run a simple sample change
 
-Let's create an OpsChain `Website` project, consisting of `Test` and `Production` environments, so we can demonstrate using OpsChain to manage a simple website. We'll use an example Git repository containing configuration and infrastructure changes that we can deploy with OpsChain. After deploying the changes, we'll use Opschain to track and report on the changes deployed to our website.
+Let's create an OpsChain `Website` project. Projects are used to organise environments and changes - a project contains many environments, and changes can be applied to these environments. Projects allow a number of environments to share configuration and GitOps definitions.
+
+OpsChain manages change. The structure of your changes is entirely customisable, and will be influenced by the tools you use with OpsChain - you may structure your changes using "desired state" techniques, or by applying explicit actions (e.g. upgrading a single package in response to a security vulnerability). OpsChain supports both patterns.
+
+We will use our new `Website` project to run a simple OpsChain change. Later in this guide we will use it to run through a more advanced example showing more of OpsChain's features.
 
 #### Create an OpsChain project
 
-First, create an OpsChain [project](../reference/concepts/concepts.md#project) to contain the configuration and actions to apply to our [environments](../reference/concepts/concepts.md#environment).
+Create the new project by using the `opschain project create` command, as shown below. If you wish to learn more about an OpsChain CLI command (or subcommand), add the `--help` argument, e.g. `opschain project create --help`.
 
 ```bash
 opschain project create --code web --name Website --description 'Public facing website infrastructure' --confirm
 ```
 
-##### Set the project Git remote
+##### Add a project Git remote
 
-Add the `opschain-getting-started` Git repository as a [remote](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes) for your new project:
+OpsChain's uses Git to manage the configuration and code associated with changes. Let's start by adding a [Git remote](../reference/concepts/concepts.md#git-remote) to our project. It contains some sample changes that we will use in this guide.
+
+Add the `opschain-getting-started` Git repository as a Git remote for your new project:
 
 ```bash
 # Note: to avoid potentially storing the repository credentials in the shell history the `--user` and `--password` arguments can be omitted and filled in when prompted
@@ -43,6 +67,7 @@ $ opschain project set-git-remote \
   --user '{username}' \
   --password '{password / personal access token}' \
   --url 'https://github.com/LimePoint/opschain-getting-started.git' \
+  --ssh-key-file '' \
   --confirm
 # Option 2: Using SSH authentication:
 $ opschain project set-git-remote \
@@ -50,20 +75,85 @@ $ opschain project set-git-remote \
   --name origin \
   --ssh-key-file ./path/to/private/key \
   --url 'git@github.com:LimePoint/opschain-getting-started.git' \
+  --user '' \
+  --password '' \
   --confirm
 ```
 
-_Notes:_
+_Note: You can use the GitHub personal access token you created while following the [installation guide](../operations/installation.md#create-a-github-personal-access-token) if using a local OpsChain install._
 
-1. _Use the GitHub personal access token you created while following the [installation guide](../operations/installation.md#create-a-github-personal-access-token)._
-2. _If your token contains special characters, they must be [URL encoded](https://www.w3schools.com/tags/ref_urlencode.asp) in order to use them in the URL parameter._
+#### Create an OpsChain environment
 
-#### Create OpsChain environments
+An OpsChain change must be targeted to an [environment](../reference/concepts/concepts.md#environment). OpsChain's concept of environments allows configuration to be managed on a per-environment level - overriding configuration from the project.
 
-Create the logical [environments](../reference/concepts/concepts.md#environment) where OpsChain will manage change.
+The `opschain environment create` subcommand can be used to create a sample `Test` environment, where we will run our first change:
 
 ```bash
 opschain environment create --project-code web --code test --name 'Test' --description 'optional description' --confirm
+```
+
+### Create and run a change
+
+The `opschain change create` subcommand is used to run a change within an environment (which itself exists within a project).
+
+The sample Git remote that was added earlier includes a very simple `hello_world` action that we can use to create our first change:
+
+```bash
+opschain change create
+```
+
+Choose/enter the following parameters:
+
+```text
+Project: Website
+Environment: Test
+Git remote name: origin
+Git rev: master
+Action (optional): hello_world
+Create this change? Yes
+```
+
+_Note: these parameters can be provided as arguments too, run `opschain change create --help` to learn more._
+
+Once the parameters have been entered, the change will be created and started, and the OpsChain CLI will report on the status of the change as it progresses.
+
+Your very first OpsChain change will likely take several minutes to execute as OpsChain needs to perform additional processes internally.
+
+The CLI will report on the status of the change as it progresses, and will exit once the change has completed.
+
+### View change logs
+
+Whenever required, the logs from the change execution can be viewed by using the `opschain change show-logs` subcommand.
+
+Copy the change ID displayed in the `opschain change create` table output and use it to view the logs from your change.
+
+```bash
+opschain change show-logs --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+Our very simple first change has just logged `Hello world` - we can also see information about the change as OpsChain processed it.
+
+### Viewing all changes executed in an environment
+
+OpsChain helps teams work together to manage change. One of the features that OpsChain provides to that end is to keep track of which changes have already been executed in an environment.
+
+Use the `opschain change list` command to list the changes executed in the `Test` environment:
+
+```bash
+opschain change list --project-code web --environment-code test
+```
+
+The resulting table will list all the changes run in the `Test` environment, in particular the change we just ran. The table doesn't provide much value with a single change, however in a team environment where multiple users are running changes, the change list allows users to know what changes their team have executed.
+
+### Setup OpsChain to run more advanced sample changes
+
+To show some of the more advanced features of OpsChain, we will run another OpsChain change, using a different [action](../reference/concepts/concepts.md#action), which gives a more realistic scenario and leverages more OpsChain features.
+
+#### Add a second OpsChain environment
+
+Add another OpsChain environment, using the `opschain environment create` command again, so that we promote our change from `Test` to `Production`:
+
+```bash
 opschain environment create --project-code web --code prod --name 'Production' --description '' --confirm
 ```
 
@@ -75,7 +165,7 @@ OpsChain allows you to configure environment variables that will supply default 
 export opschain_projectCode=web
 ```
 
-_Note: This setting can be overridden by specifying a `--project-code` explicitly on the command line._
+_Note: This setting can be overridden by specifying a `--project-code` explicitly on the command line. It can also be set in your [CLI configuration](../reference/cli.md#opschain-cli-configuration-settings) if you are always working in the same project._
 
 #### Create OpsChain properties
 
@@ -115,7 +205,7 @@ opschain environment set-properties --environment-code prod --file-path prod_pro
 
 The project properties provide default values to use when running changes in any environment in the project. The production environment properties override these defaults with production specific values.
 
-### Running OpsChain changes
+### Advanced change example
 
 Our project team utilise a custom `artifact_deploy.sh` script to deploy their website's WAR file to the target web server. They've found it difficult to keep track of:
 
@@ -126,27 +216,17 @@ Our project team utilise a custom `artifact_deploy.sh` script to deploy their we
 
 To enable the team to control access to the script, and provide auditability of its use, the team has wrapped their existing script inside an OpsChain `deploy_war` action.
 
-#### Run your first change
+#### Run the `deploy_war` action via a change
 
-The sample Git repository includes the team's `artifact_deploy.sh` script, and a `deploy_war` action to execute it from OpsChain. Lets use the OpsChain CLI in interactive mode to run the script in OpsChain:
+The sample Git repository includes the team's `artifact_deploy.sh` script, and a `deploy_war` action to execute it from OpsChain. Execute the following command to create and run this change in `Test`:
 
 ```bash
-opschain change create
-```
-
-Choose/enter the following parameters:
-
-```text
-Environment: Test
-Git remote: origin
-Git rev: master
-Action (optional): deploy_war
-Create this change? Yes
+opschain change create --environment-code test --git-remote-name origin --git-rev master --action deploy_war --confirm
 ```
 
 An informational table and step tree will be displayed. Each step in an OpsChain change is executed within its own container, ensuring its isolation from the host system and other running changes.
 
-#### View change logs
+#### View `deploy_war` change logs
 
 Once the change is complete, copy the change ID displayed in the `opschain change create` table output and use it to view the logs from your change.
 
@@ -250,19 +330,17 @@ Edit the file, adding the `war_file` property as follows:
 }
 ```
 
-_Note: Be sure to remove the first line containing the project information._
-
 Replace the project properties with the contents of the updated JSON.
 
 ```bash
 opschain project set-properties --file-path project_properties.json --confirm
 ```
 
-Create a new change to deploy the WAR to the test environment and view the change logs:
+Create a new change to deploy the WAR to the test environment in the background (i.e. not blocking the terminal) and watch the change logs as the change progresses:
 
 ```bash
-opschain change create --environment-code test --action deploy_war --git-remote-name origin --git-rev master --confirm
-opschain change show-logs --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+opschain change create --environment-code test --action deploy_war --git-remote-name origin --git-rev master --confirm --background
+opschain change show-logs --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --follow
 ```
 
 Notice how the updated WAR file has been used when running the `artifact_deploy.sh` script.
@@ -324,7 +402,7 @@ opschain automated-change list --environment-code test
 
 #### Git commits
 
-Note the `--new-commits-only=false` parameter used in the rule creation commands above. This instructs OpsChain to always create a change on the cron schedule. If `--new-commits-only=true` were used instead, OpsChain would continue to follow the specified cron schedule, but would only create a change if new commits were present in the project Git repository. With this feature, OpsChain can be used to automatically promote code changes on a schedule that suits your team. For example, you could configure a rule to automatically promote new commits in `master` to a test environment. Have your developers work in feature branches and their merge to `master` will also promote the code to test - at a time that suits your team, or straight away. See the [automated change rules guide](../automated_changes.md) for more details.
+Note the `--new-commits-only=false` parameter used in the rule creation commands above. This instructs OpsChain to always create a change on the cron schedule. If `--new-commits-only=true` were used instead, OpsChain would continue to follow the specified cron schedule, but would only create a change if new commits were present in the project Git repository. With this feature, OpsChain can be used to automatically promote code changes on a schedule that suits your team. For example, you could configure a rule to automatically promote new commits in `master` to a test environment. Have your developers work in feature branches and their merge to `master` will also promote the code to test - at a time that suits your team, or straight away. See the [automated change rules guide](../reference/concepts/automated_changes.md) for more details.
 
 ## What to do next
 

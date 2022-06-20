@@ -8,7 +8,7 @@ When configuring the CLI, please note that some of the options described are opt
 
 The OpsChain CLI binary can be downloaded from the `opschain-trial` repository on [GitHub](https://github.com/LimePoint/opschain-trial/releases). Ensure the native build matches the version of OpsChain that you are using. We suggest moving the binary to a location in your `PATH` to ensure it is easily accessible.
 
-### macOs & Linux configuration
+### macOS & Linux configuration
 
 Throughout the documentation we refer to the CLI as `opschain`. For macOS and Linux users we suggest renaming the binary to reflect the common name (and save some future typing):
 
@@ -27,6 +27,12 @@ chmod +x opschain
 - On macOS you may need to trust the OpsChain CLI binary as it is not currently signed. See [the Apple documentation](https://support.apple.com/en-au/guide/mac-help/mh40616/mac) for details
 - The native binaries offer support for the latest version of the respective OS (older versions of the respective OS may work)
 
+### Dev dependencies
+
+The `opschain dev` subcommands depend on Docker. The `docker` executable must be available on the path and functional (i.e. `docker run --rm hello-world` should succeed) for these subcommands to be usable.
+
+The open source [Docker Engine](https://docs.docker.com/engine/) package can be used on supported platforms. The open source upstream [Moby](https://mobyproject.org/) package can be used as an alternative on supported platforms. [Docker Desktop](https://www.docker.com/products/docker-desktop/) - or an alternative like [Rancher Desktop](https://rancherdesktop.io/), [Colima](https://github.com/abiosoft/colima), or [Multipass](https://multipass.run/docs/docker-tutorial) (among others) - can be used on platforms without native Docker/Moby support.
+
 ## OpsChain CLI configuration
 
 The OpsChain CLI uses an `.opschainrc` configuration file. If `.opschainrc` is present in the current working directory it is used, otherwise, the `.opschainrc` from the user's home directory is used.
@@ -35,9 +41,9 @@ An [example .opschainrc](../../.opschainrc.example) is provided in this reposito
 
 The configuration file supports INI or JSON (with comments) formats.
 
-### Native CLI binary configuration
+### CLI configuration locations
 
-With native builds the OpsChain configuration is loaded by the `rc` package. The [`rc` documentation](https://www.npmjs.com/package/rc#standards) specifies the locations where the configuration file can be placed - the `appname` is `opschain`.
+The OpsChain CLI configuration is loaded by the `rc` package. The [`rc` documentation](https://www.npmjs.com/package/rc#standards) specifies the locations where the configuration file can be placed - the `appname` is `opschain`.
 
 _On Windows the `USERPROFILE` directory is used as the home directory._
 

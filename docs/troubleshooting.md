@@ -286,6 +286,14 @@ action :do_something_with_acknowledgement, steps: [OpsChain.wait_step, :do_somet
 action :do_something_parallel, steps: [:do_something_1, :do_something_2], run_as: :parallel
 ```
 
+### OpsChain dev - `Starting OpsChain development environment failed: Error: spawnSync docker ENOENT`
+
+The `opschain dev` subcommands rely on the `docker` executable to function.
+
+#### Solution - install the dev dependencies
+
+Install the CLI [dev dependencies](reference/cli.md#dev-dependencies) and then run the command again.
+
 ## Licence & authors
 
 - Author:: LimePoint (support@limepoint.com)

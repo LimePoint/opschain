@@ -8,7 +8,7 @@ There are several key OpsChain concepts that are useful to comprehend in order t
 
 ## Project
 
-Projects are used to organise environments and changes and are analogous to [JIRA projects](https://support.atlassian.com/jira-software-cloud/docs/what-is-a-jira-software-project/). Each project has
+Projects are used to organise environments and changes - a project contains many [environments](#environment), and [changes](#change) can be applied to these environments. Each project has
 
 - a Git repository containing configuration for that project
 - [properties](properties.md) where you can store project specific:
@@ -18,57 +18,15 @@ Projects are used to organise environments and changes and are analogous to [JIR
 
 ## Environment
 
-Environments represent the logical infrastructure environments under a project (for example Development or Production). Environments also have an associated set of encrypted [properties](properties.md). If a property exists at project and environment level, the environment value will override the project value.
-
-## Action
-
-An action is a task that can be performed (for example provisioning or restarting a server). Actions can have prerequisites that will run before and steps that will run after the main action has completed.
-
-The logic for an action can be provided directly within the action definition, or if the action forms part of a Resource, it can call logic within its associated controller.
-
-See the [actions reference guide](actions.md#defining-standalone-actions) and [developing your own resources](/docs/getting_started/developer.md#developing-resources/) guide for more information.
-
-## Resource
-
-A resource represents something that OpsChain can perform actions on (e.g. SOA Instance, Confluent Broker, Linux Host, etc.) and is an instance of a resource type. A resource may include:
-
-- A controller class that will provide logic for some (or all) of the resource actions
-- Any number of resource properties. These are key value pairs that can be referenced in the action code and are supplied as a hash to the controller's constructor
-- Any number of action definitions, allowing you to define actions that can be performed on the resource
-
-See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](/docs/getting_started/developer.md#developing-resources) guide for more information.
-
-## Resource type
-
-A resource type is a template for creating resources. Rather than duplicating the definition for each instance of a resource, the controller, resource properties and action definitions can be defined in the resource type and automatically configured when the resource is created.
-
-See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources](/docs/getting_started/developer.md#developing-resources) guide for more information.
-
-## Composite resource
-
-A composite resource is a resource that encapsulates child resources. An example of this is the confluent broker composite defined in the [resource types](https://github.com/LimePoint/opschain-examples-confluent/blob/master/lib/confluent/resource_types.rb) used in the [Confluent example](../../examples/running_a_complex_change.md). The confluent broker composite provides the definition of the resources required to create one or more child brokers. Each broker will have a host, java installation, confluent installation and broker definition.
-
-Composite resources also allow you to define actions that will apply to all the composite's children. The confluent broker composite in the example defines three actions (configure, start and install). Executing any of these actions on the composite will execute the equivalent action on each of the child brokers.
-
-See the [actions reference guide](actions.md#defining-composite-resources--resource-types) and [developing your own resources](/docs/getting_started/developer.md#developing-resources) guide for more information.
-
-## Project Git repository
-
-See the [OpsChain project Git repositories](../project_git_repositories.md) guide for more information.
-
-## Properties
-
-See the [OpsChain properties](properties.md) guide for more information.
-
-## Step
-
-A step is a unit of work that is run by an OpsChain worker. A step typically runs a single action that may have its own prerequisites and child steps.
+Environments represent the logical infrastructure environments under a [project](#project) (for example Development or Production). Environments also have an associated set of encrypted [properties](properties.md). If a property exists at project and environment level, the environment value will override the project value.
 
 ## Change
 
 A change is the application of an action from a specific commit in the project's Git repository, to a particular project environment. A step will be created for the change action, with additional steps created for each child action it requests.
 
 Only one change can be running in an environment at a time. Changes will sit in the `pending` state whilst waiting for the existing change to finish.
+
+The structure of your changes is entirely customisable, and will be influenced by the tools you use with OpsChain - you may structure your changes using "desired state" techniques, or by applying explicit actions (e.g. upgrading a single package in response to a security vulnerability).
 
 ### Change & step lifecycle
 
@@ -115,7 +73,71 @@ Automated change rules can be configured to automatically create and deploy chan
 - at a particular time
 - in response to project Git repository updates
 
-See [setting up automated changes](../../automated_changes.md) for a guide on how to create an automated change rule.
+See [setting up automated changes](automated_changes.md) for a guide on how to create an automated change rule.
+
+## Action
+
+An action is a task that can be performed (for example provisioning or restarting a server). Actions can have prerequisites that will run before and steps that will run after the main action has completed.
+
+The logic for an action can be provided directly within the action definition, or if the action forms part of a Resource, it can call logic within its associated controller.
+
+See the [actions reference guide](actions.md#defining-standalone-actions) and [developing your own resources guide](/docs/getting_started/developer.md#developing-resources/) for more information.
+
+## Resource
+
+A resource represents something that OpsChain can perform actions on (e.g. SOA Instance, Confluent Broker, Linux Host, etc.) and is an instance of a resource type. A resource may include:
+
+- A controller class that will provide logic for some (or all) of the resource actions
+- Any number of resource properties. These are key value pairs that can be referenced in the action code and are supplied as a hash to the controller's constructor
+- Any number of action definitions, allowing you to define actions that can be performed on the resource
+
+See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources guide](/docs/getting_started/developer.md#developing-resources) for more information.
+
+## Resource type
+
+A resource type is a template for creating resources. Rather than duplicating the definition for each instance of a resource, the controller, resource properties and action definitions can be defined in the resource type and automatically configured when the resource is created.
+
+See the [actions reference guide](actions.md#defining-resource-types--resources) and [developing your own resources guide](/docs/getting_started/developer.md#developing-resources) for more information.
+
+## Composite resource
+
+A composite resource is a resource that encapsulates child resources. An example of this is the Confluent broker composite defined in the [resource types](https://github.com/LimePoint/opschain-examples-confluent/blob/master/lib/confluent/resource_types.rb) used in the [Confluent example](../../examples/running_a_complex_change.md). The Confluent broker composite provides the definition of the resources required to create one or more child brokers. Each broker will have a host, Java installation, Confluent installation and broker definition.
+
+Composite resources also allow you to define actions that will apply to all the composite's children. The Confluent broker composite in the example defines three actions (configure, start and install). Executing any of these actions on the composite will execute the equivalent action on each of the child brokers.
+
+See the [actions reference guide](actions.md#defining-composite-resources--resource-types) and [developing your own resources guide](/docs/getting_started/developer.md#developing-resources) for more information.
+
+## Project Git repository
+
+See the [OpsChain project Git repositories](../project_git_repositories.md) guide for more information.
+
+## Git remote
+
+Project Git repositories use [Git remote](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes) to access centralised repositories (e.g. on GitHub or Bitbucket) to allow teams to develop and manage their OpsChain configuration together.
+
+## Properties
+
+The configuration properties used for changes - stored in an auditable and secure manner.
+
+See the [OpsChain properties](properties.md) guide for more information.
+
+## Step
+
+A step is a unit of work that is run by an OpsChain worker. A step typically runs a single action that may have its own prerequisites and child steps.
+
+## Step runner image
+
+All steps are executed within isolated containers. The step runner image is the base image used for the step containers.
+
+If a custom step runner image (`.opschain/Dockerfile`) is not used, then a default step runner image is created including the project Git repository at the relevant Git revision.
+
+See the [OpsChain step runner](step_runner.md) guide for more information.
+
+## Step context
+
+The step context can be used within the actions.rb and includes information about the current running change. It can be interacted with in a similar manner to [properties](#properties), but the values are automatically populated by OpsChain.
+
+See the [OpsChain step context](context.md) guide for more information.
 
 ## Controller
 
@@ -125,6 +147,12 @@ A controller is a ruby object that can be configured via properties and provides
 - one or more action methods (these do not accept parameters)
 
 An example controller is shown in the [actions reference guide](actions.md#controller).
+
+## Event
+
+OpsChain tracks the events performed as part of the OpsChain system.
+
+See the [OpsChain events](events.md) guide for more information.
 
 ## Licence & authors
 

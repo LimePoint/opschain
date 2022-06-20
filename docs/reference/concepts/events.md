@@ -185,7 +185,7 @@ Events created internally by OpsChain can be identified by the `system` property
 
 ## Removing events
 
-Older OpsChain events can be removed, see the [OpsChain data retention](operations/maintenance/data_retention.md) guide for more details.
+Older OpsChain events can be removed, see the [OpsChain data retention](/docs/operations/maintenance/data_retention.md) guide for more details.
 
 ## Licence & authors
 

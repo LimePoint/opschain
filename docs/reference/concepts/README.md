@@ -10,9 +10,17 @@ Introduces various concepts that will help you to understand the tool and its us
 
 Defining actions, resources and resource types in OpsChain.
 
+## [Automated changes](automated_changes.md)
+
+Learn about automating the creation and execution of changes with OpsChain.
+
 ## [Context](context.md)
 
 The context information available to your actions when running steps.
+
+## [Events](events.md)
+
+Learn about the events OpsChain tracks for auditing and reporting purposes.
 
 ## [Properties](properties.md)
 
