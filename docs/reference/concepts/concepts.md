@@ -115,6 +115,8 @@ See the [OpsChain project Git repositories](../project_git_repositories.md) guid
 
 Project Git repositories use [Git remote](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes) to access centralised repositories (e.g. on GitHub or Bitbucket) to allow teams to develop and manage their OpsChain configuration together.
 
+See the [Git remotes guide](git_remotes.md) for more information.
+
 ## Properties
 
 The configuration properties used for changes - stored in an auditable and secure manner.

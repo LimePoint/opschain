@@ -1,5 +1,18 @@
 # Changelog
 
+## 2022-06-29
+
+### Added
+
+- OpsChain project Git remotes can now be archived using the `opschain project archive-git-remote` command.
+- The OpsChain API project `git_remotes` endpoint now accepts `DELETE` requests. _Note: Git remotes  that are associated with changes will have their credentials cleared rather than being deleted._
+- Documentation has been added on Git remote operations. [Learn more](docs/reference/concepts/git_remotes.md).
+
+### Changed
+
+- `PATCH` request on the project `git_remotes` endpoint is now only used for archiving/unarchiving an existing Git remote. Git remote creation has been moved to its `POST` request.
+- The `opschain project add-git-remote` command now replaces `opschain project set-git-remote`.
+
 ## 2022-06-20
 
 ### Added

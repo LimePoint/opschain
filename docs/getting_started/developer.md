@@ -193,9 +193,9 @@ Associate your Git repository with the `web` project created during the getting 
 ```bash
 # Note: to avoid potentially storing the repository credentials in the shell history the `-U` (user) and `-P` (password) arguments can be omitted and filled in when prompted
 # Option 1: Using password authentication:
-$ opschain project set-git-remote -p <project code> -n origin -U '{username}' -P '{password / personal access token}' -u 'https://github.com/{username}/opschain-getting-started.git'
+$ opschain project add-git-remote -p <project code> -n origin -U '{username}' -P '{password / personal access token}' -u 'https://github.com/{username}/opschain-getting-started.git'
 # Option 2: Using SSH authentication:
-$ opschain project set-git-remote -p <project code> -n origin -s ./path/to/private/key -u 'git@github.com:{username}/opschain-getting-started.git'
+$ opschain project add-git-remote -p <project code> -n origin -s ./path/to/private/key -u 'git@github.com:{username}/opschain-getting-started.git'
 ```
 
 #### Run the change

@@ -61,7 +61,7 @@ Add the `opschain-getting-started` Git repository as a Git remote for your new p
 ```bash
 # Note: to avoid potentially storing the repository credentials in the shell history the `--user` and `--password` arguments can be omitted and filled in when prompted
 # Option 1: Using password authentication:
-$ opschain project set-git-remote \
+$ opschain project add-git-remote \
   --project-code web \
   --name origin \
   --user '{username}' \
@@ -70,7 +70,7 @@ $ opschain project set-git-remote \
   --ssh-key-file '' \
   --confirm
 # Option 2: Using SSH authentication:
-$ opschain project set-git-remote \
+$ opschain project add-git-remote \
   --project-code web \
   --name origin \
   --ssh-key-file ./path/to/private/key \

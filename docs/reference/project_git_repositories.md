@@ -33,13 +33,13 @@ Add the project Git repository as a [remote](https://git-scm.com/book/en/v2/Git-
 ```bash
 # Note: to avoid potentially storing the repository credentials in the shell history the `--user` and `--password` arguments can be omitted and filled in when prompted
 # Example 1: Using password authentication:
-$ opschain project set-git-remote --project-code <project code> --name origin --user '{username}' --password '{password / personal access token}' --url 'https://github.com/LimePoint/{repository name}.git'
+$ opschain project add-git-remote --project-code <project code> --name origin --user '{username}' --password '{password / personal access token}' --url 'https://github.com/LimePoint/{repository name}.git'
 # Example 2: Using SSH authentication: using a key
-$ opschain project set-git-remote --project-code <project code> --name origin --ssh-key-file ./path/to/private/key --url 'git@github.com:LimePoint/{repository name}.git'
+$ opschain project add-git-remote --project-code <project code> --name origin --ssh-key-file ./path/to/private/key --url 'git@github.com:LimePoint/{repository name}.git'
 # Example 3: Using SSH authentication: using credentials
-$ opschain project set-git-remote --project-code <project code> --name origin --user '{ssh username}' --password '{ssh password}' --url 'ssh://repo.example.com/{repository name}.git' --ssh-key-file ''
+$ opschain project add-git-remote --project-code <project code> --name origin --user '{ssh username}' --password '{ssh password}' --url 'ssh://repo.example.com/{repository name}.git' --ssh-key-file ''
 # Example 4: Using SSH authentication: using a key with a passphrase
-$ opschain project set-git-remote --project-code <project code> --name origin --ssh-key-file ./path/to/private/key --username git --password '{ssh key passphrase}' --url 'ssh://github.com:LimePoint/{repository name}.git'
+$ opschain project add-git-remote --project-code <project code> --name origin --ssh-key-file ./path/to/private/key --username git --password '{ssh key passphrase}' --url 'ssh://github.com:LimePoint/{repository name}.git'
 ```
 
 ## SSH Git remotes
@@ -59,7 +59,7 @@ The configured SSH keys can be seen by running the following command:
 kubectl -n opschain-trial get ConfigMap opschain-ssh-known-hosts -o jsonpath='{.data.known_hosts}'
 ```
 
-The Git remote is tested during the `set-git-remote` request, and if your SSH endpoint is not trusted by the bundled `known_hosts` list then the remote will not be added.
+The Git remote is tested during the `add-git-remote` request, and if your SSH endpoint is not trusted by the bundled `known_hosts` list then the remote will not be added.
 
 ### Customising the SSH `known_hosts` file
 

@@ -104,9 +104,11 @@ The following is the list of API events that are currently supported, these valu
 - `api:environments:destroy`
 - `api:environments:index`
 - `api:environments:show`
+- `api:git_remotes:create`
 - `api:git_remotes:index`
 - `api:git_remotes:show`
 - `api:git_remotes:update`
+- `api:git_remotes:destroy`
 - `api:log_lines:index`
 - `api:projects:create`
 - `api:projects:update`

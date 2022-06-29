@@ -69,6 +69,7 @@ curl -u opschain:password -X PATCH http://localhost:3000/environments/dev -H "Ac
     }
   }
 }
+DATA
 ```
 
 Note: You will need to edit the example to replace:
