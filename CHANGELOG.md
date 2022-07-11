@@ -1,5 +1,26 @@
 # Changelog
 
+## 2022-07-11
+
+### Changed
+
+- The OpsChain CLI now displays the user who continued a [wait step](docs/reference/concepts/actions.md#wait-steps).
+- Upgraded Bundler to 2.3.17.
+- Upgraded HashiCorp Vault to 1.11.0 in the OpsChain Vault example.
+- Upgraded Kong Helm chart to v2.10.2.
+- Upgraded Kong Ingress Controller to v2.4.2.
+- Upgraded OPA to v0.42.0.
+- Upgraded cert-manager 1.8.2
+- Upgraded PostgreSQL to 14.4
+- The `ruby-terraform` Gem version supported by the `opschain-resource-types` Gem has been updated to v1.6.0.
+- Upgraded Terraform to 1.2.4 in the OpsChain examples.
+- Upgraded Terraform 'hashicorp/aws' provider to 4.21.0 in the OpsChain Ansible example.
+- Upgraded Terraform 'hashicorp/kubernetes' provider to 2.12.1 in the OpsChain Confluent, Terraform, and Weblogic examples.
+
+### Fixed
+
+- OpsChain now supports project Git repositories with > 100 character paths.
+
 ## 2022-06-29
 
 ### Added
