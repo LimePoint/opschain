@@ -1,5 +1,28 @@
 # Changelog
 
+## 2022-07-20
+
+### Important breaking changes
+
+- The way OpsChain manages its local clone of your project Git repositories has changed to improve support for projects with multiple Git remotes. **You must re-add all active Git remotes for this release**.
+  - Use the `opschain project list-git-remotes` command to identify your active Git remotes in each project.
+  - Archive each Git remote using the `opschain project archive-git-remote` command.
+  - Re-associate each Git remote with the project using the `opschain project add-git-remote` command.
+
+### Added
+
+- The `opschain change create` command now accepts a `--follow` argument, allowing you to follow the change logs rather than view the step tree.
+
+### Removed
+
+- The `Metadata` column has been removed from the `opschain change list` output. To view the metadata, use the `opschain change show` command.
+
+### Changed
+
+- When creating a change, OpsChain now validates the supplied Git remote and revision after the change has been created. If the supplied values are invalid, the change will complete with an error status and the change logs will provide further information.
+- Archiving a Git remote will now unschedule any automated change rules related to it.
+- Git remotes used by automated change rules can no longer be deleted. Deleting the related automated change rules is now a prerequisite to deleting the Git remote.
+
 ## 2022-07-11
 
 ### Changed

@@ -133,6 +133,8 @@ opschain change show-logs --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
 Our very simple first change has just logged `Hello world` - we can also see information about the change as OpsChain processed it.
 
+_Note: If you wish to view the logs as your change executes, specify the `--follow` option when [creating the change](#create-and-run-a-change). This option can also be supplied to the `opschain change show-logs` command to follow an existing change._
+
 ### Viewing all changes executed in an environment
 
 OpsChain helps teams work together to manage change. One of the features that OpsChain provides to that end is to keep track of which changes have already been executed in an environment.
@@ -287,13 +289,19 @@ The same change action and git revision are provided, ensuring the change applie
 
 #### View the production change list
 
-To `change list` command allows you to view the list of changes applied to an environment. The inclusion of metadata in the list helps identify specific changes.
+The `change list` command allows you to view the list of changes applied to an environment.
 
 ```bash
 opschain change list --environment-code prod
 ```
 
-Looking at the list, our project team can now easily see who deployed a WAR to production, when they deployed it, and even who approved the deployment!
+Looking at the list, you should be able to view the information about the [change you just created](#run-the-production-change), such as who deployed a WAR to production, when they deployed it, and the status of the change execution.
+
+To view the metadata we associated with the production change, use the `change show` command.
+
+```bash
+opschain change show --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
 
 #### View the production logs and properties
 
@@ -336,11 +344,10 @@ Replace the project properties with the contents of the updated JSON.
 opschain project set-properties --file-path project_properties.json --confirm
 ```
 
-Create a new change to deploy the WAR to the test environment in the background (i.e. not blocking the terminal) and watch the change logs as the change progresses:
+Create a new change to deploy the WAR to the test environment and watch the change logs as the change progresses:
 
 ```bash
-opschain change create --environment-code test --action deploy_war --git-remote-name origin --git-rev master --confirm --background
-opschain change show-logs --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx --follow
+opschain change create --environment-code test --action deploy_war --git-remote-name origin --git-rev master --confirm --follow
 ```
 
 Notice how the updated WAR file has been used when running the `artifact_deploy.sh` script.
