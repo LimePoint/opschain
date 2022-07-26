@@ -1,6 +1,21 @@
 # Changelog
 
+## 2022-07-26
+
+*This release is a bugfix for the 2022-07-20 release which is unusable. Please check the release notes for both releases before upgrading.*
+
+### Changed
+
+- The `opschain change create` command `--follow` argument has been renamed to `--follow-logs`.
+
+### Fixed
+
+- The 2022-07-20 release contained a bug that caused it to fail when upgrading existing instances. This release corrects the invalid migration and must be used in place of 2022-07-20.
+- The `opschain change create` command now exits with an error code for cancelled or failed changes when using the `--follow-logs` argument. This matches the functionality when this argument is not provided.
+
 ## 2022-07-20
+
+*This release has a critical bug and should not be used. Please use release 2022-07-26 instead.**
 
 ### Important breaking changes
 
