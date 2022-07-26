@@ -133,7 +133,7 @@ opschain change show-logs --change-id xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
 
 Our very simple first change has just logged `Hello world` - we can also see information about the change as OpsChain processed it.
 
-_Note: If you wish to view the logs as your change executes, specify the `--follow` option when [creating the change](#create-and-run-a-change). This option can also be supplied to the `opschain change show-logs` command to follow an existing change._
+_Note: If you wish to view the logs as your change executes, specify the `--follow-logs` option when [creating the change](#create-and-run-a-change). This option can also be supplied to the `opschain change show-logs` command to follow an existing change._
 
 ### Viewing all changes executed in an environment
 
@@ -347,7 +347,7 @@ opschain project set-properties --file-path project_properties.json --confirm
 Create a new change to deploy the WAR to the test environment and watch the change logs as the change progresses:
 
 ```bash
-opschain change create --environment-code test --action deploy_war --git-remote-name origin --git-rev master --confirm --follow
+opschain change create --environment-code test --action deploy_war --git-remote-name origin --git-rev master --confirm --follow-logs
 ```
 
 Notice how the updated WAR file has been used when running the `artifact_deploy.sh` script.
