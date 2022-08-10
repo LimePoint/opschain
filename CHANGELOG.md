@@ -1,5 +1,24 @@
 # Changelog
 
+## 2022-08-10
+
+### Important breaking change
+
+- The OpsChain step runner Dockerfile template has been changed. After upgrading, please use `opschain dev create-dockerfile` to create a copy of the new template in your project's `.opschain` folder and then reapply your customisations.
+
+### Added
+
+- The OpsChain CLI now allows you to build a step runner image from your project's `.opschain/Dockerfile` via the `opschain dev build-runner-image` command. See [custom runner images](docs/docker_development_environment.md#custom-runner-images) for more details on using the image in your OpsChain development environment.
+
+### Changed
+
+- The `opschain project add-git-remote` command will now display the Git remote details rather than the text `Git remote added successfully`.
+
+### Fixed
+
+- The image registry garbage collector now handles error conditions that may have caused runner images to be garbage collected prematurely.
+- The `opschain change retry` command now follows the change logs when supplied with the `--follow-logs` argument.
+
 ## 2022-07-26
 
 *This release is a bugfix for the 2022-07-20 release which is unusable. Please check the release notes for both releases before upgrading.*

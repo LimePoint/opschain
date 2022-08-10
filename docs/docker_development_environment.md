@@ -141,65 +141,40 @@ When run manually, the linter tests all not-ignored files in the Git repository.
 
 `[host] $ OPSCHAIN_LINT_GIT_KNOWN_ONLY=true opschain dev lint`.
 
-## Using custom runner images
+## Custom runner images
 
-If your project uses a custom Dockerfile (`.opschain/Dockerfile`) you can use the custom runner image as the base for `opschain dev`.
+### Building the image
 
-### Build and use a custom runner image
-
-Use the following procedure to create the custom runner image:
-
-#### 1. Obtain the standard runner image
-
-The custom Dockerfile must be based on an OpsChain runner image (`limepoint/opschain-runner` or `limepoint/opschain-runner-enterprise`). To find the current version for your OpsChain instance, you can run the `opschain info` CLI command. Ensure you have the image locally or have run the [configure Docker Hub access](operations/installation.md#configure-docker-hub-access) steps from the getting started guide.
-
-#### 2. Create a repository tarball
-
-A repository tarball is required to build the custom runner image. From your project repository execute:
+If your project uses a custom Dockerfile (`.opschain/Dockerfile`) you can use the OpsChain CLI to create a base Docker image for `opschain dev`. The `opschain dev build-runner-image` command will build the image and tag it as `customer_runner:latest`. If you would prefer a different image tag, include the optional `--tag` argument when running the command:
 
 ```bash
-tar -cf repo.tar --exclude=repo.tar .
+[host] $ opschain dev build-runner-image --tag my_custom_runner:1.0.0
 ```
 
-_Note: The project repository is mounted into the container when the image is in use via `opschain dev` so it is not necessary to rebuild this tarball following local repository changes._
+#### Bundler credentials
 
-#### 3. Create a `step_context_env.json`
+If your `.opschain/Dockerfile` uses OpsChain environment variables to supply credentials when running bundler, create a [step context JSON](#create-a-step_contextjson-optional) file in the `.opschain` directory that includes the relevant values and this will be used when building your image.
 
-The repository build requires a `step_context_env.json` file in the root directory of your project repository. Follow the steps [described earlier](#create-a-step_contextjson-optional) to create the file, being sure to create `./step_context_env.json` rather than `.opschain/step_context.json`.
+### Using the image
+
+You can use the custom image as follows:
 
 ```bash
-cat << EOF > ./step_context_env.json
-{
-   "project": {
-      "properties": $(opschain project show-properties -p web)
-   },
-   "environment": {
-      "properties": $(opschain environment show-properties -p web -e test)
-   }
-}
-EOF
+[host] $ OPSCHAIN_RUNNER_IMAGE=my_custom_runner:1.0.0 opschain dev
 ```
 
-_Note: Replace the `web` project and `test` environment codes with the codes applicable to your project and environment._
+_Note: Modify the OPSCHAIN_RUNNER_IMAGE value to reflect the tag of your custom image._
 
-#### 4. Build and use the image
-
-Use the following command to build the custom runner image. _Note: the image tag `custom_runner` can be replaced with a valid Docker tag of your choice_
+To make the change permanent the OPSCHAIN_RUNNER_IMAGE can be specified in your shell config file, e.g.:
 
 ```bash
-OPSCHAIN_VERSION='2022-04-11' # EXAMPLE ONLY - To find the current version for your OpsChain instance, you can run the `opschain info` CLI command
-docker build --build-arg OPSCHAIN_BASE_RUNNER=limepoint/opschain-runner:${OPSCHAIN_VERSION} --build-arg GIT_REV=HEAD --build-arg GIT_SHA=$(git rev-parse HEAD) -t custom_runner -f .opschain/Dockerfile .
+[host] $ echo export OPSCHAIN_RUNNER_IMAGE=\"my_custom_runner:1.0.0\" >> ~/.zshrc # or ~/.bashrc if using bash
+[host] $ exec zsh # reload the shell config by starting a new session (replace zsh with bash as appropriate)
 ```
 
-_Note: If using the enterprise runner, set the OPSCHAIN_BASE_RUNNER build argument to be `limepoint/opschain-runner-enterprise:latest`._
+Now calls to `opschain dev` will use the custom image by default.
 
-Start the development environment using the OPSCHAIN_RUNNER_IMAGE environment variable to specify the runner image to use (replace `custom_runner` with the tag used in the build command above if you altered it).
-
-```bash
-[host] $ OPSCHAIN_RUNNER_IMAGE=custom_runner opschain dev
-```
-
-### Enabling tracing
+## Enabling tracing
 
 When running OpsChain actions within the OpsChain development environment you can enable tracing by setting the OPSCHAIN_TRACE environment variable.
 
