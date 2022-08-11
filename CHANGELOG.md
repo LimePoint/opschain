@@ -1,5 +1,11 @@
 # Changelog
 
+## 2022-08-12
+
+### Fixed
+
+- The `error: cannot lock ref` error that occurred when multiple changes were executed for the same Git remote has been fixed.
+
 ## 2022-08-10
 
 ### Important breaking change
