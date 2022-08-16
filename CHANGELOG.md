@@ -1,5 +1,12 @@
 # Changelog
 
+## 2022-08-16
+
+### Important breaking change
+
+- OpsChain environments codes are no longer globally unique and can now be reused in different projects. With this change, the `/environments` API endpoint has been removed. Please use the `/projects/<project_code>/environments` endpoint for all future environment specific API access.
+  - *_Note: Due to the endpoint changes, please ensure you are using the latest OpsChain CLI version._*
+
 ## 2022-08-12
 
 ### Fixed

@@ -58,10 +58,10 @@ Automated change rules that exist for an archived environment will be disabled a
 
 ## Unarchiving projects and environments
 
-Archiving a resource is intended as a one way process and the CLI does not provide an option to unarchive them. In the event that you need to unarchive a project or environment, you will need to interact directly with the API server. The following example patch request will unarchive the `dev` environment:
+Archiving a resource is intended as a one way process and the CLI does not provide an option to unarchive them. In the event that you need to unarchive a project or environment, you will need to interact directly with the API server. The following example patch request will unarchive the `dev` environment in the `demo` project:
 
 ```bash
-curl -u opschain:password -X PATCH http://localhost:3000/environments/dev -H "Accept: application/vnd.api+json" -H "Content-Type: application/vnd.api+json" --data-binary @- <<DATA
+curl -u opschain:password -X PATCH http://localhost:3000/projects/demo/environments/dev -H "Accept: application/vnd.api+json" -H "Content-Type: application/vnd.api+json" --data-binary @- <<DATA
 {
   "data": {
     "attributes": {
@@ -76,10 +76,10 @@ Note: You will need to edit the example to replace:
 
 - `opschain:password` with your username and password
 - `localhost:3000` with the OpsChain host and port
-- `environments/dev` with the appropriate path for the archived resource. e.g.
-
-  - `projects/<project code>`
-  - `environments/<environment code>`
+- `projects/demo/environments/dev` with the appropriate path for the archived resource. e.g.
+  - `projects/<project code>` to unarchive a project
+  - `projects/<project code>/environments/<environment code>` to unarchive an environment
+  - `projects/<project code>/git_remotes/<git remote id>` to unarchive a git remote
 
 ## Licence & authors
 
