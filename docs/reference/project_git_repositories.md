@@ -79,11 +79,11 @@ Then edit the exported resource, ensure you update the `metadata.name` field to 
 kubectl -n opschain-trial apply -f custom-opschain-ssh-known-hosts.yaml
 ```
 
-Next update the `.env` file to use the custom config map by updating the `OPSCHAIN_SSH_KNOWN_HOSTS_CONFIG_MAP` configuration to use the custom config map name that was used when modifying the YAML file above. Once this has been done, rerun the OpsChain configuration, and apply the update:
+Next update your server configuration's `.env` file to use the custom config map by updating the `OPSCHAIN_SSH_KNOWN_HOSTS_CONFIG_MAP` configuration to use the custom config map name that was used when modifying the YAML file above. Once this has been done, rerun the OpsChain configuration, and apply the update:
 
 ```bash
-opschain-configure
-opschain-deploy
+opschain server configure
+opschain server deploy
 ```
 
 ## Licence & authors

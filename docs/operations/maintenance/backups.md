@@ -11,13 +11,13 @@ This guide assumes you have a Kubernetes backup tool to perform your backup and 
 Prior to backing up your resources, we recommend stopping OpsChain:
 
 ```bash
-opschain-stop
+opschain server stop
 ```
 
-It is recommended that you backup the entire `opschain-trial` namespace so that in an unlikely event of a failure, you can get OpsChain up an running after the recovery and restore process. Using the backup tool of your choice, make a snapshot of the `opschain-trial` resources. In addition to the resources in the `opschain-trial` namespace, the OpsChain persistent volumes that fulfill the persistent volume claims (in the `opschain-trial` namespace) need to be backed up as well (e.g. database, git repos, ldap, step data). Once the snapshot has been created, you can restart OpsChain:
+It is recommended that you backup the entire `opschain-trial` namespace so that in an unlikely event of a failure, you can get OpsChain up an running after the recovery and restore process. Using the backup tool of your choice, make a snapshot of the `opschain-trial` resources. In addition to the resources in the `opschain-trial` namespace, the OpsChain persistent volumes that fulfill the persistent volume claims (in the `opschain-trial` namespace) need to be backed up as well (e.g. database, Git repos, LDAP, step data). Once the snapshot has been created, you can restart OpsChain:
 
 ```bash
-opschain-start
+opschain server start
 ```
 
 ## Restoring a backup

@@ -24,8 +24,8 @@ OPSCHAIN_AUTH_SERVICE=OPA
 After reconfiguring and restarting, OpsChain will use the Open Policy Agent server to authorise all requests:
 
 ```bash
-opschain-configure
-opschain-deploy
+opschain server configure
+opschain server deploy
 ```
 
 ### Expose OpsChain LDAP and authorisation service server ports
@@ -57,7 +57,7 @@ opschain environment list -p demo
 
 ### Update the security configuration
 
-When OpsChain is started, it initialises its security configuration from the `opschain_auth/security_configuration.json` file. An empty configuration file was created in the `opschain_auth` directory when you ran the `opschain-configure` command. Edit this file, replacing the contents with the following JSON:
+When OpsChain is started, it initialises its security configuration from the `security_configuration.json` file. An empty configuration file was created when you ran the `opschain server configure` command. Edit this file, replacing the contents with the following JSON:
 
 ```json
 {
@@ -81,7 +81,7 @@ _Note: The `security_configuration.json` file is case sensitive - all keys and c
 Upload the new configuration to the authorisation server:
 
 ```bash
-curl -k http://localhost:8181/v1/data -H "Content-Type: application/json" -X PUT -d "@./opschain_auth/security_configuration.json"
+curl -k http://localhost:8181/v1/data -H "Content-Type: application/json" -X PUT -d "@./security_configuration.json"
 ```
 
 ### Assign LDAP group

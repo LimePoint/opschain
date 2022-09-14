@@ -52,16 +52,36 @@ See the [OpsChain context guide](context.md) if you would like to learn more abo
 
 OpsChain will look for the following files in your project's Git repository:
 
-- `.opschain/properties.json`
-- `.opschain/properties.toml`
-- `.opschain/properties.yaml`
+1. `.opschain/properties.json`
+2. `.opschain/properties.toml`
+3. `.opschain/properties.yaml`
+4. `.opschain/environments/<environment code>.json`
+5. `.opschain/environments/<environment code>.toml`
+6. `.opschain/environments/<environment code>.yaml`
 
-If more than one of these files exist in the repository, they will be merged together in the order listed above. Properties defined in properties.yaml will override properties defined in properties.toml and properties.json. Properties defined in properties.toml will override properties defined in properties.json. Within each action, the result of merging these files will be available via `OpsChain.repository.properties`.
+If more than one of these files exist in the repository, they will be merged together in the order listed above. When two files define the same property/value, the latter file's value will override the former. E.g. if `.opschain/properties.toml` and `.opschain/environments/<environment code>.json` both contain the same property, the value from `.opschain/environments/<environment code>.json` will be used.
+
+Within each action, the result of merging these files will be available via `OpsChain.repository.properties`.
 
 #### Notes
 
 1. The repository properties are read only within each action (as OpsChain cannot modify the underlying Git repository to store any changes).
-2. Opening the [OpsChain development environment](../../docker_development_environment.md)) (`opschain dev`) and running `opschain-action -AT` will raise explanatory exceptions if the schema or structure of the files is invalid.
+2. Loading repository properties in the [OpsChain development environment](../../docker_development_environment.md) (`opschain dev`):
+   - running `opschain-action -AT` will raise explanatory exceptions if the schema or structure of these file(s) is invalid.
+   - the `<environment code>.[json|toml|yaml]` files will be loaded by `opschain-action` if the `step_context.json` file includes the relevant context environment code. e.g.
+
+    ```yaml
+    {
+      "context": {
+        ...
+        "environment": {
+          "code": "<environment code>",
+          ...
+        }
+      },
+      ...
+    }
+    ```
 
 ### Database
 
@@ -195,15 +215,17 @@ OpsChain.project.properties.delete(:parent)
 
 An example of setting properties can be seen in the [Confluent example](https://github.com/LimePoint/opschain-examples-confluent). The `provision` [action](concepts.md#action) in [`actions.rb`](https://github.com/LimePoint/opschain-examples-confluent/blob/master/actions.rb) modifies the environment properties to change settings for broker1.
 
-#### Changing properties in parallel steps
+#### Changing properties in concurrent steps
 
-When a step starts, the current state of the project and environment properties (in the OpsChain database) is supplied to the step's action. This means steps that run in parallel will start with the same set of properties. At the completion of each step, a [JSONPatch](http://jsonpatch.com/) is generated describing the changes made to the project and environment properties by the action. It is up to the action developer to ensure any changes made to properties by parallel steps are compatible with each other.
+Changes that take advantage of the `:parallel` [change execution strategy](actions.md#child-execution-strategy) will cause OpsChain to run multiple steps concurrently. Similarly, starting multiple changes at once will also lead to steps executing concurrently.
 
-_OpsChain recommends that you do not modify properties from within parallel steps. However, if this is a requirement of your change, ensuring the modifications apply to unrelated sections of the OpsChain properties will mitigate the risk. The following sections describe various types of properties changes and the possible errors you may encounter._
+When each step starts, the current state of the project and environment properties (in the OpsChain database) is supplied to the step's action(s). This means steps that run concurrently will start with the same set of properties. At the completion of each step, any changes made to the project and/or environment properties by the action, are reflected in a [JSON Patch](http://jsonpatch.com/) applicable to the relevant source properties. The JSON Patch(es) are returned from the step runner to the OpsChain API and applied to the current state of the database properties. It is up to the action developer to ensure any changes made to properties by concurrent steps are compatible with each other.
+
+_Note: OpsChain recommends that you do not modify properties from within concurrent steps. However, if this is a requirement, ensuring the modifications apply to unrelated sections of the OpsChain properties will mitigate the risk. The following sections describe various types of properties changes and the possible errors you may encounter. For simplicity, the examples all show concurrent steps created within a single change using the `:parallel` child step execution strategy. Steps executing from changes that have been submitted concurrently can run into similar limitations._
 
 ##### Modifying different properties
 
-Using a JSONPatch to apply changes made by actions to the OpsChain properties ensures parallel steps can modify independent properties successfully. For example:
+Using a JSON Patch to apply changes made by actions to the OpsChain properties ensures concurrent steps can modify independent properties successfully. For example:
 
 ```ruby
 # Sets up an initial set of values for the OpsChain project properties, then calls the foo and bar child actions in parallel
@@ -228,7 +250,7 @@ At the completion of the child steps, the OpsChain project properties will be:
 
 ##### Race conditions
 
-Modifying the same property in parallel steps will produce unexpected results. In the example below, at the completion of the child steps, the final value of the `race` property will be the value assigned by the child step that completes last.
+Modifying the same property in concurrent steps will produce unexpected results. In the example below, at the completion of the child steps, the final value of the `race` property will be the value assigned by the child step that completes last.
 
 ```ruby
 # Sets up an initial set of values for the OpsChain project properties, then calls the foo and bar child actions in parallel
@@ -247,7 +269,7 @@ end
 
 ##### Conflicting changes
 
-In addition to the [race conditions](#race-conditions) example above, changes to OpsChain properties made by parallel steps can create JSONPatch conflicts that will result in a change failing. The following scenarios are example of parallel steps that will generate conflicting JSONPatches.
+In addition to the [race conditions](#race-conditions) example above, changes to OpsChain properties made by concurrent steps can create JSON Patch conflicts that will result in a change failing. The following scenarios are example of parallel steps that will generate conflicting JSON Patches.
 
 _Scenario 1:_ Deleting a property in one child, while modifying that property's elements in the other.
 
@@ -283,7 +305,52 @@ action :bar do
 end
 ```
 
-In both scenarios, the `default` action will fail running child step `bar`. As the child steps start with the properties defined by the `default` action, the logic within each child will complete successfully. However, as `bar` (with its included sleep) will finish last, the JSONPatch it produces will fail when OpsChain attempts to apply it as `foo` has changed the `parent` property to be incompatible with the patch made by `bar`. In both cases, the `child` element no longer exists and cannot be modified.
+In both scenarios, the `default` action will fail running child step `bar`. As the child steps start with the properties defined by the `default` action, the logic within each child will complete successfully. However, as `bar` (with its included sleep) will finish last, the JSON Patch it produces will fail when OpsChain attempts to apply it as `foo` has changed the `parent` property to be incompatible with the patch made by `bar`. In both cases, the `child` element no longer exists and cannot be modified.
+
+##### Resolving conflicts
+
+If a step's JSON Patches fail to apply, the change will error at the failing step and the logs will provide the following information for each failed patch:
+
+```json
+ERROR: Updates made to the project properties in step "[c5556d54-d98f-415e-9198-4134848fb93f] bar" could not be applied.
+
+Original project properties supplied to the step:
+{
+  "parent": {
+    "child": "value"
+  }
+}
+
+JSON Patch reflecting the updates made to the properties in the step (that cannot be applied):
+[{
+  "op": "replace",
+  "path": "/parent/child",
+  "value": "new value"
+}]
+
+Patched original properties - that could not be saved because the project properties were modified outside this step:
+{
+  "parent": {
+    "child": "new value"
+  }
+}
+
+Current value of project properties (that the JSON Patch fails to apply to):
+{}
+
+Please resolve this conflict manually and correct the project properties via the `opschain project set-properties` command. If applicable, retry the change to complete any remaining steps.
+```
+
+Use the four JSON documents from the change log, and your knowledge of the actions being performed by the conflicting steps, to:
+
+1. construct a version of the properties that incorporates the required updates
+2. use the CLI to manually update the relevant properties.
+
+If there are no further steps in the change to run, there is no need to retry the failed change and you can continue using OpsChain as normal.
+
+If there are further steps in the change to run, and the failed step is idempotent, you can use the `opschain change retry` command to restart the change from the failed step. **It is important to note that OpsChain will re-run the failed step in its entirety.**
+
+If there are further steps in the change to run, and the failed step is NOT idempotent, you will need to create change(s) to perform the incomplete actions.
 
 ### File properties
 
@@ -327,11 +394,11 @@ The file format attribute provides OpsChain with information on how to serialise
 
 _Please contact LimePoint if you require other file formats._
 
-### Storing & removing files
+#### Storing & removing files
 
 The project or environment properties can be edited directly to add, edit or remove file properties (using a combination of a text editor, the `show-properties` and `set-properties` commands). In addition, OpsChain enables you to store and remove files from within your actions.
 
-#### Project file properties
+##### Project file properties
 
 To store a file in the project properties
 
@@ -345,7 +412,7 @@ To remove a file from the project properties
   OpsChain.project.remove_file!('/file/to/store.txt')
 ```
 
-#### Environment file properties
+##### Environment file properties
 
 To store a file in the environment properties
 
@@ -359,7 +426,7 @@ To remove a file from the environment properties
   OpsChain.environment.remove_file!('/file/to/store.txt')
 ```
 
-#### Optional file format
+##### Optional file format
 
 The `store_file!` method accepts an optional `format:` parameter, allowing you to specify the [file format](#file-formats) OpsChain should use when adding the file into the file properties. For example:
 
@@ -367,7 +434,7 @@ The `store_file!` method accepts an optional `format:` parameter, allowing you t
   OpsChain.environment.store_file!('/file/to/store.txt', format: :base64)
 ```
 
-#### Storing files examples
+##### Storing files examples
 
 Examples of storing files can be seen in the [Ansible example](https://github.com/LimePoint/opschain-examples-ansible).
 
@@ -399,6 +466,32 @@ Each [step](concepts.md#step) [action](concepts.md#action) is executed using the
 #### Setting environment variables example
 
 An example of setting environment variables can be seen in the [Ansible example](https://github.com/LimePoint/opschain-examples-ansible). The [`project_properties.json`](https://github.com/LimePoint/opschain-examples-ansible/blob/master/project_properties.json) contains the credentials to be able to successfully login to your AWS account.
+
+### Project / environment configuration
+
+The `opschain.config` section of the properties allow you to change the OpsChain configuration for the project or environment the properties are assigned to. The following configuration options can be set in your properties JSON:
+
+```json
+{
+  "opschain": {
+    "config": {
+      "change_log_retention_days": -- see table below --,
+      "event_retention_days": -- see table below --,
+      "environments": {
+        "allow_parallel_changes": -- see table below --
+      }
+    }
+  }
+}
+```
+
+_Note: Configuration options within `opschain.config.environments` can only be set in project properties and are applicable to all environments within the project. All other configuration options can be set at project or environment level, with environment configuration overriding project configuration._
+
+| Configuration Option      | Description                                                                                                                                                                                             | Default value                                |
+|:--------------------------|:--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:---------------------------------------------|
+| change_log_retention_days | The number of days to retain change logs. See [change log retention](../../operations/maintenance/data_retention.md#change-log-retention) for more information.                                         | unset, OpsChain will retain all change logs. |
+| event_retention_days      | The number of days to retain events. See [event retention](../../operations/maintenance/data_retention.md#event-retention) for more information                                                                          | unset, OpsChain will retain all events.       |
+| allow_parallel_changes    | For a given project, allow multiple changes to run within a single environment. See [change execution options](changes.md#change-execution-options) in the changes reference guide for more information | false                                        |
 
 ## Licence & authors
 

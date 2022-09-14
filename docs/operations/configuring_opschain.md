@@ -6,7 +6,7 @@ This guide describes the various configuration options that can be included in y
 
 The following configuration variables can be set in your `.env` file:
 
-_Note: After making changes to your `.env` file, you must run `opschain-configure` and then start/restart OpsChain._
+_Note: After making changes to your `.env` file, you must run `opschain server configure` and then re-deploy OpsChain (e.g. `opschain server deploy`)._
 
 ### Common configuration
 

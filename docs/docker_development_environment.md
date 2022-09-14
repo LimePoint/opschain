@@ -184,7 +184,7 @@ When running OpsChain actions within the OpsChain development environment you ca
 
 ## Removing older runner images
 
-The OpsChain development environment container uses the OpsChain step runner image. Upgrading the CLI (or altering the `OPSCHAIN_VERSION` environment variable) will cause a new version of the image to be downloaded. To recover the space used by these older images, the `docker rmi` command can be used to remove them.
+The OpsChain development environment container uses the OpsChain step runner image. Upgrading the CLI will cause a new version of the image to be downloaded. To recover the space used by these older images, the `docker rmi` command can be used to remove them.
 
 _Note: The following commands assume you are not using the OPSCHAIN_RUNNER_IMAGE to specify your runner image._
 

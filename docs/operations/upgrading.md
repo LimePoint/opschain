@@ -1,16 +1,21 @@
 # Upgrading
 
-To upgrade OpsChain go to the location on your OpsChain host where you cloned the [OpsChain trial repository](https://github.com/LimePoint/opschain-trial), pull the latest changes from the remote Git repository, and deploy the latest version of OpsChain (which will pull the latest images).
+To upgrade OpsChain go to the location on your OpsChain host where you store your OpsChain server configuration (e.g. `~/opschain-configuration`), [download and install the latest CLI](../reference/cli.md#installation), and deploy the latest version of OpsChain (which will pull the latest images).
 
 ```bash
-cd opschain-trial
-git pull
-opschain-configure
-# reapply any manual modifications to values.yaml - the old values.yaml will be stored as a backup by the configure script
-opschain-deploy
+cd ~/opschain-configuration # or the directory where you store your OpsChain server configuration
+# download and install the latest CLI
+opschain server configure
+# reapply any manual modifications to values.yaml - the old values.yaml will be stored as a backup by the configure script, alternatively a values.override.yaml file could be used
+opschain server deploy
+# we suggest committing your config to Git after upgrade
 ```
 
-The updated OpsChain CLI native binaries (with the release date matching the current release (which can be found in the `RELEASE-VERSION` file in the `opschain-trial` repo or by running the `opschain info` CLI command)) must be [downloaded](../reference/cli.md#installation).
+## Configure overrides
+
+Any configuration modifications that need to be applied to `values.yaml` during the upgrade can be stored in a `values.override.yaml` file in the same directory.
+
+Configuration from this file is automatically applied by the OpsChain CLI - [learn more](/docs/reference/cli.md#configuration-overrides).
 
 ## Updating runner images in the OpsChain registry
 
@@ -19,13 +24,13 @@ OpsChain will not automatically remove old images in the registry during the upg
 ### List runner image tags in the registry
 
 ```bash
-opschain-utils list_runner_image_tags
+opschain server utils list_runner_image_tags
 ```
 
 ### Remove a runner image tag from the registry
 
 ```bash
-opschain-utils 'remove_runner_image_tag[<tag_to_remove>]'
+opschain server utils 'remove_runner_image_tag[<tag_to_remove>]'
 ```
 
 The [internal registry garbage collection](maintenance/docker_image_cleanup.md#internal-registry-garbage-collection) will then remove these images from disk.

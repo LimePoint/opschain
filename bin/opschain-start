@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-set -eo pipefail -o nounset
-
-CDPATH='' cd "$(dirname "${BASH_SOURCE[0]}")"
-
-exec ./opschain-deploy "$@"

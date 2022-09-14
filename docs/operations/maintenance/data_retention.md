@@ -25,8 +25,8 @@ The global retention setting is used if a project or environment configuration i
 ```bash
 # update OPSCHAIN_CHANGE_LOG_RETENTION_DAYS or OPSCHAIN_EVENT_RETENTION_DAYS to the desired value, add the key if it is not present
 vi .env
-opschain-configure
-opschain-deploy
+opschain server configure
+opschain server deploy
 ```
 
 ### Project/environment
@@ -61,8 +61,8 @@ For example, the removal job could be configured to only run on weekends as foll
 
 ```bash
 echo "OPSCHAIN_CLEAN_OLD_DATA_JOB_CRON='0 23 * * 6-7'" >> .env
-opschain-configure
-opschain-deploy
+opschain server configure
+opschain server deploy
 ```
 
 [crontab.guru](https://crontab.guru/) is a useful tool for creating cron rules.

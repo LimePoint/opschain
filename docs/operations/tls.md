@@ -6,8 +6,8 @@ To enable HTTPS access to the OpsChain API, specify a host name via the OPSCHAIN
 
 ```shell
 echo OPSCHAIN_API_HOST_NAME=opschain.my-company.com >> .env
-opschain-configure
-opschain-deploy
+opschain server configure
+opschain server deploy
 ```
 
 Configure a DNS entry for this host name to point to the external address of the opschain-ingress-proxy load balancer.
@@ -29,8 +29,8 @@ To use a custom certificate for the HTTPS listener, create a [Kubernetes TLS sec
 ```shell
 kubectl -n opschain-trial create secret tls my-custom-certificate --cert=path/to/tls.cert --key=path/to/tls.key
 echo OPSCHAIN_API_CERTIFICATE_SECRET_NAME=my-custom-certificate >> .env
-opschain-configure
-opschain-deploy
+opschain server configure
+opschain server deploy
 ```
 
 ## Configure the OpsChain CLI to trust a certificate authority
@@ -51,6 +51,6 @@ export NODE_EXTRA_CA_CERTS=path/to/opschain-ca.pem
 Once the OpsChain API HTTPS listener has been successfully configured, you can disable the insecure HTTP listener so that OpsChain is only accessible via HTTPS. To disable the HTTP port, edit `.env` file and set `OPSCHAIN_INSECURE_HTTP_PORT_ENABLED` to `false`, apply the update by running the following:
 
 ```bash
-opschain-configure
-opschain-deploy
+opschain server configure
+opschain server deploy
 ```

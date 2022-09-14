@@ -1,0 +1,16 @@
+# An example of a values.override.yaml configuation file.
+# Replace the `{{ alternative image registry domain name }}` with an alternative to `opschain-image-registry.local.gd` if another value is desired.
+trow:
+  trow:
+    domain: "{{ alternative image registry domain name }}"
+  ingress:
+    hosts:
+      - paths: ['/']
+        host: "{{ alternative image registry domain name }}"
+    tls:
+      - secretName: opschain-image-registry-cert
+        hosts:
+          - "{{ alternative image registry domain name }}"
+
+env:
+  OPSCHAIN_IMAGE_REGISTRY_HOST: "{{ alternative image registry domain name }}"

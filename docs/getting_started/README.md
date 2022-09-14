@@ -24,7 +24,7 @@ _Note: On macOS you may need to trust the OpsChain CLI binary as it is not curre
 
 ### Configure the OpsChain CLI
 
-Create a `.opschainrc` in your home directory (e.g. `~/.opschainrc` on Linux, macOS, or WSL) based on the [example](/.opschainrc.example) - be sure to update the `apiBaseUrl` to point to your OpsChain server installation, and the `username` and `password` configuration for your user account. On Windows - not within WSL - the configuration file should be placed in the `USERPROFILE` directory. See the [CLI configuration locations](../reference/cli.md#cli-configuration-locations) guide if you would like to learn more.
+Create a `.opschainrc` in your home directory (e.g. `~/.opschainrc` on Linux, macOS, or WSL) based on the [example](/config_file_examples/opschainrc.example) - be sure to update the `apiBaseUrl` to point to your OpsChain server installation, and the `username` and `password` configuration for your user account. On Windows - not within WSL - the configuration file should be placed in the `USERPROFILE` directory. See the [CLI configuration locations](../reference/cli.md#cli-configuration-locations) guide if you would like to learn more.
 
 _Note: If you create a `.opschainrc` file in your current working directory, it will be used instead of the version in your home directory._
 
@@ -410,6 +410,10 @@ opschain automated-change list --environment-code test
 #### Git commits
 
 Note the `--new-commits-only=false` parameter used in the rule creation commands above. This instructs OpsChain to always create a change on the cron schedule. If `--new-commits-only=true` were used instead, OpsChain would continue to follow the specified cron schedule, but would only create a change if new commits were present in the project Git repository. With this feature, OpsChain can be used to automatically promote code changes on a schedule that suits your team. For example, you could configure a rule to automatically promote new commits in `master` to a test environment. Have your developers work in feature branches and their merge to `master` will also promote the code to test - at a time that suits your team, or straight away. See the [automated change rules guide](../reference/concepts/automated_changes.md) for more details.
+
+### Output formats
+
+The majority of OpsChain CLI commands accept an optional `--output` argument, allowing you to alter the format of the command's output. By outputting machine readable formats such as JSON or YAML, the CLI can be incorporated into automated pipelines as required. See the [OpsChain CLI reference](../reference/cli.md#opschain-cli-configuration-settings) for more information on how to configure the default output format(s) for the CLI.
 
 ## What to do next
 

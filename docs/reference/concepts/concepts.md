@@ -22,11 +22,9 @@ Environments represent the logical infrastructure environments under a [project]
 
 ## Change
 
-A change is the application of an action from a specific commit in the project's Git repository, to a particular project environment. A step will be created for the change action, with additional steps created for each child action it requests.
+A change is the application of an action from a specific commit in the project's Git repository, to a particular project environment.
 
-Only one change can be running in an environment at a time. Changes will sit in the `pending` state whilst waiting for the existing change to finish.
-
-The structure of your changes is entirely customisable, and will be influenced by the tools you use with OpsChain - you may structure your changes using "desired state" techniques, or by applying explicit actions (e.g. upgrading a single package in response to a security vulnerability).
+See the OpsChain [change reference guide](changes.md) guide for more information.
 
 ### Change & step lifecycle
 

@@ -75,7 +75,7 @@ This Dockerfile can be modified and committed like any other file in the project
 The build context used when building the step runner image has access to the following files:
 
 - `repo.tar` - The complete project Git repository including the .git directory with all commit info. This file will change (and invalidate the build context) when a different commit is used for a change or when there are changes to the project's Git repository
-- `step_context_env.json` - The environment variables for the project and environment for use by `opschain-exec`. This file will change if the environment variables in the project or environment [properties](properties.md) change
+- `step_context_env.json` - The [environment variable properties](properties.md#environment-variables) for the project and environment, along with the project and environment [context](context.md) values for use by `opschain-exec`. This file will change if the environment variables in the project or environment change
 
 The build arguments supplied to [BuildKit](https://docs.docker.com/develop/develop-images/build_enhancements/) when building the image include:
 

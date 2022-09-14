@@ -27,7 +27,7 @@ OpsChain changes may fail with the following error: `BUG: error: failed to solve
 
 #### Solution - `BUG: error: failed to solve`
 
-Run the following command in your `opschain-trial` directory and then retry your change:
+Run the following command in your OpsChain server configuration directory (e.g. `~/opschain-configuration`) and then retry your change:
 
 ```bash
 source .env
@@ -209,25 +209,26 @@ rm -f .git/hooks/pre-commit
 
 Or, if you would like to skip the hook just once, the `--no-verify` argument can be used when committing.
 
-### Updates made to properties could not be applied
+### Updates made to properties in change "...", step "..." could not be applied
 
-The following error highlights that you are running parallel steps and OpsChain is unable to successfully apply the JSONPatch with your property updates.
+The following error highlights that actions running in concurrent steps have made incompatible modifications to project and/or environment properties and OpsChain is unable to successfully apply the JSON Patch with these property updates.
 
 ```ruby
 Failed processing step: /opt/opschain/app/commands/process_step_result_command.rb:17:in `rescue in call': Failed processing step "bar" (ProcessStepResultCommand::Error)
 # ...
-rescue in apply_properties_diff!': Updates made to properties in step "bar" could not be applied - parallel steps must not modify the same property. (ProcessStepResultCommand::Error)
+rescue in apply_properties_diff!': Updates made to properties in change "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx", step "[xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx] bar" could not be applied - see change logs for more details. (ProcessStepResultCommand::Error)
 # ...
 in `remove_operation': JSON::PatchObjectOperationOnArrayException (JSON::PatchObjectOperationOnArrayException)
 # ...
 ```
 
-#### Solution - refactor your child steps
+#### Solution - updates made to properties could not be applied
 
-To avoid getting this error message, you can use one of the following options:
+The change logs of the change specified in the error will include a number of JSON documents containing the necessary information to manually correct the OpsChain properties. See the [resolving conflicts](reference/concepts/properties.md#resolving-conflicts) section of the properties reference guide for more information.
 
-- ensure that your parallel steps aren't [modifying the same property](reference/concepts/properties.md#conflicting-changes)
-- convert those child steps to serial
+##### Preventing future properties update failures
+
+The [properties reference guide](reference/concepts/properties.md#changing-properties-in-concurrent-steps) includes a number of examples of properties updates that will cause JSON Patch failure. Review the code in your `actions.rb` and where possible avoid these types of updates.
 
 ### OpsChain change - `OpsChain wait steps can't be created as actions - they can only be used as steps.`
 
@@ -292,7 +293,7 @@ The `opschain dev` subcommands rely on the `docker` executable to function.
 
 #### Solution - install the dev dependencies
 
-Install the CLI [dev dependencies](reference/cli.md#dev-dependencies) and then run the command again.
+Install the CLI [dev dependencies](reference/cli.md#dev-subcommand-dependencies) and then run the command again.
 
 ## Licence & authors
 

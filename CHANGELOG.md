@@ -1,5 +1,47 @@
 # Changelog
 
+## 2022-09-15
+
+### Important breaking change
+
+- The OpsChain step runner Dockerfile template has been changed. After upgrading, please use `opschain dev create-dockerfile` to create a copy of the new template in your project's `.opschain` folder and then reapply your customisations.
+- The OpsChain server management commands (`bin/*`) have been removed from the `opschain-trial` repository. They have been replaced by `opschain server` subcommands.
+- The `opschain_auth/security_configuration.json` file must be moved out of the `opschain_auth` folder and stored in the same folder as the `.env` and `values.yaml` files, e.g. `mv opschain_auth/security_configuration.json .`
+
+### Added
+
+- The OpsChain CLI now supports an optional `--output` argument for many operations, allowing you to display the command's output in different formats (e.g. YAML / JSON). See the relevant command's `--help` output for the available formats.
+- Default output format(s) can be configured via your `.opschainrc` file. See the [OpsChain CLI reference](docs/reference/cli.md#opschain-cli-configuration-settings) for more information.
+- The `opschain change retry` command now accepts a `--background` argument, allowing you to retry the change in the background.
+- OpsChain now supports loading environment specific repository properties. See the [Git repository](docs/reference/concepts/properties.md#git-repository) section of the properties guide for more information.
+- OpsChain can now be configured to support running concurrent changes for a single project environment. See the [change execution options](docs/reference/concepts/changes.md#change-execution-options) section of the changes reference guide for more information.
+- The OpsChain CLI has new subcommands for managing and configuring OpsChain server installations under `opschain server`, e.g. `opschain server configure` - [learn more](docs/reference/cli.md#server-management).
+- The `opschain server` commands support a `values.override.yaml` file for automatically applying Helm customisations.
+
+### Changed
+
+- When the available log lines for a single request (via `/log_lines` with a filter or via `changes/<change_id>/log_lines`) exceeds the limit for a single request - a `more` link is provided to navigate to the next chunk.
+- Upgraded cert-manager to 1.9.1.
+- Upgraded Fluent Bit to v1.9.8.
+- Upgraded HashiCorp Vault to 1.11.3 in the OpsChain Vault example.
+- Upgraded Kong Helm chart to v2.12.0.
+- Upgraded Kong Ingress Controller to v2.5.0.
+- Upgraded OPA to v0.44.0.
+- Upgraded OpsChain Log Aggregator Image to Fluentd 1.15.1.
+- Upgraded PostgreSQL to 14.5.
+- Upgraded Terraform to 1.2.9 in the OpsChain examples.
+- Upgraded Terraform 'hashicorp/aws' provider to 4.29.0 in the OpsChain Ansible example.
+- Upgraded BuildKit to v0.10.4.
+
+### Fixed
+
+- The `opschain dev build-runner-image` command now supplies the `OPSCHAIN_VERSION` build argument to Docker when building your custom step runner image.
+
+### Removed
+
+- **Breaking change** - The OpsChain CLI `opschain dev` commands no longer recognise the `OPSCHAIN_VERSION` environment variable when starting the development environment or building runner images. Ensure you have the corresponding version of the CLI to access the required OpsChain images, e.g. to use the `2022-08-16` OpsChain images, use the `2022-08-16` version of the CLI.
+- The `bin/opschain-*` commands have been removed from the `opschain-trial` repository - they have been replaced by the `opschain server` subcommands as described above. _Note: the `opschain server` commands do not need to be run in the `opschain-trial` directory. You can now move the existing configuration files (the `.env`, `values.yaml`, and `opschain_auth/security_configuration.json` files) into a folder of your choosing and run the commands from there. Please ensure as part of the move, that you move the `opschain_auth/security_configuration.json` file out of the `opschain_auth` folder per the instructions above (under "important breaking change")._
+
 ## 2022-08-16
 
 ### Important breaking change

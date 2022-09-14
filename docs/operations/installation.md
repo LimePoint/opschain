@@ -55,18 +55,9 @@ By default OpsChain will attempt to use `opschain-image-registry.local.gd` which
 
 [`hostctl`](https://guumaster.github.io/) can be used to achieve this with the `hostctl add domains opschain opschain-image-registry.local.gd` command.
 
-_Note: A hostname other that `opschain-image-registry.local.gd` can be used if desired - the value would need to be manually updated in the `.env` file after the `opschain-configure` script below has been run._
+_Note: A hostname other than `opschain-image-registry.local.gd` can be used if desired - the value would need to be manually updated in the `.env` file and `values.yaml` file after the `opschain server configure` script below has been run. Alternatively the value could be added to a [`values.override.yaml` configuration override file](/docs/reference/cli.md#configuration-overrides) - [see an example](/config_file_examples/values.override.yaml.example)._
 
 ## Installation
-
-### Clone the OpsChain trial repository
-
-Clone the [OpsChain trial repository](https://github.com/LimePoint/opschain-trial) to your local machine using your preferred Git client.
-
-```bash
-git clone git@github.com:LimePoint/opschain-trial.git
-cd opschain-trial
-```
 
 ### Install the OpsChain licence
 
@@ -78,25 +69,6 @@ To access the private OpsChain repositories you will need to create a [GitHub pe
 
 This token will also be used for access to the example OpsChain Git repositories that been created to provide sample code for the getting started guide, and examples of how you might implement different types of changes.
 
-### Add the OpsChain commands to the path
-
-To add the OpsChain commands to the path run:
-
-```bash
-export PATH="$(pwd)/bin:$PATH" # set the path for the current shell
-```
-
-To make the change permanent the path can be modified in your shell config file, e.g.:
-
-```bash
-echo export PATH=\"$(pwd)/bin:'$PATH'\" >> ~/.zshrc # or ~/.bashrc if using bash
-exec zsh # reload the shell config by starting a new session (replace zsh with bash as appropriate)
-```
-
-Alternatively, the OpsChain commands can be run without adding them to the path by specifying the full path to the command each time. The examples below assume the commands have been added to the path.
-
-_The OpsChain commands do not support being executed via symlinks (i.e. `ln -s bin/opschain-deploy /usr/bin/opschain-deploy` will not work)._
-
 ### Install `cert-manager`
 
 OpsChain depends on [`cert-manager`](https://cert-manager.io/) to manage its internal SSL/TLS certificates.
@@ -104,27 +76,37 @@ OpsChain depends on [`cert-manager`](https://cert-manager.io/) to manage its int
 ```bash
 helm repo add jetstack https://charts.jetstack.io
 helm repo update
-helm upgrade --install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.8.2 --set installCRDs=true
+helm upgrade --install cert-manager jetstack/cert-manager --namespace cert-manager --create-namespace --version v1.9.1 --set installCRDs=true
 ```
 
 `cert-manager` is now ready for OpsChain to use - no additional `cert-manager` configuration is required.
 
 _Please [contact OpsChain support](/docs/support.md#how-to-contact-us) if you would like the option to use OpsChain without installing `cert-manager`._
 
+### Install the OpsChain CLI
+
+OpsChain has native CLI binaries for Windows, macOS and Linux. See the [installation](../reference/cli.md#installation) section of our CLI reference guide to download and configure the `opschain` executable.
+
+The OpsChain CLI is used to configure the OpsChain server installation.
+
 ### Configure OpsChain
 
-OpsChain needs to be configured before first run (and when upgrading) by executing the configuration script:
+OpsChain needs to be configured before first run (and when upgrading) by executing the `opschain server configure` command. This command will generate (or update) a number of configuration files in the current directory. For this reason we recommend creating a specific OpsChain configuration folder that should be used whenever you execute any `opschain server` subcommands.
 
 ```bash
-opschain-configure
+mkdir ~/opschain-configuration # use another directory as desired
+cd ~/opschain-configuration
+opschain server configure
 ```
 
 You will be asked to confirm whether you would like to use certain features and provide your credentials for the OpsChain installation.
 
+_Note: all future `opschain server` commands must be run in the `~/opschain-configuration` (or equivalent) directory to ensure that the right configuration is used._
+
 ### Deploy the OpsChain containers
 
 ```bash
-opschain-deploy
+opschain server deploy
 ```
 
 This will start the OpsChain server and its dependent services in separate Kubernetes pods. For more information on these containers see the [architecture overview](../reference/architecture.md).
@@ -137,37 +119,29 @@ The `kubectl` command can be used to see the deployment progress:
 kubectl get all -n opschain-trial
 ```
 
-Once the `opschain-deploy` script has returned you can continue with the rest of the setup process.
+Once the `opschain server deploy` script has returned you can continue with the rest of the setup process.
 
 ### Create an OpsChain user
 
 The OpsChain API server requires a valid username and password. To create a user, execute:
 
 ```bash
-opschain-utils "create_user['opschain','password']"
+opschain server utils "create_user['opschain','password']"
 ```
 
-_Note: Please ensure there are no spaces included in the parameter you supply to `opschain_utils`._
+_Note: Please ensure there are no spaces included in the parameter you supply to `opschain server utils`._
 
-### Setup the OpsChain CLI
+### Configure the OpsChain CLI's API access
 
-OpsChain has native CLI binaries for Windows, macOS and Linux. See the [installation](../reference/cli.md#installation) section of our CLI reference guide to download and configure the `opschain` executable.
-
-Copy the example CLI configuration file to your home directory:
+Create a CLI configuration file in your home directory based on the [example](/config_file_examples/opschainrc.example):
 
 ```bash
-cp .opschainrc.example ~/.opschainrc
+vi ~/.opschainrc
 ```
 
-Verify that the username and password combination created earlier is reflected in the configuration file.
+If you changed the username or password in the `create_user` command above, ensure you modify the `.opschainrc` file to reflect your changes.
 
-```bash
-cat ~/.opschainrc
-```
-
-If you changed the username or password in the create_user command above, please edit the `.opschainrc` file to reflect your changes.
-
-In addition, the `apiBaseUrl` configuration in `~/.opschainrc` must be updated to reflect the external OpsChain API address. This address reflects the OpsChain listening port specified as part of the `opschain-configure` script. If you accepted the default setting, this will be `http://localhost:3000/`.
+In addition, the `apiBaseUrl` configuration in `~/.opschainrc` must be updated to reflect the external OpsChain API address. This address reflects the OpsChain listening port specified as part of the `opschain server configure` script. If you accepted the default setting, this will be `http://localhost:3000/`.
 
 Learn more about the `opschainrc` configuration in the [CLI configuration guide](../reference/cli.md#opschain-cli-configuration).
 
@@ -186,7 +160,7 @@ security add-trusted-cert -k ~/Library/Keychains/login.keychain-db -p ssl opscha
 
 ### Configure Docker Hub access (optional)
 
-If you intend to use the OpsChain development environment (used when creating new action definitions) you will need to be logged in to [Docker Hub](https://hub.docker.com/) as the `opschaintrial` user (or, if you have an [enterprise licence for OpsChain](../reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle), the `opschainenterprise` user). These are the same Docker credentials requested by the `opschain-configure` command.
+If you intend to use the OpsChain development environment (used when creating new action definitions) you will need to be logged in to [Docker Hub](https://hub.docker.com/) as the `opschaintrial` user (or, if you have an [enterprise licence for OpsChain](../reference/opschain_and_mintpress.md#enterprise-controllers-for-oracle), the `opschainenterprise` user). These are the same Docker credentials requested by the `opschain server configure` command.
 
 ```bash
 docker login --username opschaintrial
