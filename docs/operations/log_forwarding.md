@@ -55,7 +55,7 @@ logAggregator:
 If your internal registry requires credentials to pull this image, update the OpsChain [imagePullSecret](https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/) config to allow this image to be pulled:
 
 ```shell
-kubectl edit -n opschain-trial secret opschain-image-secret
+kubectl edit -n opschain secret opschain-image-secret
 # modify the base64 encoded `.dockerconfigjson` value to add the additional credentials (don't remove the existing ones)
 ```
 

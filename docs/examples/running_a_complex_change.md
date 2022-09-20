@@ -67,7 +67,7 @@ kubectl apply -f k8s/namespace.yaml
 
 This will create an `opschain-confluent` namespace, and assign relevant permissions to the `opschain-runner` role to allow it to create and destroy the Confluent deployment in it.
 
-_Note: this step assumes you are using the default `opschain-trial` Kubernetes namespace for OpsChain. You must modify the `ServiceAccount` namespace in `k8s/namespace.yaml` if this is not the case._
+_Note: this step assumes you are using the default `opschain` Kubernetes namespace for OpsChain. You must modify the `ServiceAccount` namespace in `k8s/namespace.yaml` if this is not the case._
 
 ### Build the base image
 

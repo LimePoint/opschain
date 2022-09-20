@@ -42,9 +42,9 @@ Remove the `.opschainrc` file that you created from the [create an OpsChain CLI 
 rm ~/.opschainrc
 ```
 
-## Delete the OpsChain directory
+## Delete the OpsChain configuration files
 
-Remove the `opschain-trial` directory that you cloned from the [clone the OpsChain trial repository](installation.md#clone-the-opschain-trial-repository) section in the installation guide.
+Remove the configuration files that you created when [configuring Opschain](installation.md#configure-opschain)
 
 ## Uninstall native CLI
 

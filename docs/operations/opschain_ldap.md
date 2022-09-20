@@ -60,7 +60,7 @@ _Note: An example [Active Directory configuration](#example-active-directory-con
 Restart the OpsChain API server to allow the new LDAP configuration to take effect.
 
 ```bash
-kubectl rollout restart -n opschain-trial deployment.apps/opschain-api
+kubectl rollout restart -n opschain deployment.apps/opschain-api
 ```
 
 ### Example Active Directory configuration

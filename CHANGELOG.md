@@ -1,5 +1,18 @@
 # Changelog
 
+## 2022-09-20
+
+### Changed
+
+- As part of OpsChain moving out of the trial phase, the default Kubernetes namespace has been updated to `opschain` and the documentation repository has been moved to [`opschain`](https://github.com/LimePoint/opschain).
+- Properties validation in OpsChain has been improved. Formerly properties validation was only applied when a step started running. Now, properties validation is also applied:
+  - when project or environment properties are set (via the API or CLI). Detailed errors will be provided (via the API or CLI) if the properties fail validation.
+  - after an OpsChain action modifies project or environment properties. If the modifications cause the properties to fail validation, the change will error and detailed errors will be reported in the change logs.
+
+### Fixed
+
+- The OpsChain Helm chart no longer deploys a cluster role or cluster role binding for the OpsChain ingress service account. The role and binding are now included with the Kong v2.12.0 Helm deployment.
+
 ## 2022-09-15
 
 ### Important breaking change

@@ -35,13 +35,13 @@ OpsChain authorisation relies on the LDAP groups assigned to each user to determ
 To do this, run the `kubectl port-forward` command:
 
 ```bash
-kubectl port-forward -n opschain-trial deploy/opschain-auth 8181
+kubectl port-forward -n opschain deploy/opschain-auth 8181
 # open a new terminal
-kubectl port-forward -n opschain-trial deploy/opschain-ldap 389
+kubectl port-forward -n opschain deploy/opschain-ldap 389
 # open a new terminal
 ```
 
-_Note: this step assumes you are using the default `opschain-trial` Kubernetes namespace for OpsChain._
+_Note: this step assumes you are using the default `opschain` Kubernetes namespace for OpsChain._
 
 ## Restricting project and environment access
 

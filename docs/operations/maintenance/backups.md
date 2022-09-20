@@ -14,7 +14,7 @@ Prior to backing up your resources, we recommend stopping OpsChain:
 opschain server stop
 ```
 
-It is recommended that you backup the entire `opschain-trial` namespace so that in an unlikely event of a failure, you can get OpsChain up an running after the recovery and restore process. Using the backup tool of your choice, make a snapshot of the `opschain-trial` resources. In addition to the resources in the `opschain-trial` namespace, the OpsChain persistent volumes that fulfill the persistent volume claims (in the `opschain-trial` namespace) need to be backed up as well (e.g. database, Git repos, LDAP, step data). Once the snapshot has been created, you can restart OpsChain:
+It is recommended that you backup the entire `opschain` namespace so that in an unlikely event of a failure, you can get OpsChain up and running after the recovery and restore process. Using the backup tool of your choice, make a snapshot of the `opschain` resources. In addition to the resources in the `opschain` namespace, the OpsChain persistent volumes that fulfil the persistent volume claims (in the `opschain` namespace) need to be backed up as well (e.g. database, Git repos, LDAP, step data). Once the snapshot has been created, you can restart OpsChain:
 
 ```bash
 opschain server start

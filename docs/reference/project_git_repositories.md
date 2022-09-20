@@ -55,8 +55,7 @@ OpsChain includes a bundled SSH `known_hosts` file which includes SSH keys for a
 The configured SSH keys can be seen by running the following command:
 
 ```bash
-# these commands assume you are using the default `OPSCHAIN_KUBERNETES_NAMESPACE` value of `opschain-trial`
-kubectl -n opschain-trial get ConfigMap opschain-ssh-known-hosts -o jsonpath='{.data.known_hosts}'
+kubectl -n opschain get ConfigMap opschain-ssh-known-hosts -o jsonpath='{.data.known_hosts}'
 ```
 
 The Git remote is tested during the `add-git-remote` request, and if your SSH endpoint is not trusted by the bundled `known_hosts` list then the remote will not be added.
@@ -65,18 +64,19 @@ The Git remote is tested during the `add-git-remote` request, and if your SSH en
 
 The bundled SSH `known_hosts` file can be customised by creating a new config map, configuring OpsChain to use it, and applying the updated config.
 
-The following steps assume you are using the default `OPSCHAIN_KUBERNETES_NAMESPACE` (`opschain-trial`). Modify the commands if your namespace is different.
+The following steps assume you are using the default `OPSCHAIN_KUBERNETES_NAMESPACE` (`opschain`). Modify the commands if your namespace is different.
 
 The bundled config map can be used as a template to help create the custom `known_hosts` config map:
 
 ```bash
-kubectl -n opschain-trial get ConfigMap opschain-ssh-known-hosts -o yaml > custom-opschain-ssh-known-hosts.yaml
+# these commands assume you are using the default `OPSCHAIN_KUBERNETES_NAMESPACE` value of `opschain`
+kubectl -n opschain get ConfigMap opschain-ssh-known-hosts -o yaml > custom-opschain-ssh-known-hosts.yaml
 ```
 
 Then edit the exported resource, ensure you update the `metadata.name` field to a different config map name, and then update the file contents under the known_hosts key. Once the resource definition has been updated, use `kubectl` to create the custom config map:
 
 ```bash
-kubectl -n opschain-trial apply -f custom-opschain-ssh-known-hosts.yaml
+kubectl -n opschain apply -f custom-opschain-ssh-known-hosts.yaml
 ```
 
 Next update your server configuration's `.env` file to use the custom config map by updating the `OPSCHAIN_SSH_KNOWN_HOSTS_CONFIG_MAP` configuration to use the custom config map name that was used when modifying the YAML file above. Once this has been done, rerun the OpsChain configuration, and apply the update:

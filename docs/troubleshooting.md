@@ -10,8 +10,8 @@ After following this guide you should understand:
 When errors are encountered with OpsChain, the following high-level checklist may be useful:
 
 - check the log output from any relevant changes using `opschain change show-logs`
-- check the log output from Kubernetes, e.g. via [`kubetail -n opschain-trial --since 0`](https://github.com/johanhaleby/kubetail)
-  - to see the logs for a specific OpsChain service using `kubetail`, run `kubetail {{service}} -n opschain-trial` (use `kubectl get deployments -n opschain-trial` to see the list of OpsChain services)
+- check the log output from Kubernetes, e.g. via [`kubetail -n opschain --since 0`](https://github.com/johanhaleby/kubetail)
+  - to see the logs for a specific OpsChain service using `kubetail`, run `kubetail {{service}} -n opschain` (use `kubectl get deployments -n opschain` to see the list of OpsChain services)
 - ensure the OpsChain [hardware/VM prerequisites](operations/installation.md#hardwarevm-requirements) are met
   - ensure that adequate disk space is still available
 - ensure the system time is accurate
@@ -39,10 +39,10 @@ kubectl exec -ti -n ${OPSCHAIN_KUBERNETES_NAMESPACE} deploy/opschain-api-worker 
 The most likely cause of this issue is an invalid or expired licence file, although other scenarios can cause a container to be flagged as unhealthy. To view the container log files execute:
 
 ```bash
-kubetail -n opschain-trial --since 0
+kubetail -n opschain --since 0
 ```
 
-_Note: if you would like to view the logs of a single service, include the service name in the command e.g. `kubetail opschain-api -n opschain-trial --since 0`. A complete list of the OpsChain services is available via `kubectl get deployments -n opschain-trial`._
+_Note: if you would like to view the logs of a single service, include the service name in the command e.g. `kubetail opschain-api -n opschain --since 0`. A complete list of the OpsChain services is available via `kubectl get deployments -n opschain`._
 
 #### Expired / invalid licence
 

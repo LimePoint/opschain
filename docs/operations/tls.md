@@ -15,7 +15,7 @@ Configure a DNS entry for this host name to point to the external address of the
 After you have deployed OpsChain, you can run the following command to obtain the external address:
 
 ```shell
-kubectl get svc -n opschain-trial opschain-ingress-proxy -o jsonpath='{.status.loadBalancer.ingress[]}'
+kubectl get svc -n opschain opschain-ingress-proxy -o jsonpath='{.status.loadBalancer.ingress[]}'
 ```
 
 Depending on your Kubernetes load balancer implementation, the command will either return an IP address or a host name that you can use to configure your DNS entry.
@@ -27,7 +27,7 @@ By default, OpsChain will issue a certificate for the HTTPS listener from the in
 To use a custom certificate for the HTTPS listener, create a [Kubernetes TLS secret](https://kubernetes.io/docs/concepts/configuration/secret/#tls-secrets) that contains your custom certificate and private key and set the value of OPSCHAIN_API_CERTIFICATE_SECRET_NAME to the name of your secret.
 
 ```shell
-kubectl -n opschain-trial create secret tls my-custom-certificate --cert=path/to/tls.cert --key=path/to/tls.key
+kubectl -n opschain create secret tls my-custom-certificate --cert=path/to/tls.cert --key=path/to/tls.key
 echo OPSCHAIN_API_CERTIFICATE_SECRET_NAME=my-custom-certificate >> .env
 opschain server configure
 opschain server deploy
@@ -42,7 +42,7 @@ To do this, you can set the NODE_EXTRA_CA_CERTS environment variable to a file p
 For example, to configure the CLI to trust the internal opschain-ca certificate authority, run the following:
 
 ```shell
-kubectl -n opschain-trial get secret opschain-ca-key-pair -o jsonpath="{.data.ca\.crt}" | base64 -d > opschain-ca.pem
+kubectl -n opschain get secret opschain-ca-key-pair -o jsonpath="{.data.ca\.crt}" | base64 -d > opschain-ca.pem
 export NODE_EXTRA_CA_CERTS=path/to/opschain-ca.pem
 ```
 

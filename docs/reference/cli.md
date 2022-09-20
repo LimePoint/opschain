@@ -6,7 +6,7 @@ When configuring the CLI, please note that some of the options described are opt
 
 ## Installation
 
-The OpsChain CLI binary can be downloaded from the `opschain-trial` repository on [GitHub](https://github.com/LimePoint/opschain-trial/releases). Ensure the native build matches the version of OpsChain that you are using. We suggest moving the binary to a location in your `PATH` to ensure it is easily accessible.
+The OpsChain CLI binary can be downloaded from the `opschain` repository on [GitHub](https://github.com/LimePoint/opschain/releases). Ensure the native build matches the version of OpsChain that you are using. We suggest moving the binary to a location in your `PATH` to ensure it is easily accessible.
 
 ### macOS & Linux configuration
 

@@ -61,7 +61,7 @@ _Note: A hostname other than `opschain-image-registry.local.gd` can be used if d
 
 ### Install the OpsChain licence
 
-Copy the `opschain.lic` licence file into the current folder (`opschain-trial`).
+Copy the `opschain.lic` licence file into the current folder or set the `OPSCHAIN_LICENCE` environment variable to the path where you stored `opschain.lic`.
 
 ### Create a GitHub personal access token
 
@@ -116,7 +116,7 @@ The command may take several minutes to start, especially with slower internet c
 The `kubectl` command can be used to see the deployment progress:
 
 ```bash
-kubectl get all -n opschain-trial
+kubectl get all -n opschain
 ```
 
 Once the `opschain server deploy` script has returned you can continue with the rest of the setup process.
@@ -152,7 +152,7 @@ _Note: If you create a `.opschainrc` file in your current directory, this will b
 On macOS, to ensure that the OpsChain registry certificate is trusted by Kubernetes the following setup is required (_*Note: Once this setup is complete you must restart Docker Desktop*_).
 
 ```bash
-kubectl -n opschain-trial get secret opschain-ca-key-pair -o jsonpath="{.data.ca\.crt}" | base64 -d > opschain-ca.pem
+kubectl -n opschain get secret opschain-ca-key-pair -o jsonpath="{.data.ca\.crt}" | base64 -d > opschain-ca.pem
 security add-trusted-cert -k ~/Library/Keychains/login.keychain-db -p ssl opschain-ca.pem
 # You will be prompted for your admin password in a macOS dialog
 # Remember to restart Docker Desktop once these commands have completed
@@ -169,7 +169,7 @@ docker login --username opschaintrial
 TIP: use the DOCKER_CONFIG environment variable if you need to use multiple Docker Hub logins.
 
 ```bash
-export DOCKER_CONFIG="$(pwd)/.docker" # this would need to be exported in all opschain-trial terminals
+export DOCKER_CONFIG="$(pwd)/.docker" # this would need to be exported in all terminals where OpsChain is being used
 docker login --username opschaintrial
 ```
 

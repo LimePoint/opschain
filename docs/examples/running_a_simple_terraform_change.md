@@ -47,7 +47,7 @@ Follow [adding a project Git repository as a remote](../reference/project_git_re
 
 ### Using your own Kubernetes cluster
 
-_If you are using a SaaS trial instance of OpsChain see the section below._
+_If you are using a SaaS demo instance of OpsChain see the section below._
 
 If this example, and your OpsChain API server, are running on your own Kubernetes cluster, you will need to create a namespace and a role that grants the opschain-runner service account, permissions to create the example resources. You can do this by applying the manifest included in this repo.
 
@@ -57,11 +57,11 @@ kubectl apply -f k8s/namespace.yaml
 
 This will create an `opschain-terraform` namespace, and assign relevant permissions to the `opschain-runner` role to allow it to create and destroy the nginx deployment in it.
 
-_Note: this step assumes you are using the default `opschain-trial` Kubernetes namespace for OpsChain. You must modify the `ServiceAccount` namespace in `k8s/namespace.yaml` if this is not the case._
+_Note: this step assumes you are using the default `opschain` Kubernetes namespace for OpsChain. You must modify the `ServiceAccount` namespace in `k8s/namespace.yaml` if this is not the case._
 
-### Using the examples namespace provided as part of your OpsChain SaaS trial
+### Using the examples namespace provided as part of your OpsChain SaaS demo
 
-If you are using a SaaS trial instance of OpsChain, an example namespace will have been provisioned for you and the necessary permissions granted to the opschain-runner service account.
+If you are using a SaaS demo instance of OpsChain, an example namespace will have been provisioned for you and the necessary permissions granted to the opschain-runner service account.
 
 To ensure that the correct namespace is passed to Terraform, you will need to add this examples namespace to your OpsChain project properties.
 
@@ -75,7 +75,7 @@ cat << EOF > terraform_properties.json
 EOF
 ```
 
-Replace `<YOUR EXAMPLES NAMESPACE>` with the examples namespace that was provided to you as part of your OpsChain trial onboarding.
+Replace `<YOUR EXAMPLES NAMESPACE>` with the examples namespace that was provided to you as part of your OpsChain onboarding.
 
 Apply the properties to the `terraform` project:
 
@@ -148,7 +148,7 @@ _Note: the [verify the change](#verify-the-change) steps above can be re-run to 
 
 The example takes advantage of the OpsChain properties to allow you to adjust the nginx port exposed by the Kubernetes cluster.
 
-If you created a `terraform_properties.json` to configure your [target Kubernetes namespace](#using-the-examples-namespace-provided-as-part-of-your-opschain-saas-trial) earlier, edit it and add the `external_port` property e.g.
+If you created a `terraform_properties.json` to configure your [target Kubernetes namespace](#using-the-examples-namespace-provided-as-part-of-your-opschain-saas-demo) earlier, edit it and add the `external_port` property e.g.
 
 ```json
 {
@@ -177,7 +177,7 @@ Now re-run the [create a change to deploy nginx](#create-a-change-to-deploy-ngin
 
 ### Remove Kubernetes namespace
 
-If you are running this example on your own Kubernetes cluster, you can now remove the resources you created when you [configured the target namespace](#using-your-own-kubernetes-cluster)
+If you are running this example on your own Kubernetes cluster, you can now remove the resources you created when you [configured the target namespace](#using-your-own-kubernetes-cluster).
 
 ```bash
 kubectl delete -f k8s/namespace.yaml

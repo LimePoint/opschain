@@ -6,9 +6,9 @@ This page details the support policy in relation to the OpsChain product under t
 
 Our support team is available from 9am - 5pm Monday to Friday (AEDT).
 
-## OpsChain trial - best efforts support
+## OpsChain demo - best efforts support
 
-All support offered during the OpsChain trial process is best efforts - no guarantees are made that the support team will resolve your issue, nor the timeframe in which you may receive a solution or fix.
+All support offered during the OpsChain demo is best efforts - no guarantees are made that the support team will resolve your issue, nor the timeframe in which you may receive a solution or fix.
 
 ### What is included
 
@@ -36,16 +36,16 @@ Please refer to the [troubleshooting](troubleshooting.md) guide on how to resolv
 
 ### Using OpsChain in production
 
-For trial participants, we do not recommend using OpsChain in your production environments, and do so at your own risk.
+We do not recommend using the OpsChain SaaS demo in your production environments, and do so at your own risk.
 
 ## How to contact us
 
-For any support-related enquiries, please contact us via the [`#opschain-support` Slack channel](https://limepoint.slack.com/messages/opschain-support) that you have been added to as part of our trial, or email opschain-support@limepoint.com.
+For any support-related enquiries, please contact us via the [`#opschain-support` Slack channel](https://limepoint.slack.com/messages/opschain-support) that you have been added to as part of the demo, or email opschain-support@limepoint.com.
 
 ## Ongoing support
 
-Our OpsChain support team will continue to provide assistance until your trial licence expires.
+Our OpsChain support team will continue to provide assistance until your demo licence expires.
 
 ## Supported versions
 
-We will provide support for the [latest release](https://github.com/LimePoint/opschain-trial/releases/latest) and the immediately preceding release only. If you encounter any issues, LimePoint advises that you first upgrade your OpsChain to the latest release. If you are still experiencing issues, please contact support using the above channels.
+We will provide support for the [latest release](https://github.com/LimePoint/opschain/releases/latest) and the immediately preceding release only. If you encounter any issues, LimePoint advises that you first upgrade your OpsChain to the latest release. If you are still experiencing issues, please contact support using the above channels.
