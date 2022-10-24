@@ -1,6 +1,0 @@
-.env
-docker-compose.override.yml
-opschain_data
-opschain.lic
-/values.yaml*
-opschain_auth/security_configuration.json
